@@ -1,3 +1,4 @@
 /.idea/
 /auth-center/.gradle/
 /auth-center/build/
+/todo-service/gradle/
