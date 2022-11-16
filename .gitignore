@@ -1,4 +1,9 @@
 /.idea/
-/auth-center/.gradle/
-/auth-center/build/
-/todo-service/gradle/
+.gradle
+/gradle/wrapper
+gradlew
+gradlew.bat
+HELP.md
+*.iml
+*.jar
+gradle-wrapper.properties
