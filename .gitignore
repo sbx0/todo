@@ -10,3 +10,4 @@ gradle-wrapper.properties
 package-lock.json
 .next
 node_modules
+build
