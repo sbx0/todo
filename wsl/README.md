@@ -17,3 +17,7 @@ source /root/.bashrc
 
 java WSL2Support
 service docker start
+
+wsl --shutdown
+su
+./start.sh
