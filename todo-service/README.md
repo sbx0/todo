@@ -20,6 +20,8 @@ services:
       MYSQL_ROOT_PASSWORD: justfordev
     ports:
       - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
   cache:
     image: redis
     container_name: redis
@@ -27,7 +29,7 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./data:/data
+      - ./redis:/data                          
 ```
 
 - docker compose up -d
