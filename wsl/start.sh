@@ -7,3 +7,4 @@ service docker start
 # start mysql dev env
 cd /home/mysql-dev-env
 docker compose up -d
+cd /home
