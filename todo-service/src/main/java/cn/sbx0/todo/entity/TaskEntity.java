@@ -32,4 +32,16 @@ public class TaskEntity {
   private LocalDateTime createTime;
   // when update
   private LocalDateTime updateTime;
+
+  public TaskEntity() {
+  }
+
+  public TaskEntity(Long id, String taskName) {
+    this.id = id;
+    this.taskName = taskName;
+  }
+
+  public TaskEntity(String taskName) {
+    this.taskName = taskName;
+  }
 }

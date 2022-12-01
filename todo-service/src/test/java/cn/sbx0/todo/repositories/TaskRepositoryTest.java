@@ -1,10 +1,13 @@
 package cn.sbx0.todo.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import cn.sbx0.todo.entity.TaskEntity;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,7 +37,7 @@ class TaskRepositoryTest {
     crudRepository.save(entity);
 
     Page<TaskEntity> page = pagingRepository.findAll(PageRequest.of(0, 10));
-    Assertions.assertEquals(2L, page.getTotalElements());
+    assertEquals(2L, page.getTotalElements());
 
     List<TaskEntity> content = page.getContent();
     entity = content.get(0);
@@ -42,14 +45,14 @@ class TaskRepositoryTest {
     crudRepository.save(entity);
 
     page = pagingRepository.findAll(PageRequest.of(1, 10));
-    Assertions.assertEquals(2L, page.getTotalElements());
+    assertEquals(2L, page.getTotalElements());
 
     Optional<TaskEntity> one = crudRepository.findById(entity.getId());
-    Assertions.assertFalse(one.isEmpty());
-    Assertions.assertEquals("test", one.get().getTaskName());
+    assertFalse(one.isEmpty());
+    assertEquals("test", one.get().getTaskName());
 
     crudRepository.delete(entity);
     one = crudRepository.findById(entity.getId());
-    Assertions.assertTrue(one.isEmpty());
+    assertTrue(one.isEmpty());
   }
 }
