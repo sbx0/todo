@@ -1,5 +1,6 @@
 package cn.sbx0.todo.service.common;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
@@ -10,12 +11,16 @@ import org.springframework.data.domain.PageRequest;
  */
 @Getter
 @Setter
-public class Paging<T> extends Result<T> {
+public class Paging<T> {
 
+  private Integer code;
+  private Boolean success;
+  private String message;
+  private List<T> data;
   private PagingCommon common;
 
   public static <T> Paging<T> success(
-      T data,
+      List<T> data,
       int page,
       int pageSize,
       long total,

@@ -7,7 +7,6 @@ import cn.sbx0.todo.service.common.IBaseService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,7 +26,7 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   private TaskPagingRepository pagingRepository;
 
   @Override
-  public Paging<List<TaskEntity>> paging(int page, int pageSize) {
+  public Paging<TaskEntity> paging(int page, int pageSize) {
     Page<TaskEntity> pagingData = pagingRepository.findAll(Paging.build(page, pageSize));
     return Paging.success(
         pagingData.getContent(),

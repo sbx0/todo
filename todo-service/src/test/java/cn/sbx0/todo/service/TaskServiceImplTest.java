@@ -55,7 +55,7 @@ class TaskServiceImplTest {
     Page<TaskEntity> pagingData = new PageImpl<>(data, Paging.build(page, pageSize), data.size());
     given(pagingRepository.findAll(ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
 
-    Paging<List<TaskEntity>> paging = service.paging(page, pageSize);
+    Paging<TaskEntity> paging = service.paging(page, pageSize);
     assertNotNull(paging);
     assertTrue(paging.getSuccess());
     assertEquals(Code.SUCCESS, paging.getCode());
