@@ -1,15 +1,18 @@
 package cn.sbx0.todo.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +21,8 @@ import cn.sbx0.todo.service.TaskServiceImpl;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Paging.PagingCommon;
+import cn.sbx0.todo.service.common.Result;
+import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,7 +67,7 @@ class TaskControllerTest {
 
     Paging<TaskEntity> pagingData = new Paging<>();
     pagingData.setSuccess(true);
-    pagingData.setMessage("Success");
+    pagingData.setMessage(Code.SUCCESS_MESSAGE);
 
     List<TaskEntity> data = new ArrayList<>();
     TaskEntity test = new TaskEntity("Task Name");
@@ -115,7 +120,54 @@ class TaskControllerTest {
             ))
         .andReturn().getResponse().getContentAsString();
 
-    log.debug(response);
+    log.info(response);
+  }
+
+  /**
+   * Test for {@link TaskController#save}
+   *
+   * @throws Exception exception
+   */
+  @Test
+  void save() throws Exception {
+    long id = 1L;
+    TaskEntity test = new TaskEntity("Task Name");
+    test.setId(id);
+    test.setTaskStatus(0);
+    test.setTaskRemark("Task Remark");
+    test.setPlanTime(LocalDateTime.now());
+    test.setCreateTime(LocalDateTime.now());
+    test.setUpdateTime(LocalDateTime.now());
+
+    given(service.save(any())).willReturn(Result.success(1L));
+
+    String response = mockMvc.perform(post("/task/save")
+            .accept(MediaType.APPLICATION_JSON)
+            .content(JSON.parse(test))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("code").value("0"))
+        .andDo(
+            document("TaskSave",
+                requestFields(
+                    fieldWithPath("id").description("ID"),
+                    fieldWithPath("taskName").description("Task Name"),
+                    fieldWithPath("taskRemark").description("Task Remark"),
+                    fieldWithPath("taskStatus").description("Task Status"),
+                    fieldWithPath("planTime").description("Plan Time"),
+                    fieldWithPath("createTime").description("Create Time"),
+                    fieldWithPath("updateTime").description("Update Time")
+                ),
+                responseFields(
+                    fieldWithPath("data").description("ID"),
+                    fieldWithPath("success").description("Is success"),
+                    fieldWithPath("code").description("Status Code"),
+                    fieldWithPath("message").description("Message")
+                )
+            ))
+        .andReturn().getResponse().getContentAsString();
+
+    log.info(response);
   }
 
   protected MockMvc mockMvc;

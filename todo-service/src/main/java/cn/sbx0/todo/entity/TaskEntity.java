@@ -1,5 +1,10 @@
 package cn.sbx0.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,10 +32,19 @@ public class TaskEntity {
   // task status
   private Integer taskStatus;
   // plan time
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime planTime;
   // when create
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime createTime;
   // when update
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime updateTime;
 
   public TaskEntity() {

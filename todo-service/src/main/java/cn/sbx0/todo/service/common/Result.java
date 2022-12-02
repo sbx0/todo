@@ -19,30 +19,34 @@ public class Result<T> {
 
   public static <T> Result<T> success() {
     Result<T> result = new Result<>();
-    result.setCode(Code.SUCCESS);
     result.setSuccess(true);
+    result.setCode(Code.SUCCESS);
+    result.setMessage(Code.SUCCESS_MESSAGE);
     return result;
   }
 
   public static <T> Result<T> success(T data) {
     Result<T> result = new Result<>();
-    result.setCode(Code.SUCCESS);
     result.setSuccess(true);
+    result.setCode(Code.SUCCESS);
+    result.setMessage(Code.SUCCESS_MESSAGE);
     result.setData(data);
     return result;
   }
 
   public static <T> Result<T> failed() {
     Result<T> result = new Result<>();
-    result.setCode(Code.FAILED);
     result.setSuccess(false);
+    result.setCode(Code.FAILED);
+    result.setMessage(Code.FAILED_MESSAGE);
     return result;
   }
 
   public static <T> Result<T> failed(T data) {
     Result<T> result = new Result<>();
-    result.setCode(Code.FAILED);
     result.setSuccess(false);
+    result.setCode(Code.FAILED);
+    result.setMessage(Code.FAILED_MESSAGE);
     result.setData(data);
     return result;
   }
