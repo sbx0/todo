@@ -4,3 +4,7 @@ spring:
     url: jdbc:mysql://wsl2.sbx0.cn:3306/todo
     username: root
     password: justfordev
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
