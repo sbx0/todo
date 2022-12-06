@@ -39,6 +39,7 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Result<TaskEntity> save(TaskEntity entity) {
+    entity.setTaskStatus(0);
     entity.setCreateTime(LocalDateTime.now());
     entity = repository.save(entity);
     if (entity.getId() != null) {
