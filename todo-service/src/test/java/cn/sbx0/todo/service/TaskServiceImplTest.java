@@ -1,8 +1,11 @@
 package cn.sbx0.todo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cn.sbx0.todo.entity.TaskEntity;
@@ -63,12 +66,27 @@ class TaskServiceImplTest {
 
   @Test
   void save() {
+    // id is null after save
     TaskEntity entity = new TaskEntity("test");
+    given(repository.save(any())).willReturn(entity);
+
     Result<TaskEntity> result = service.save(entity);
+    assertNotNull(result);
+    assertFalse(result.getSuccess());
+    assertEquals(Code.FAILED, result.getCode());
+
+    assertNull(result.getData());
+
+    // id is 1L after save
+    Long id = 1L;
+    entity.setId(id);
+    given(repository.save(any())).willReturn(entity);
+
+    result = service.save(entity);
     assertNotNull(result);
     assertTrue(result.getSuccess());
     assertEquals(Code.SUCCESS, result.getCode());
-    assertEquals(1L, result.getData().getId());
+    assertEquals(id, result.getData().getId());
   }
 
   @Test

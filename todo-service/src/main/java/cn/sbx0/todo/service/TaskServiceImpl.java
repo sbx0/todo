@@ -6,8 +6,7 @@ import cn.sbx0.todo.service.common.IBaseService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,13 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
 
   @Resource
-  private TaskRepository crudRepository;
-  @PersistenceContext
-  private EntityManager entityManager;
+  private TaskRepository repository;
 
   @Override
   public Paging<TaskEntity> paging(int page, int pageSize) {
-    Page<TaskEntity> pagingData = crudRepository.findAll(Paging.build(page, pageSize));
+    Page<TaskEntity> pagingData = repository.findAll(Paging.build(page, pageSize));
     return Paging.success(
         pagingData.getContent(),
         pagingData.getPageable().getPageNumber(),
@@ -42,8 +39,8 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Result<TaskEntity> save(TaskEntity entity) {
-    entityManager.persist(entity);
-    crudRepository.customSave(entity);
+    entity.setCreateTime(LocalDateTime.now());
+    entity = repository.save(entity);
     if (entity.getId() != null) {
       return Result.success(entity);
     } else {
@@ -53,13 +50,13 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
 
   @Override
   public Result<TaskEntity> findById(Long id) {
-    Optional<TaskEntity> result = crudRepository.findById(id);
+    Optional<TaskEntity> result = repository.findById(id);
     return result.map(Result::success).orElseGet(Result::failed);
   }
 
   @Override
   public Result<Void> deleteById(Long id) {
-    crudRepository.deleteById(id);
+    repository.deleteById(id);
     return Result.success();
   }
 }

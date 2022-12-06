@@ -19,6 +19,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
   @Modifying
   @Query(value = CUSTOM_SAVE_SQL, nativeQuery = true)
+  @Deprecated
   void customSave(TaskEntity entity);
 
   //language=MySQL

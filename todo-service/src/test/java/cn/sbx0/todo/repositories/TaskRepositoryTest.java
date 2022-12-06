@@ -29,10 +29,10 @@ class TaskRepositoryTest {
   public void testCRUD() {
     TaskEntity entity = new TaskEntity();
     entity.setTaskName("test1");
-    repository.customSave(entity);
+    repository.save(entity);
     entity = new TaskEntity();
     entity.setTaskName("test2");
-    repository.customSave(entity);
+    repository.save(entity);
 
     Page<TaskEntity> page = repository.findAll(PageRequest.of(0, 10));
     assertEquals(2L, page.getTotalElements());
