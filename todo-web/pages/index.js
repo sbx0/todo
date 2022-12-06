@@ -5,7 +5,7 @@ import {listApi, saveApi} from "../apis/taskApi";
 
 export default function Home() {
   const [list, setList] = useState([]);
-  const [newTask, setNewTask] = useState(null);
+  const [newTask, setNewTask] = useState('');
 
   useEffect(() => {
     listApi().then((res) => {
@@ -14,17 +14,19 @@ export default function Home() {
   }, []);
 
   const saveNewTask = () => {
-    if (newTask == null) {
+    let taskName = newTask;
+    setNewTask('');
+    if (taskName == null) {
       return;
     }
-    if (newTask === '') {
+    if (taskName === '') {
       return;
     }
-    if (newTask.trim() === '') {
+    if (taskName.trim() === '') {
       return;
     }
     saveApi({
-      taskName: newTask
+      taskName: taskName
     }).then(() => {
       listApi().then(r => setList(r.data));
     })
@@ -52,6 +54,7 @@ export default function Home() {
             <input type='text'
                    id='taskInput'
                    placeholder='Input New Task'
+                   value={newTask}
                    onChange={(event) => setNewTask(event.target.value)}
                    className={styles.taskInput}/>
             <button onClick={saveNewTask}
