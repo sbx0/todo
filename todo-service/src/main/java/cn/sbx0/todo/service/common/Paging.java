@@ -29,6 +29,7 @@ public class Paging<T> {
   ) {
     Paging<T> result = new Paging<>();
     result.setCode(Code.SUCCESS);
+    result.setMessage(Code.SUCCESS_MESSAGE);
     result.setSuccess(true);
     result.setData(data);
     result.setCommon(new PagingCommon(page, pageSize, total, totalPage));

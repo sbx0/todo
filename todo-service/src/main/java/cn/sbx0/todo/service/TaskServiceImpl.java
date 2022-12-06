@@ -35,8 +35,8 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
         pagingData.getContent(),
         pagingData.getPageable().getPageNumber(),
         pagingData.getPageable().getPageSize(),
-        pagingData.getTotalPages(),
-        pagingData.getTotalElements()
+        pagingData.getTotalElements(),
+        pagingData.getTotalPages()
     );
   }
 
