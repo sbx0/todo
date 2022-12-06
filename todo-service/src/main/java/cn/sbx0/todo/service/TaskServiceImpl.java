@@ -11,7 +11,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +37,8 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   @Override
   public Paging<TaskEntity> paging(int page, int pageSize) {
     Page<TaskEntity> pagingData = repository.findAll(Paging.build(
-        page, pageSize, Sort.by(Direction.DESC, "id")
+        page, pageSize,
+        Sort.by(Order.asc("taskStatus"), Order.desc("id"))
     ));
     return Paging.success(
         pagingData.getContent(),
