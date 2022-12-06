@@ -23,36 +23,34 @@ import org.springframework.data.domain.PageRequest;
 class TaskRepositoryTest {
 
   @Autowired
-  private TaskCrudRepository crudRepository;
-  @Autowired
-  private TaskPagingRepository pagingRepository;
+  private TaskRepository repository;
 
   @Test
   public void testCRUD() {
     TaskEntity entity = new TaskEntity();
     entity.setTaskName("test1");
-    crudRepository.save(entity);
+    repository.customSave(entity);
     entity = new TaskEntity();
     entity.setTaskName("test2");
-    crudRepository.save(entity);
+    repository.customSave(entity);
 
-    Page<TaskEntity> page = pagingRepository.findAll(PageRequest.of(0, 10));
+    Page<TaskEntity> page = repository.findAll(PageRequest.of(0, 10));
     assertEquals(2L, page.getTotalElements());
 
     List<TaskEntity> content = page.getContent();
     entity = content.get(0);
     entity.setTaskName("test");
-    crudRepository.save(entity);
+    repository.customUpdate(entity);
 
-    page = pagingRepository.findAll(PageRequest.of(1, 10));
+    page = repository.findAll(PageRequest.of(1, 10));
     assertEquals(2L, page.getTotalElements());
 
-    Optional<TaskEntity> one = crudRepository.findById(entity.getId());
+    Optional<TaskEntity> one = repository.findById(entity.getId());
     assertFalse(one.isEmpty());
     assertEquals("test", one.get().getTaskName());
 
-    crudRepository.delete(entity);
-    one = crudRepository.findById(entity.getId());
+    repository.delete(entity);
+    one = repository.findById(entity.getId());
     assertTrue(one.isEmpty());
   }
 }

@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(schema = "todo", name = "tasks")
+@Table(name = "tasks")
 public class TaskEntity {
 
   @Id

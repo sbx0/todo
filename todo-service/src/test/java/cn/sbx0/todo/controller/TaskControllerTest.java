@@ -139,7 +139,7 @@ class TaskControllerTest {
     test.setCreateTime(LocalDateTime.now());
     test.setUpdateTime(LocalDateTime.now());
 
-    given(service.save(any())).willReturn(Result.success(1L));
+    given(service.save(any())).willReturn(Result.success(test));
 
     String response = mockMvc.perform(post("/task/save")
             .accept(MediaType.APPLICATION_JSON)
@@ -159,7 +159,14 @@ class TaskControllerTest {
                     fieldWithPath("updateTime").description("Update Time")
                 ),
                 responseFields(
-                    fieldWithPath("data").description("ID"),
+                    fieldWithPath("data.id").description("ID"),
+                    fieldWithPath("data.taskName").description("Task Name"),
+                    fieldWithPath("data.taskRemark").description("Task Remark"),
+                    fieldWithPath("data.taskStatus").description("Task Status"),
+                    fieldWithPath("data.planTime").description("Plan Time"),
+                    fieldWithPath("data.createTime").description("Create Time"),
+                    fieldWithPath("data.updateTime").description("Update Time"),
+                    fieldWithPath("data").description("Data"),
                     fieldWithPath("success").description("Is success"),
                     fieldWithPath("code").description("Status Code"),
                     fieldWithPath("message").description("Message")

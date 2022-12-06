@@ -47,7 +47,7 @@ public class TaskController {
    * @return ID
    */
   @PostMapping("/save")
-  public Result<Long> save(@RequestBody TaskEntity entity) {
+  public Result<TaskEntity> save(@RequestBody TaskEntity entity) {
     return service.save(entity);
   }
 }

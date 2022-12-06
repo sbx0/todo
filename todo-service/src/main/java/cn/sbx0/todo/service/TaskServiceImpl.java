@@ -1,16 +1,18 @@
 package cn.sbx0.todo.service;
 
 import cn.sbx0.todo.entity.TaskEntity;
-import cn.sbx0.todo.repositories.TaskCrudRepository;
-import cn.sbx0.todo.repositories.TaskPagingRepository;
+import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.IBaseService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author sbx0
@@ -21,13 +23,13 @@ import org.springframework.stereotype.Service;
 public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
 
   @Resource
-  private TaskCrudRepository crudRepository;
-  @Resource
-  private TaskPagingRepository pagingRepository;
+  private TaskRepository crudRepository;
+  @PersistenceContext
+  private EntityManager entityManager;
 
   @Override
   public Paging<TaskEntity> paging(int page, int pageSize) {
-    Page<TaskEntity> pagingData = pagingRepository.findAll(Paging.build(page, pageSize));
+    Page<TaskEntity> pagingData = crudRepository.findAll(Paging.build(page, pageSize));
     return Paging.success(
         pagingData.getContent(),
         pagingData.getPageable().getPageNumber(),
@@ -38,10 +40,12 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   }
 
   @Override
-  public Result<Long> save(TaskEntity entity) {
-    TaskEntity result = crudRepository.save(entity);
-    if (result.getId() != null) {
-      return Result.success(result.getId());
+  @Transactional(rollbackFor = Exception.class)
+  public Result<TaskEntity> save(TaskEntity entity) {
+    entityManager.persist(entity);
+    crudRepository.customSave(entity);
+    if (entity.getId() != null) {
+      return Result.success(entity);
     } else {
       return Result.failed();
     }

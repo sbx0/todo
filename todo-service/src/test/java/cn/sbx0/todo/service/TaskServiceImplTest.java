@@ -1,16 +1,12 @@
 package cn.sbx0.todo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cn.sbx0.todo.entity.TaskEntity;
-import cn.sbx0.todo.repositories.TaskCrudRepository;
-import cn.sbx0.todo.repositories.TaskPagingRepository;
+import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Paging.PagingCommon;
@@ -33,7 +29,7 @@ import org.springframework.data.domain.Pageable;
  * @author sbx0
  * @since 2022/12/1
  */
-@MockBean(classes = {TaskCrudRepository.class, TaskPagingRepository.class})
+@MockBean(classes = {TaskRepository.class})
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class TaskServiceImplTest {
 
@@ -41,9 +37,7 @@ class TaskServiceImplTest {
   private TaskServiceImpl service;
 
   @Resource
-  private TaskCrudRepository crudRepository;
-  @Resource
-  private TaskPagingRepository pagingRepository;
+  private TaskRepository repository;
 
   @Test
   public void paging() {
@@ -53,7 +47,7 @@ class TaskServiceImplTest {
     List<TaskEntity> data = new ArrayList<>();
     data.add(new TaskEntity("test"));
     Page<TaskEntity> pagingData = new PageImpl<>(data, Paging.build(page, pageSize), data.size());
-    given(pagingRepository.findAll(ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
+    given(repository.findAll(ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
 
     Paging<TaskEntity> paging = service.paging(page, pageSize);
     assertNotNull(paging);
@@ -69,35 +63,19 @@ class TaskServiceImplTest {
 
   @Test
   void save() {
-    // id is null after save
     TaskEntity entity = new TaskEntity("test");
-    given(crudRepository.save(any())).willReturn(entity);
-
-    Result<Long> result = service.save(entity);
-    assertNotNull(result);
-    assertFalse(result.getSuccess());
-    assertEquals(Code.FAILED, result.getCode());
-
-    Long id = result.getData();
-    assertNull(id);
-
-    // id is 1L after save
-    id = 1L;
-    entity.setId(id);
-    given(crudRepository.save(any())).willReturn(entity);
-
-    result = service.save(entity);
+    Result<TaskEntity> result = service.save(entity);
     assertNotNull(result);
     assertTrue(result.getSuccess());
     assertEquals(Code.SUCCESS, result.getCode());
-    assertEquals(id, result.getData());
+    assertEquals(1L, result.getData().getId());
   }
 
   @Test
   void findById() {
     Long id = 1L;
     TaskEntity entity = new TaskEntity(id, "test");
-    given(crudRepository.findById(id)).willReturn(Optional.of(entity));
+    given(repository.findById(id)).willReturn(Optional.of(entity));
 
     Result<TaskEntity> result = service.findById(1L);
     assertNotNull(result);

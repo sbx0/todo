@@ -1,12 +1,13 @@
 package cn.sbx0.todo.service.common;
 
+
 /**
  * @author sbx0
  * @since 2022/12/1
  */
 public interface IBaseService<T, ID> {
 
-  Result<ID> save(T entity);
+  Result<T> save(T entity);
 
   Result<T> findById(ID id);
 
