@@ -59,6 +59,10 @@
   cursor: pointer;
 }
 
+.taskItemBodyCompleted {
+  background-color: #009924 !important;
+}
+
 .taskItemBody:hover {
   background-color: #484848;
   color: #f7f7f7;
