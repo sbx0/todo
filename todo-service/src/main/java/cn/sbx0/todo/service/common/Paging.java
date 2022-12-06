@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 /**
  * @author sbx0
@@ -38,6 +39,14 @@ public class Paging<T> {
     return PageRequest.of(
         adjustPage(page),
         adjustPageSize(pageSize)
+    );
+  }
+
+  public static PageRequest build(int page, int pageSize, Sort sort) {
+    return PageRequest.of(
+        adjustPage(page),
+        adjustPageSize(pageSize),
+        sort
     );
   }
 
