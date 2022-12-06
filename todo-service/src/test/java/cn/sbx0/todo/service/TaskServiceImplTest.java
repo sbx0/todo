@@ -90,6 +90,31 @@ class TaskServiceImplTest {
   }
 
   @Test
+  void update() {
+    // id is null
+    TaskEntity entity = new TaskEntity("test");
+    given(repository.save(any())).willReturn(entity);
+
+    Result<TaskEntity> result = service.update(entity);
+    assertNotNull(result);
+    assertFalse(result.getSuccess());
+    assertEquals(Code.FAILED, result.getCode());
+
+    assertNull(result.getData());
+
+    // id is 1L after save
+    Long id = 1L;
+    entity.setId(id);
+    given(repository.save(any())).willReturn(entity);
+
+    result = service.update(entity);
+    assertNotNull(result);
+    assertTrue(result.getSuccess());
+    assertEquals(Code.SUCCESS, result.getCode());
+    assertEquals(id, result.getData().getId());
+  }
+
+  @Test
   void findById() {
     Long id = 1L;
     TaskEntity entity = new TaskEntity(id, "test");

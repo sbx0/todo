@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {useEffect, useState} from "react";
-import {listApi, saveApi} from "../apis/taskApi";
+import {listApi, saveApi, updateApi} from "../apis/taskApi";
 
 export default function Home() {
   const [list, setList] = useState([]);
@@ -32,6 +32,24 @@ export default function Home() {
     })
   }
 
+  const setTaskStatusCompleted = (task) => {
+    updateApi({
+      ...task,
+      taskStatus: 1
+    }).then(() => {
+      listApi({page: 1, pageSize: 20}).then(r => setList(r.data));
+    })
+  }
+
+  const setTaskStatusUndo = (task) => {
+    updateApi({
+      ...task,
+      taskStatus: 0
+    }).then(() => {
+      listApi({page: 1, pageSize: 20}).then(r => setList(r.data));
+    })
+  }
+
   return (
       <div className={styles.container}>
         <Head>
@@ -50,7 +68,8 @@ export default function Home() {
                           <svg fill="currentColor" width="20"
                                height="20" viewBox="0 0 20 20"
                                xmlns="http://www.w3.org/2000/svg"
-                               focusable="false">
+                               focusable="false"
+                               onClick={() => setTaskStatusUndo(one)}>
                             <path
                                 d="M10 2a8 8 0 110 16 8 8 0 010-16zm0 1a7 7 0 100 14 7 7 0 000-14zm3.36 4.65c.17.17.2.44.06.63l-.06.07-4 4a.5.5 0 01-.64.07l-.07-.06-2-2a.5.5 0 01.63-.77l.07.06L9 11.3l3.65-3.65c.2-.2.51-.2.7 0z"
                                 fill="currentColor"></path>
@@ -59,7 +78,8 @@ export default function Home() {
                           <svg fill="currentColor" width="20"
                                height="20" viewBox="0 0 20 20"
                                xmlns="http://www.w3.org/2000/svg"
-                               focusable="false">
+                               focusable="false"
+                               onClick={() => setTaskStatusCompleted(one)}>
                             <path
                                 d="M10 3a7 7 0 100 14 7 7 0 000-14zm-8 7a8 8 0 1116 0 8 8 0 01-16 0z"
                                 fill="currentColor"></path>

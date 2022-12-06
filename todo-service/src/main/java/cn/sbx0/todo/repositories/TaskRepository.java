@@ -12,17 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
   //language=MySQL
-  String CUSTOM_SAVE_SQL = """
-      insert into tasks (task_name)
-      values (:#{#entity.taskName})
-            """;
-
-  @Modifying
-  @Query(value = CUSTOM_SAVE_SQL, nativeQuery = true)
-  @Deprecated
-  void customSave(TaskEntity entity);
-
-  //language=MySQL
   String CUSTOM_UPDATE_SQL = """
       UPDATE tasks
       SET task_name   = :#{#entity.taskName},

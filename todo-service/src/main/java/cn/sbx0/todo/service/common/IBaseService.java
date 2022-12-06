@@ -9,6 +9,8 @@ public interface IBaseService<T, ID> {
 
   Result<T> save(T entity);
 
+  Result<T> update(T entity);
+
   Result<T> findById(ID id);
 
   Paging<T> paging(int page, int pageSize);

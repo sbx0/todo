@@ -44,10 +44,22 @@ public class TaskController {
    * <p>Unit Test is {@link  TaskControllerTest#save}</p>
    *
    * @param entity entity
-   * @return ID
+   * @return new entity
    */
   @PostMapping("/save")
   public Result<TaskEntity> save(@RequestBody TaskEntity entity) {
     return service.save(entity);
+  }
+
+  /**
+   * <p>Update</p>
+   * <p>Unit Test is {@link  TaskControllerTest#update}</p>
+   *
+   * @param entity entity
+   * @return new entity
+   */
+  @PostMapping("/update")
+  public Result<TaskEntity> update(@RequestBody TaskEntity entity) {
+    return service.update(entity);
   }
 }

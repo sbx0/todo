@@ -26,6 +26,14 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
   @Resource
   private TaskRepository repository;
 
+  /**
+   * <p>Task paging list</p>
+   * <p>Unit Test is {@link  TaskServiceImplTest#paging}</p>
+   *
+   * @param page     page
+   * @param pageSize pageSize
+   * @return Task list
+   */
   @Override
   public Paging<TaskEntity> paging(int page, int pageSize) {
     Page<TaskEntity> pagingData = repository.findAll(Paging.build(
@@ -40,9 +48,19 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
     );
   }
 
+  /**
+   * <p>Save</p>
+   * <p>Unit Test is {@link  TaskServiceImplTest#save}</p>
+   *
+   * @param entity entity
+   * @return new entity
+   */
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Result<TaskEntity> save(TaskEntity entity) {
+    if (entity == null) {
+      return Result.failed();
+    }
     entity.setTaskStatus(0);
     entity.setCreateTime(LocalDateTime.now());
     entity = repository.save(entity);
@@ -51,6 +69,23 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
     } else {
       return Result.failed();
     }
+  }
+
+  /**
+   * <p>Update</p>
+   * <p>Unit Test is {@link  TaskServiceImplTest#update}</p>
+   *
+   * @param entity entity
+   * @return new entity
+   */
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Result<TaskEntity> update(TaskEntity entity) {
+    if (entity == null || entity.getId() == null) {
+      return Result.failed();
+    }
+    repository.customUpdate(entity);
+    return Result.success(entity);
   }
 
   @Override

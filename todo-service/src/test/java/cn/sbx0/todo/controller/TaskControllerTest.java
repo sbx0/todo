@@ -177,6 +177,60 @@ class TaskControllerTest {
     log.info(response);
   }
 
+  /**
+   * Test for {@link TaskController#update}
+   *
+   * @throws Exception exception
+   */
+  @Test
+  void update() throws Exception {
+    long id = 1L;
+    TaskEntity test = new TaskEntity("Task Name");
+    test.setId(id);
+    test.setTaskStatus(0);
+    test.setTaskRemark("Task Remark");
+    test.setPlanTime(LocalDateTime.now());
+    test.setCreateTime(LocalDateTime.now());
+    test.setUpdateTime(LocalDateTime.now());
+
+    given(service.update(any())).willReturn(Result.success(test));
+
+    String response = mockMvc.perform(post("/task/update")
+            .accept(MediaType.APPLICATION_JSON)
+            .content(JSON.parse(test))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("code").value("0"))
+        .andDo(
+            document("TaskUpdate",
+                requestFields(
+                    fieldWithPath("id").description("ID"),
+                    fieldWithPath("taskName").description("Task Name"),
+                    fieldWithPath("taskRemark").description("Task Remark"),
+                    fieldWithPath("taskStatus").description("Task Status"),
+                    fieldWithPath("planTime").description("Plan Time"),
+                    fieldWithPath("createTime").description("Create Time"),
+                    fieldWithPath("updateTime").description("Update Time")
+                ),
+                responseFields(
+                    fieldWithPath("data.id").description("ID"),
+                    fieldWithPath("data.taskName").description("Task Name"),
+                    fieldWithPath("data.taskRemark").description("Task Remark"),
+                    fieldWithPath("data.taskStatus").description("Task Status"),
+                    fieldWithPath("data.planTime").description("Plan Time"),
+                    fieldWithPath("data.createTime").description("Create Time"),
+                    fieldWithPath("data.updateTime").description("Update Time"),
+                    fieldWithPath("data").description("Data"),
+                    fieldWithPath("success").description("Is success"),
+                    fieldWithPath("code").description("Status Code"),
+                    fieldWithPath("message").description("Message")
+                )
+            ))
+        .andReturn().getResponse().getContentAsString();
+
+    log.info(response);
+  }
+
   protected MockMvc mockMvc;
 
   @BeforeEach

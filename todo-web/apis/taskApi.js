@@ -39,3 +39,18 @@ export async function saveApi(params) {
   }
   return res.json();
 }
+
+export async function updateApi(params) {
+  const res = await fetch('/api/task/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params)
+  });
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data');
+  }
+  return res.json();
+}
