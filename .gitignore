@@ -13,3 +13,4 @@ node_modules
 build
 htmlReport
 /todo-service/asciidoc/*.html
+/todo-web/out/
