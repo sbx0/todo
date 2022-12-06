@@ -40,7 +40,9 @@ export default function Home() {
 
         <main className={styles.main}>
           <div className={styles.contentArea}>
-            {list.map((one) => <div>{one.taskName}</div>)}
+            {list.map((one) =>
+                <div key={'taskInfo_' + one.id}>{one.taskName}</div>)
+            }
           </div>
           <div className={styles.operationArea}>
             <label htmlFor='taskInput'
