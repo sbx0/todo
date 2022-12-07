@@ -27,9 +27,17 @@ export async function listApi(params, cache) {
   }
   let cacheKey = hash(url);
   if (cache) {
-    let cacheData = await localForage.getItem(cacheKey);
-    if (cacheData != null) {
-      return cacheData;
+    let cacheTime = await localForage.getItem('cacheTime' + cacheKey);
+    if (cacheTime != null) {
+      let now = Date.now();
+      let milliseconds = now - cacheTime;
+      let seconds = milliseconds / 1000;
+      if (seconds < 60) {
+        let cacheData = await localForage.getItem(cacheKey);
+        if (cacheData != null) {
+          return cacheData;
+        }
+      }
     }
   }
   const res = await fetch(url, {
@@ -44,6 +52,7 @@ export async function listApi(params, cache) {
   }
   let json = res.json();
   await localForage.setItem(cacheKey, json);
+  await localForage.setItem('cacheTime' + cacheKey, Date.now());
   return json;
 }
 
