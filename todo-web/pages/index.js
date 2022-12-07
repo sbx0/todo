@@ -101,14 +101,16 @@ export default function Home() {
             <input type='text'
                    id='taskInput'
                    placeholder='Input New Task'
+                   className={styles.taskInput}
                    value={newTask}
                    onChange={(event) => setNewTask(event.target.value)}
-                   className={styles.taskInput}/>
-            <button onClick={saveNewTask}
-                    type='button'
-                    className={styles.taskButton}>
-              Save New Task
-            </button>
+                   onKeyDown={event => {
+                     if (event.key === 'Enter') {
+                       saveNewTask();
+                       event.preventDefault();
+                       event.stopPropagation();
+                     }
+                   }}/>
           </div>
         </main>
       </div>
