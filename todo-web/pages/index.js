@@ -8,7 +8,7 @@ export default function Home() {
   const [newTask, setNewTask] = useState('');
 
   useEffect(() => {
-    listApi({page: 1, pageSize: 20}).then((res) => {
+    listApi({page: 1, pageSize: 20}, true).then((res) => {
       setList(res.data)
     })
   }, []);

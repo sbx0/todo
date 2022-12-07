@@ -1,15 +1,35 @@
-export async function listApi(params) {
+import localForage from "localforage";
+
+function hash(str) {
+  let hash = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash.toString();
+}
+
+export async function listApi(params, cache) {
   let url = '/api/task/paging';
   if (params) {
     const paramsArray = [];
     Object.keys(params).forEach((key) =>
-        paramsArray.push(key + '=' + encodeURI(params[key])));
+        paramsArray.push(key + '=' + encodeURI(params[key]))
+    );
     if (paramsArray.length > 0) {
       if (url.search(/\?/) === -1) {
         url += '?' + paramsArray.join('&');
       } else {
         url += '&' + paramsArray.join('&');
       }
+    }
+  }
+  let cacheKey = hash(url);
+  if (cache) {
+    let cacheData = localForage.getItem(cacheKey);
+    if (cacheData != null) {
+      return cacheData;
     }
   }
   const res = await fetch(url, {
@@ -22,7 +42,9 @@ export async function listApi(params) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');
   }
-  return res.json();
+  let json = res.json();
+  await localForage.setItem(cacheKey, json);
+  return json;
 }
 
 export async function saveApi(params) {
