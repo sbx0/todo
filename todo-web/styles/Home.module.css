@@ -57,6 +57,18 @@
   word-break: break-word;
   flex-wrap: wrap;
   cursor: pointer;
+  animation: slideFadeDown 250ms forwards;
+}
+
+@keyframes slideFadeDown {
+  0% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1
+  }
 }
 
 .taskItemBodyCompleted {
