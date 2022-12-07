@@ -29,7 +29,6 @@ export async function listApi(params, cache) {
   if (cache) {
     let cacheData = await localForage.getItem(cacheKey);
     if (cacheData != null) {
-      console.log('cacheData', cacheData)
       return cacheData;
     }
   }
