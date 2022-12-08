@@ -59,6 +59,25 @@ export default function Home() {
         </Head>
 
         <main className={styles.main}>
+          <div className={styles.operationArea}>
+            <label htmlFor='taskInput'
+                   className={styles.taskLabel}>
+              New Task
+            </label>
+            <input type='text'
+                   id='taskInput'
+                   placeholder='Input New Task'
+                   className={styles.taskInput}
+                   value={newTask}
+                   onChange={(event) => setNewTask(event.target.value)}
+                   onKeyDown={event => {
+                     if (event.key === 'Enter') {
+                       saveNewTask();
+                       event.preventDefault();
+                       event.stopPropagation();
+                     }
+                   }}/>
+          </div>
           <div className={styles.contentArea}>
             {list.map((one) =>
                 <div key={'taskInfo_' + one.id}
@@ -92,25 +111,6 @@ export default function Home() {
                   </div>
                 </div>)
             }
-          </div>
-          <div className={styles.operationArea}>
-            <label htmlFor='taskInput'
-                   className={styles.taskLabel}>
-              New Task
-            </label>
-            <input type='text'
-                   id='taskInput'
-                   placeholder='Input New Task'
-                   className={styles.taskInput}
-                   value={newTask}
-                   onChange={(event) => setNewTask(event.target.value)}
-                   onKeyDown={event => {
-                     if (event.key === 'Enter') {
-                       saveNewTask();
-                       event.preventDefault();
-                       event.stopPropagation();
-                     }
-                   }}/>
           </div>
         </main>
       </div>
