@@ -1,7 +1,9 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import {useEffect, useState} from "react";
+import styles from '../styles/Home.module.css'
+import TaskInput from "../components/task/TaskInput";
 import {listApi, saveApi, updateApi} from "../apis/taskApi";
+
+import Head from 'next/head'
 
 export default function Home() {
   const [list, setList] = useState([]);
@@ -60,23 +62,9 @@ export default function Home() {
 
         <main className={styles.main}>
           <div className={styles.operationArea}>
-            <label htmlFor='taskInput'
-                   className={styles.taskLabel}>
-              New Task
-            </label>
-            <input type='text'
-                   id='taskInput'
-                   placeholder='Input New Task'
-                   className={styles.taskInput}
-                   value={newTask}
-                   onChange={(event) => setNewTask(event.target.value)}
-                   onKeyDown={event => {
-                     if (event.key === 'Enter') {
-                       saveNewTask();
-                       event.preventDefault();
-                       event.stopPropagation();
-                     }
-                   }}/>
+            <TaskInput newTask={newTask}
+                       setNewTask={setNewTask}
+                       saveNewTask={saveNewTask}/>
           </div>
           <div className={styles.contentArea}>
             {list.map((one) =>

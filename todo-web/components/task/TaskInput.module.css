@@ -1,0 +1,13 @@
+.taskLabel {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.taskInput {
+  width: 100%;
+  height: 40px;
+  font-size: 20px;
+  display: block;
+  margin: 5px auto;
+}
