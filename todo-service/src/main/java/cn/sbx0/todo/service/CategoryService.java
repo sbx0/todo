@@ -37,7 +37,7 @@ public class CategoryService implements JpaService<CategoryEntity, Long> {
   public Paging<CategoryEntity> paging(int page, int pageSize) {
     Page<CategoryEntity> pagingData = repository.findAll(Paging.build(
         page, pageSize,
-        Sort.by(Order.desc("id"))
+        Sort.by(Order.asc("id"))
     ));
     return Paging.success(
         pagingData.getContent(),

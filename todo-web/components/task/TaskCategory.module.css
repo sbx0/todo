@@ -1,0 +1,30 @@
+.categoryContainer {
+  height: 50px;
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.categoryItem {
+  min-width: 100px;
+  display: inline-block;
+  margin: 5px auto;
+  font-size: 16px;
+}
+
+.categoryLabel {
+  padding: 10px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.categoryLabel:hover {
+  background-color: #484848;
+}
+
+input[type='radio']:checked + .categoryLabel {
+  color: #ffffff;
+  background: #009924;
+}

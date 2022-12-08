@@ -6,10 +6,6 @@ export default function TaskInput({
   saveNewTask
 }) {
   return <>
-    <label htmlFor='taskInput'
-           className={styles.taskLabel}>
-      New Task
-    </label>
     <input type='text'
            id='taskInput'
            placeholder='Input New Task'

@@ -5,6 +5,7 @@ import TaskItem from "../components/task/TaskItem";
 
 import {listApi, saveApi, updateApi} from "../apis/taskApi";
 import Head from 'next/head'
+import TaskCategory from "../components/task/TaskCategory";
 
 export default function Home() {
   const [list, setList] = useState([]);
@@ -68,6 +69,7 @@ export default function Home() {
                        saveNewTask={saveNewTask}/>
           </div>
           <div className={styles.contentArea}>
+            <TaskCategory/>
             {list.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id}
                           one={one}
