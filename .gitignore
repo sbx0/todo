@@ -14,3 +14,9 @@ build
 htmlReport
 /todo-service/asciidoc/*.html
 /todo-web/out/
+/todo-web/public/sw.js
+/todo-web/public/sw.js.map
+/todo-web/public/workbox-*.js
+/todo-web/public/workbox-*.js.map
+/todo-web/public/icons
+/todo-web/public/static
