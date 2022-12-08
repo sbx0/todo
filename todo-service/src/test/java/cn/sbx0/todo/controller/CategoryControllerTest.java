@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cn.sbx0.todo.entity.TaskEntity;
-import cn.sbx0.todo.service.TaskService;
+import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.service.CategoryService;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Paging.PagingCommon;
@@ -44,19 +44,19 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  * @author sbx0
- * @since 2022/12/2
+ * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {TaskService.class})
+@MockBean(classes = {CategoryService.class})
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-class TaskControllerTest {
+class CategoryControllerTest {
 
   @Resource
-  private TaskService service;
+  private CategoryService service;
 
   /**
-   * Test for {@link TaskController#paging}
+   * Test for {@link CategoryController#paging}
    *
    * @throws Exception exception
    */
@@ -65,16 +65,14 @@ class TaskControllerTest {
     int page = 1;
     int pageSize = 10;
 
-    Paging<TaskEntity> pagingData = new Paging<>();
+    Paging<CategoryEntity> pagingData = new Paging<>();
     pagingData.setSuccess(true);
     pagingData.setMessage(Code.SUCCESS_MESSAGE);
 
-    List<TaskEntity> data = new ArrayList<>();
-    TaskEntity test = new TaskEntity("Task Name");
+    List<CategoryEntity> data = new ArrayList<>();
+    CategoryEntity test = new CategoryEntity("Category Name");
     test.setId(1L);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
+    test.setCategoryRemark("Category Remark");
     test.setCreateTime(LocalDateTime.now());
     test.setUpdateTime(LocalDateTime.now());
     data.add(test);
@@ -86,7 +84,7 @@ class TaskControllerTest {
 
     given(service.paging(anyInt(), anyInt())).willReturn(pagingData);
 
-    String response = mockMvc.perform(get("/task/paging")
+    String response = mockMvc.perform(get("/category/paging")
             .accept(MediaType.APPLICATION_JSON)
             .queryParam("page", "1")
             .queryParam("pageSize", "10")
@@ -94,17 +92,15 @@ class TaskControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("code").value("0"))
         .andDo(
-            document("TaskPagingList",
+            document("CategoryPagingList",
                 queryParameters(
                     parameterWithName("page").description("Page Number"),
                     parameterWithName("pageSize").description("Page Size")
                 ),
                 responseFields(
                     fieldWithPath("data[].id").description("ID"),
-                    fieldWithPath("data[].taskName").description("Task Name"),
-                    fieldWithPath("data[].taskRemark").description("Task Remark"),
-                    fieldWithPath("data[].taskStatus").description("Task Status"),
-                    fieldWithPath("data[].planTime").description("Plan Time"),
+                    fieldWithPath("data[].categoryName").description("Category Name"),
+                    fieldWithPath("data[].categoryRemark").description("Category Remark"),
                     fieldWithPath("data[].createTime").description("Create Time"),
                     fieldWithPath("data[].updateTime").description("Update Time"),
                     fieldWithPath("data").description("Data"),
@@ -124,46 +120,40 @@ class TaskControllerTest {
   }
 
   /**
-   * Test for {@link TaskController#save}
+   * Test for {@link CategoryController#save}
    *
    * @throws Exception exception
    */
   @Test
   void save() throws Exception {
     long id = 1L;
-    TaskEntity test = new TaskEntity("Task Name");
+    CategoryEntity test = new CategoryEntity("Category Name");
     test.setId(id);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
+    test.setCategoryRemark("Category Remark");
     test.setCreateTime(LocalDateTime.now());
     test.setUpdateTime(LocalDateTime.now());
 
     given(service.save(any())).willReturn(Result.success(test));
 
-    String response = mockMvc.perform(post("/task/save")
+    String response = mockMvc.perform(post("/category/save")
             .accept(MediaType.APPLICATION_JSON)
             .content(JSON.parse(test))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("code").value("0"))
         .andDo(
-            document("TaskSave",
+            document("CategorySave",
                 requestFields(
                     fieldWithPath("id").description("ID"),
-                    fieldWithPath("taskName").description("Task Name"),
-                    fieldWithPath("taskRemark").description("Task Remark"),
-                    fieldWithPath("taskStatus").description("Task Status"),
-                    fieldWithPath("planTime").description("Plan Time"),
+                    fieldWithPath("categoryName").description("Category Name"),
+                    fieldWithPath("categoryRemark").description("Category Remark"),
                     fieldWithPath("createTime").description("Create Time"),
                     fieldWithPath("updateTime").description("Update Time")
                 ),
                 responseFields(
                     fieldWithPath("data.id").description("ID"),
-                    fieldWithPath("data.taskName").description("Task Name"),
-                    fieldWithPath("data.taskRemark").description("Task Remark"),
-                    fieldWithPath("data.taskStatus").description("Task Status"),
-                    fieldWithPath("data.planTime").description("Plan Time"),
+                    fieldWithPath("data.categoryName").description("Category Name"),
+                    fieldWithPath("data.categoryRemark").description("Category Remark"),
                     fieldWithPath("data.createTime").description("Create Time"),
                     fieldWithPath("data.updateTime").description("Update Time"),
                     fieldWithPath("data").description("Data"),
@@ -178,46 +168,40 @@ class TaskControllerTest {
   }
 
   /**
-   * Test for {@link TaskController#update}
+   * Test for {@link CategoryController#update}
    *
    * @throws Exception exception
    */
   @Test
   void update() throws Exception {
     long id = 1L;
-    TaskEntity test = new TaskEntity("Task Name");
+    CategoryEntity test = new CategoryEntity("Category Name");
     test.setId(id);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
+    test.setCategoryRemark("Category Remark");
     test.setCreateTime(LocalDateTime.now());
     test.setUpdateTime(LocalDateTime.now());
 
     given(service.update(any())).willReturn(Result.success(test));
 
-    String response = mockMvc.perform(post("/task/update")
+    String response = mockMvc.perform(post("/category/update")
             .accept(MediaType.APPLICATION_JSON)
             .content(JSON.parse(test))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("code").value("0"))
         .andDo(
-            document("TaskUpdate",
+            document("CategoryUpdate",
                 requestFields(
                     fieldWithPath("id").description("ID"),
-                    fieldWithPath("taskName").description("Task Name"),
-                    fieldWithPath("taskRemark").description("Task Remark"),
-                    fieldWithPath("taskStatus").description("Task Status"),
-                    fieldWithPath("planTime").description("Plan Time"),
+                    fieldWithPath("categoryName").description("Category Name"),
+                    fieldWithPath("categoryRemark").description("Category Remark"),
                     fieldWithPath("createTime").description("Create Time"),
                     fieldWithPath("updateTime").description("Update Time")
                 ),
                 responseFields(
                     fieldWithPath("data.id").description("ID"),
-                    fieldWithPath("data.taskName").description("Task Name"),
-                    fieldWithPath("data.taskRemark").description("Task Remark"),
-                    fieldWithPath("data.taskStatus").description("Task Status"),
-                    fieldWithPath("data.planTime").description("Plan Time"),
+                    fieldWithPath("data.categoryName").description("Category Name"),
+                    fieldWithPath("data.categoryRemark").description("Category Remark"),
                     fieldWithPath("data.createTime").description("Create Time"),
                     fieldWithPath("data.updateTime").description("Update Time"),
                     fieldWithPath("data").description("Data"),

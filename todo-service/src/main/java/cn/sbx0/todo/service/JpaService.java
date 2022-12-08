@@ -1,11 +1,14 @@
-package cn.sbx0.todo.service.common;
+package cn.sbx0.todo.service;
 
+
+import cn.sbx0.todo.service.common.Paging;
+import cn.sbx0.todo.service.common.Result;
 
 /**
  * @author sbx0
  * @since 2022/12/1
  */
-public interface IBaseService<T, ID> {
+public interface JpaService<T, ID> {
 
   Result<T> save(T entity);
 

@@ -34,10 +34,10 @@ import org.springframework.data.domain.Pageable;
  */
 @MockBean(classes = {TaskRepository.class})
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class TaskServiceImplTest {
+class TaskServiceTest {
 
   @Autowired
-  private TaskServiceImpl service;
+  private TaskService service;
 
   @Resource
   private TaskRepository repository;

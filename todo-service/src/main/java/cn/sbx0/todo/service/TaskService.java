@@ -2,7 +2,6 @@ package cn.sbx0.todo.service;
 
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.repositories.TaskRepository;
-import cn.sbx0.todo.service.common.IBaseService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -21,14 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
+public class TaskService implements JpaService<TaskEntity, Long> {
 
   @Resource
   private TaskRepository repository;
 
   /**
    * <p>Task paging list</p>
-   * <p>Unit Test is {@link  TaskServiceImplTest#paging}</p>
+   * <p>Unit Test is {@link  TaskServiceTest#paging}</p>
    *
    * @param page     page
    * @param pageSize pageSize
@@ -51,7 +50,7 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
 
   /**
    * <p>Save</p>
-   * <p>Unit Test is {@link  TaskServiceImplTest#save}</p>
+   * <p>Unit Test is {@link  TaskServiceTest#save}</p>
    *
    * @param entity entity
    * @return new entity
@@ -74,7 +73,7 @@ public class TaskServiceImpl implements IBaseService<TaskEntity, Long> {
 
   /**
    * <p>Update</p>
-   * <p>Unit Test is {@link  TaskServiceImplTest#update}</p>
+   * <p>Unit Test is {@link  TaskServiceTest#update}</p>
    *
    * @param entity entity
    * @return new entity

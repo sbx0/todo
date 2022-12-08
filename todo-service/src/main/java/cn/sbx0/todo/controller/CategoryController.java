@@ -1,7 +1,7 @@
 package cn.sbx0.todo.controller;
 
-import cn.sbx0.todo.entity.TaskEntity;
-import cn.sbx0.todo.service.TaskService;
+import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.service.CategoryService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author sbx0
- * @since 2022/12/2
+ * @since 2022/12/8
  */
 @RestController
-@RequestMapping(("/task"))
-public class TaskController {
+@RequestMapping(("/category"))
+public class CategoryController {
 
   @Resource
-  private TaskService service;
+  private CategoryService service;
 
   /**
-   * <p>Task paging list</p>
-   * <p>Unit Test is {@link  TaskControllerTest#paging}</p>
+   * <p>Category paging list</p>
+   * <p>Unit Test is {@link  CategoryControllerTest#paging}</p>
    *
    * @param page     page
    * @param pageSize pageSize
-   * @return Task list
+   * @return Category list
    */
   @GetMapping("/paging")
-  public Paging<TaskEntity> paging(
+  public Paging<CategoryEntity> paging(
       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
       @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize
   ) {
@@ -41,25 +41,25 @@ public class TaskController {
 
   /**
    * <p>Save</p>
-   * <p>Unit Test is {@link  TaskControllerTest#save}</p>
+   * <p>Unit Test is {@link  CategoryControllerTest#save}</p>
    *
    * @param entity entity
    * @return new entity
    */
   @PostMapping("/save")
-  public Result<TaskEntity> save(@RequestBody TaskEntity entity) {
+  public Result<CategoryEntity> save(@RequestBody CategoryEntity entity) {
     return service.save(entity);
   }
 
   /**
    * <p>Update</p>
-   * <p>Unit Test is {@link  TaskControllerTest#update}</p>
+   * <p>Unit Test is {@link  CategoryControllerTest#update}</p>
    *
    * @param entity entity
    * @return new entity
    */
   @PostMapping("/update")
-  public Result<TaskEntity> update(@RequestBody TaskEntity entity) {
+  public Result<CategoryEntity> update(@RequestBody CategoryEntity entity) {
     return service.update(entity);
   }
 }
