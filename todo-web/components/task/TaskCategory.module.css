@@ -12,6 +12,7 @@
   display: inline-block;
   margin: 5px auto;
   font-size: 16px;
+  animation: slideFadeDown 750ms forwards;
 }
 
 .categoryLabel {
@@ -27,4 +28,15 @@
 input[type='radio']:checked + .categoryLabel {
   color: #ffffff;
   background: #009924;
+}
+
+@keyframes slideFadeDown {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1
+  }
 }
