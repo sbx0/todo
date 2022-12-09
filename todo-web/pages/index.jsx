@@ -1,23 +1,21 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import styles from '../styles/Home.module.css'
 import TaskInput from "../components/task/TaskInput";
 import TaskItem from "../components/task/TaskItem";
 
-import {listApi, saveApi, updateApi} from "../apis/taskApi";
+import {saveApi, updateApi} from "../apis/taskApi";
 import Head from 'next/head'
 import TaskCategory from "../components/task/TaskCategory";
+import useFetch from "../hooks/useFetch";
 
 export default function Home() {
-  const [list, setList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [newTask, setNewTask] = useState('');
   const [categoryId, setCategoryId] = useState(0);
-
-  useEffect(() => {
-    listApi({page: 1, pageSize: 20, categoryId: categoryId}, false).then(
-        (res) => {
-          setList(res.data)
-        })
-  }, [categoryId]);
+  const taskPaging = useFetch('POST', '/api/task/paging', {
+    page: page, pageSize: pageSize, categoryId: categoryId
+  });
 
   const saveNewTask = () => {
     let taskName = newTask;
@@ -35,8 +33,7 @@ export default function Home() {
       taskName: taskName,
       categoryId: categoryId
     }).then(() => {
-      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
-          r => setList(r.data));
+      taskPaging.refresh();
     })
   }
 
@@ -45,9 +42,7 @@ export default function Home() {
       ...task,
       taskStatus: 1
     }).then(() => {
-      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
-          r => setList(r.data)
-      );
+      taskPaging.refresh();
     })
   }
 
@@ -56,8 +51,7 @@ export default function Home() {
       ...task,
       taskStatus: 0
     }).then(() => {
-      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
-          r => setList(r.data));
+      taskPaging.refresh();
     })
   }
 
@@ -78,7 +72,7 @@ export default function Home() {
           <div className={styles.contentArea}>
             <TaskCategory categoryId={categoryId}
                           setCategoryId={setCategoryId}/>
-            {list.map((one) =>
+            {taskPaging.data?.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id}
                           one={one}
                           setTaskStatusUndo={setTaskStatusUndo}
