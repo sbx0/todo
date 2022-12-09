@@ -9,18 +9,18 @@ export default function TaskItem({
   let isCompletedClassName = isCompleted ? styles.taskItemBodyCompleted : '';
   let divClassName = `${styles.taskItemBody} ${isCompletedClassName}`;
 
-  return <div className={divClassName}
-              onClick={() => {
-                if (isCompleted) {
-                  setTaskStatusUndo(one);
-                } else {
-                  setTaskStatusCompleted(one)
-                }
-              }}>
-    <div className={styles.taskCheckIconContainer}>
+  return <div className={divClassName}>
+    <div className={styles.taskCheckIconContainer}
+         onClick={() => {
+           if (isCompleted) {
+             setTaskStatusUndo(one);
+           } else {
+             setTaskStatusCompleted(one)
+           }
+         }}>
       {isCompleted ?
-          <svg fill="currentColor" width="20"
-               height="20" viewBox="0 0 20 20"
+          <svg fill="currentColor" width="25"
+               height="25" viewBox="0 0 20 20"
                xmlns="http://www.w3.org/2000/svg"
                focusable="false">
             <path
@@ -28,8 +28,8 @@ export default function TaskItem({
                 fill="currentColor"></path>
           </svg>
           :
-          <svg fill="currentColor" width="20"
-               height="20" viewBox="0 0 20 20"
+          <svg fill="currentColor" width="25"
+               height="25" viewBox="0 0 20 20"
                xmlns="http://www.w3.org/2000/svg"
                focusable="false">
             <path

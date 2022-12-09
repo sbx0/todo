@@ -5,6 +5,7 @@
   display: block;
   margin: 5px auto;
   animation: slideFadeDown 500ms forwards;
+  z-index: 9999;
 }
 
 @keyframes slideFadeDown {
