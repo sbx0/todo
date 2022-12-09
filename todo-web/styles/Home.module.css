@@ -11,7 +11,7 @@
 .contentArea {
   width: 100%;
   max-width: 750px;
-  padding: 5px;
+  padding: 5px 10px;
   margin: 0 auto;
 }
 
@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 750px;
   height: 50px;
-  padding: 5px;
+  padding: 5px 10px;
   margin: 0 auto;
 }
 
