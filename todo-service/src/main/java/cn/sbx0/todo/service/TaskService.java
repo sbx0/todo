@@ -1,5 +1,6 @@
 package cn.sbx0.todo.service;
 
+import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.Paging;
@@ -34,10 +35,12 @@ public class TaskService implements JpaService<TaskEntity, Long> {
    * @return Task list
    */
   @Override
-  public Paging<TaskEntity> paging(int page, int pageSize) {
-    Page<TaskEntity> pagingData = repository.findAll(Paging.build(
-        page, pageSize,
-        Sort.by(Order.asc("taskStatus"), Order.desc("id"))
+  public <TaskPagingRequest extends PagingRequest> Paging<TaskEntity> paging(
+      TaskPagingRequest pagingRequest
+  ) {
+    Page<TaskEntity> pagingData = repository.paging(pagingRequest, Paging.build(
+        pagingRequest.getPage(), pagingRequest.getPageSize(),
+        Sort.by(Order.asc("task_status"), Order.desc("id"))
     ));
     return Paging.success(
         pagingData.getContent(),

@@ -41,10 +41,11 @@ export async function listApi(params, cache) {
     }
   }
   const res = await fetch(url, {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify(params)
   });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary

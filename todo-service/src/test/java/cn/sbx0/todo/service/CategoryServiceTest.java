@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.CategoryRepository;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
@@ -44,24 +45,25 @@ class CategoryServiceTest {
 
   @Test
   public void paging() {
-    int page = 1;
-    int pageSize = 10;
+    DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 0);
 
     List<CategoryEntity> data = new ArrayList<>();
     data.add(new CategoryEntity("test"));
-    Page<CategoryEntity> pagingData = new PageImpl<>(data, Paging.build(page, pageSize),
-        data.size());
+    Page<CategoryEntity> pagingData = new PageImpl<>(data,
+        Paging.build(pagingRequest.getPage(), pagingRequest.getPageSize()),
+        data.size()
+    );
     given(repository.findAll(ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
 
-    Paging<CategoryEntity> paging = service.paging(page, pageSize);
+    Paging<CategoryEntity> paging = service.paging(pagingRequest);
     assertNotNull(paging);
     assertTrue(paging.getSuccess());
     assertEquals(Code.SUCCESS, paging.getCode());
 
     PagingCommon common = paging.getCommon();
     assertNotNull(common);
-    assertEquals(Paging.adjustPage(page), common.getPage());
-    assertEquals(Paging.adjustPageSize(pageSize), common.getPageSize());
+    assertEquals(Paging.adjustPage(pagingRequest.getPage()), common.getPage());
+    assertEquals(Paging.adjustPageSize(pagingRequest.getPageSize()), common.getPageSize());
     assertEquals(data.size(), common.getTotal());
   }
 

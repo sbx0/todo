@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import styles from "./TaskCategory.module.css";
 import {listApi} from "../../apis/category";
 
-export default function TaskCategory() {
+export default function TaskCategory({categoryId, setCategoryId}) {
   const [list, setList] = useState([]);
 
   useEffect(() => {
@@ -17,6 +17,8 @@ export default function TaskCategory() {
              name={'category'}
              type="radio"
              defaultChecked
+             value={null}
+             onClick={event => setCategoryId(event.target.value)}
              hidden/>
       <label className={styles.categoryLabel}
              htmlFor={'category_default'}>
@@ -30,9 +32,13 @@ export default function TaskCategory() {
           <input id={'category_' + one.id}
                  name={'category'}
                  type="radio"
+                 value={one.id}
+                 onClick={event => setCategoryId(event.target.value)}
                  hidden/>
           <label className={styles.categoryLabel}
-                 htmlFor={'category_' + one.id}>{one.categoryName}</label>
+                 htmlFor={'category_' + one.id}>
+            {one.categoryName}
+          </label>
         </div>
       })
     }

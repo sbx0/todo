@@ -1,6 +1,7 @@
 package cn.sbx0.todo.service;
 
 import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.CategoryRepository;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
@@ -34,9 +35,11 @@ public class CategoryService implements JpaService<CategoryEntity, Long> {
    * @return Category list
    */
   @Override
-  public Paging<CategoryEntity> paging(int page, int pageSize) {
+  public <DefaultPagingRequest extends PagingRequest> Paging<CategoryEntity> paging(
+      DefaultPagingRequest pagingRequest
+  ) {
     Page<CategoryEntity> pagingData = repository.findAll(Paging.build(
-        page, pageSize,
+        pagingRequest.getPage(), pagingRequest.getPageSize(),
         Sort.by(Order.asc("id"))
     ));
     return Paging.success(

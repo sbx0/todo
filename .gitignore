@@ -20,3 +20,4 @@ htmlReport
 /todo-web/public/workbox-*.js.map
 /todo-web/public/icons
 /todo-web/public/static
+/logs/

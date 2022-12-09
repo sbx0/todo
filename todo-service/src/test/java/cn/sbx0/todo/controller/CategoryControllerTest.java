@@ -1,7 +1,6 @@
 package cn.sbx0.todo.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -9,14 +8,13 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.entity.DefaultPagingRequest;
+import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.CategoryService;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
@@ -62,8 +60,7 @@ class CategoryControllerTest {
    */
   @Test
   void paging() throws Exception {
-    int page = 1;
-    int pageSize = 10;
+    DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 10);
 
     Paging<CategoryEntity> pagingData = new Paging<>();
     pagingData.setSuccess(true);
@@ -80,22 +77,28 @@ class CategoryControllerTest {
 
     pagingData.setCode(Code.SUCCESS);
 
-    pagingData.setCommon(new PagingCommon(page, pageSize, (long) data.size(), (long) page));
+    pagingData.setCommon(
+        new PagingCommon(
+            pagingRequest.getPage(),
+            pagingRequest.getPageSize(),
+            (long) data.size(),
+            (long) pagingRequest.getPage()
+        )
+    );
 
-    given(service.paging(anyInt(), anyInt())).willReturn(pagingData);
+    given(service.paging(any())).willReturn(pagingData);
 
-    String response = mockMvc.perform(get("/category/paging")
+    String response = mockMvc.perform(post("/category/paging")
             .accept(MediaType.APPLICATION_JSON)
-            .queryParam("page", "1")
-            .queryParam("pageSize", "10")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JSON.parse(new PagingRequest(1, 10))))
         .andExpect(status().isOk())
         .andExpect(jsonPath("code").value("0"))
         .andDo(
             document("CategoryPagingList",
-                queryParameters(
-                    parameterWithName("page").description("Page Number"),
-                    parameterWithName("pageSize").description("Page Size")
+                requestFields(
+                    fieldWithPath("page").description("Page Number"),
+                    fieldWithPath("pageSize").description("Page Size")
                 ),
                 responseFields(
                     fieldWithPath("data[].id").description("ID"),

@@ -1,6 +1,7 @@
 package cn.sbx0.todo.service;
 
 
+import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 
@@ -16,7 +17,7 @@ public interface JpaService<T, ID> {
 
   Result<T> findById(ID id);
 
-  Paging<T> paging(int page, int pageSize);
+  <C extends PagingRequest> Paging<T> paging(C pagingRequest);
 
   Result<Void> deleteById(ID id);
 }

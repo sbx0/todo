@@ -8,3 +8,16 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+logging:
+  file:
+    name: ./logs/current.log
+  logback:
+    rollingpolicy:
+      file-name-pattern: ./logs/current-%d{yyyy-MM-dd}.%i.log
+      clean-history-on-start: false
+      max-file-size: 1MB
+      total-size-cap: 1GB
+      max-history: 30
+  level:
+    root: info
+    org.hibernate.orm.jdbc.bind: trace

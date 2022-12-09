@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.Code;
@@ -44,23 +45,25 @@ class TaskServiceTest {
 
   @Test
   public void paging() {
-    int page = 1;
-    int pageSize = 10;
+    DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 0);
 
     List<TaskEntity> data = new ArrayList<>();
     data.add(new TaskEntity("test"));
-    Page<TaskEntity> pagingData = new PageImpl<>(data, Paging.build(page, pageSize), data.size());
-    given(repository.findAll(ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
+    Page<TaskEntity> pagingData = new PageImpl<>(data,
+        Paging.build(pagingRequest.getPage(), pagingRequest.getPageSize()),
+        data.size()
+    );
+    given(repository.paging(any(), ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
 
-    Paging<TaskEntity> paging = service.paging(page, pageSize);
+    Paging<TaskEntity> paging = service.paging(pagingRequest);
     assertNotNull(paging);
     assertTrue(paging.getSuccess());
     assertEquals(Code.SUCCESS, paging.getCode());
 
     PagingCommon common = paging.getCommon();
     assertNotNull(common);
-    assertEquals(Paging.adjustPage(page), common.getPage());
-    assertEquals(Paging.adjustPageSize(pageSize), common.getPageSize());
+    assertEquals(Paging.adjustPage(pagingRequest.getPage()), common.getPage());
+    assertEquals(Paging.adjustPageSize(pagingRequest.getPageSize()), common.getPageSize());
     assertEquals(data.size(), common.getTotal());
   }
 

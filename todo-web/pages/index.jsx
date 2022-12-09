@@ -10,12 +10,14 @@ import TaskCategory from "../components/task/TaskCategory";
 export default function Home() {
   const [list, setList] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const [categoryId, setCategoryId] = useState(null);
 
   useEffect(() => {
-    listApi({page: 1, pageSize: 20}, true).then((res) => {
-      setList(res.data)
-    })
-  }, []);
+    listApi({page: 1, pageSize: 20, categoryId: categoryId}, false).then(
+        (res) => {
+          setList(res.data)
+        })
+  }, [categoryId]);
 
   const saveNewTask = () => {
     let taskName = newTask;
@@ -30,9 +32,11 @@ export default function Home() {
       return;
     }
     saveApi({
-      taskName: taskName
+      taskName: taskName,
+      categoryId: categoryId
     }).then(() => {
-      listApi({page: 1, pageSize: 20}).then(r => setList(r.data));
+      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
+          r => setList(r.data));
     })
   }
 
@@ -41,7 +45,9 @@ export default function Home() {
       ...task,
       taskStatus: 1
     }).then(() => {
-      listApi({page: 1, pageSize: 20}).then(r => setList(r.data));
+      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
+          r => setList(r.data)
+      );
     })
   }
 
@@ -50,7 +56,8 @@ export default function Home() {
       ...task,
       taskStatus: 0
     }).then(() => {
-      listApi({page: 1, pageSize: 20}).then(r => setList(r.data));
+      listApi({page: 1, pageSize: 20, categoryId: categoryId}).then(
+          r => setList(r.data));
     })
   }
 
@@ -69,7 +76,8 @@ export default function Home() {
                        saveNewTask={saveNewTask}/>
           </div>
           <div className={styles.contentArea}>
-            <TaskCategory/>
+            <TaskCategory categoryId={categoryId}
+                          setCategoryId={setCategoryId}/>
             {list.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id}
                           one={one}
