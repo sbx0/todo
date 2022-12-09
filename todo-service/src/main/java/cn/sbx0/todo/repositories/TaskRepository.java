@@ -39,9 +39,15 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
              create_time,
              update_time
       FROM tasks
-      where (:#{#pagingRequest.categoryId} is null) or (:#{#pagingRequest.categoryId} is not null and category_id = :#{#pagingRequest.categoryId})
+      where (:#{#pagingRequest.categoryId} = 0) or (:#{#pagingRequest.categoryId} <> 0 and category_id = :#{#pagingRequest.categoryId})
+      """;
+  //language=MySQL
+  String CUSTOM_PAGING_COUNT_SQL = """
+      SELECT COUNT(*)
+      FROM tasks
+      where (:#{#pagingRequest.categoryId} = 0) or (:#{#pagingRequest.categoryId} <> 0 and category_id = :#{#pagingRequest.categoryId})
       """;
 
-  @Query(value = CUSTOM_PAGING_SQL, nativeQuery = true)
+  @Query(value = CUSTOM_PAGING_SQL, countQuery = CUSTOM_PAGING_COUNT_SQL, nativeQuery = true)
   <T extends PagingRequest> Page<TaskEntity> paging(T pagingRequest, Pageable pageable);
 }

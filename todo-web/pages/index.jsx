@@ -10,7 +10,7 @@ import TaskCategory from "../components/task/TaskCategory";
 export default function Home() {
   const [list, setList] = useState([]);
   const [newTask, setNewTask] = useState('');
-  const [categoryId, setCategoryId] = useState(null);
+  const [categoryId, setCategoryId] = useState(0);
 
   useEffect(() => {
     listApi({page: 1, pageSize: 20, categoryId: categoryId}, false).then(

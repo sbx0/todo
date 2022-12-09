@@ -17,7 +17,7 @@ export default function TaskCategory({categoryId, setCategoryId}) {
              name={'category'}
              type="radio"
              defaultChecked
-             value={null}
+             value={0}
              onClick={event => setCategoryId(event.target.value)}
              hidden/>
       <label className={styles.categoryLabel}
