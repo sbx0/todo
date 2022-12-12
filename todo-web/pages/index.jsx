@@ -7,6 +7,7 @@ import {saveApi, updateApi} from "../apis/taskApi";
 import Head from 'next/head'
 import TaskCategory from "../components/task/TaskCategory";
 import useFetch from "../hooks/useFetch";
+import TaskHidden from "../components/task/TaskHidden";
 
 export default function Home() {
     const [page, setPage] = useState(1);
@@ -77,6 +78,9 @@ export default function Home() {
                                   one={one}
                                   setTaskStatusUndo={setTaskStatusUndo}
                                   setTaskStatusCompleted={setTaskStatusCompleted}/>)}
+                    <TaskHidden categoryId={categoryId}
+                                setTaskStatusUndo={setTaskStatusUndo}
+                                setTaskStatusCompleted={setTaskStatusCompleted}/>
                 </div>
             </main>
         </div>

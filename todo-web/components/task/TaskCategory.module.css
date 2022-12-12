@@ -66,7 +66,7 @@
 }
 
 .categoryItemBackgroundColor:hover {
-  background: #009924;
+  background: rgba(0, 153, 36, 0.6);
 }
 
 input[type='radio']:checked + .categoryItemBackgroundColor {
