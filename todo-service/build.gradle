@@ -55,3 +55,23 @@ tasks.named('asciidoctor') {
     configurations 'asciidoctorExt'
     dependsOn test
 }
+
+task cleanExtLib(type: Delete) {
+    delete "$buildDir/libs/extLibs"
+}
+
+task copyExtLib(type: Copy) {
+    into "$buildDir/libs/extLibs"
+    from configurations.default
+}
+
+bootJar {
+    excludes = ["*.jar"]
+
+    dependsOn cleanExtLib
+    dependsOn copyExtLib
+
+    manifest {
+        attributes "Manifest-Version": 1.0, 'Class-Path': configurations.default.files.collect { "./extLibs/$it.name" }.join(' ')
+    }
+}

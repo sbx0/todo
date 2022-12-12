@@ -60,6 +60,7 @@ services:
       - "1112:9999"
     volumes:
       - ./logs:/logs
+      - ./extLibs:/extLibs
 ```
 
 vim quick.sh
