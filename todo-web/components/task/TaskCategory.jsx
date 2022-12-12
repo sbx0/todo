@@ -12,35 +12,41 @@ export default function TaskCategory({categoryId, setCategoryId}) {
   }, []);
 
   return <div className={styles.categoryContainer}>
-    <div className={styles.categoryItem}>
-      <input id={'category_default'}
-             name={'category'}
-             type="radio"
-             defaultChecked
-             value={0}
-             onClick={event => setCategoryId(event.target.value)}
-             hidden/>
-      <label className={styles.categoryLabel}
-             htmlFor={'category_default'}>
-        Default
-      </label>
-    </div>
-    {
-      list.map((one, index) => {
-        return <div key={one.id + one.categoryName}
-                    className={styles.categoryItem}>
-          <input id={'category_' + one.id}
-                 name={'category'}
-                 type="radio"
-                 value={one.id}
-                 onClick={event => setCategoryId(event.target.value)}
-                 hidden/>
+    <div className={styles.categoryScrollBar}>
+      <div className={styles.categoryItem}>
+        <input id={'category_default'}
+               name={'category'}
+               type="radio"
+               defaultChecked
+               value={0}
+               onClick={event => setCategoryId(event.target.value)}
+               hidden/>
+        <div className={styles.categoryItemBackgroundColor}>
           <label className={styles.categoryLabel}
-                 htmlFor={'category_' + one.id}>
-            {one.categoryName}
+                 htmlFor={'category_default'}>
+            Default
           </label>
         </div>
-      })
-    }
+      </div>
+      {
+        list.map((one, index) => {
+          return <div key={one.id + one.categoryName}
+                      className={styles.categoryItem}>
+            <input id={'category_' + one.id}
+                   name={'category'}
+                   type="radio"
+                   value={one.id}
+                   onClick={event => setCategoryId(event.target.value)}
+                   hidden/>
+            <div className={styles.categoryItemBackgroundColor}>
+              <label className={styles.categoryLabel}
+                     htmlFor={'category_' + one.id}>
+                {one.categoryName}
+              </label>
+            </div>
+          </div>
+        })
+      }
+    </div>
   </div>;
 }
