@@ -1,23 +1,33 @@
 package cn.sbx0.todo.entity;
 
-import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * @author sbx0
  * @since 2022/12/8
  */
-@Getter
 @Setter
 public class TaskPagingRequest extends PagingRequest {
 
-  // category id
-  private Long categoryId;
+    // category id
+    private Long categoryId;
+    // task status
+    private Integer taskStatus;
 
-  public TaskPagingRequest() {
-  }
+    public Long getCategoryId() {
+        return Objects.requireNonNullElse(this.categoryId, 0L);
+    }
 
-  public TaskPagingRequest(Integer page, Integer pageSize) {
-    super(page, pageSize);
-  }
+    public Integer getTaskStatus() {
+        return Objects.requireNonNullElse(this.taskStatus, -1);
+    }
+
+    public TaskPagingRequest() {
+    }
+
+    public TaskPagingRequest(Integer page, Integer pageSize) {
+        super(page, pageSize);
+    }
 }
