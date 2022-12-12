@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import styles from '../styles/Home.module.css'
 import TaskInput from "../components/task/TaskInput";
 import TaskItem from "../components/task/TaskItem";
@@ -14,9 +14,14 @@ export default function Home() {
     const [pageSize, setPageSize] = useState(20);
     const [newTask, setNewTask] = useState('');
     const [categoryId, setCategoryId] = useState(0);
+    const [refresh, setRefresh] = useState(false);
     const taskPaging = useFetch('POST', '/api/task/paging', {
         page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 0
     });
+
+    useEffect(() => {
+        taskPaging.refresh();
+    }, [refresh])
 
     const saveNewTask = () => {
         let taskName = newTask;
@@ -44,6 +49,7 @@ export default function Home() {
             taskStatus: 1
         }).then(() => {
             taskPaging.refresh();
+            setRefresh(!refresh);
         })
     }
 
@@ -53,6 +59,7 @@ export default function Home() {
             taskStatus: 0
         }).then(() => {
             taskPaging.refresh();
+            setRefresh(!refresh);
         })
     }
 
@@ -79,6 +86,7 @@ export default function Home() {
                                   setTaskStatusUndo={setTaskStatusUndo}
                                   setTaskStatusCompleted={setTaskStatusCompleted}/>)}
                     <TaskHidden categoryId={categoryId}
+                                refresh={refresh}
                                 setTaskStatusUndo={setTaskStatusUndo}
                                 setTaskStatusCompleted={setTaskStatusCompleted}/>
                 </div>
