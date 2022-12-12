@@ -2,7 +2,7 @@
     display: inline-block;
     width: 100%;
     height: 35px;
-    margin: 10px 5px 5px 5px;
+    margin: 10px auto 5px auto;
     font-size: 16px;
     animation: slideFadeDown 750ms forwards;
     border-radius: 5px;
