@@ -1,4 +1,5 @@
 /.idea/
+*/.idea/
 .gradle
 /gradle/wrapper
 gradlew
@@ -21,3 +22,5 @@ htmlReport
 /todo-web/public/icons
 /todo-web/public/static
 /logs/
+*/logs/
+/.fleet/
