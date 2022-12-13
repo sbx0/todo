@@ -1,19 +1,31 @@
 import {useEffect, useState} from "react";
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
+import Head from 'next/head';
+
 import TaskInput from "../components/task/TaskInput";
 import TaskItem from "../components/task/TaskItem";
-
-import {saveApi, updateApi} from "../apis/taskApi";
-import Head from 'next/head'
 import TaskCategory from "../components/task/TaskCategory";
-import useFetch from "../hooks/useFetch";
 import TaskHidden from "../components/task/TaskHidden";
+import {getCache} from "../components/Cache";
+import useFetch from "../hooks/useFetch";
+import {saveApi, updateApi} from "../apis/taskApi";
 
 export default function Home() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [newTask, setNewTask] = useState('');
-    const [categoryId, setCategoryId] = useState(0);
+    const [categoryId, setCategoryId] = useState(() => {
+        // just for next.js
+        if (typeof window !== 'undefined') {
+            let cache = getCache('categoryId');
+            if (cache == null) {
+                cache = '0';
+            }
+            return parseInt(cache);
+        } else {
+            return 0;
+        }
+    });
     const [refresh, setRefresh] = useState(false);
     const taskPaging = useFetch('POST', '/api/task/paging', {
         page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 0
@@ -21,7 +33,7 @@ export default function Home() {
 
     useEffect(() => {
         taskPaging.refresh();
-    }, [refresh])
+    }, [refresh]);
 
     const saveNewTask = () => {
         let taskName = newTask;
