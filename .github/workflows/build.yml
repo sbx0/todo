@@ -39,6 +39,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: latest
-      - name: NPM run build
+      - name: npm install
+        working-directory: ./todo-web
+        run: npm install
+      - name: npm run build
         working-directory: ./todo-web
         run: npm run build
