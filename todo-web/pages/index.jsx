@@ -9,8 +9,10 @@ import TaskHidden from "../components/task/TaskHidden";
 import {getCache} from "../components/Cache";
 import useFetch from "../hooks/useFetch";
 import {saveApi, updateApi} from "../apis/taskApi";
+import Loading from "../components/Loading";
 
 export default function Home() {
+    const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [newTask, setNewTask] = useState('');
@@ -27,8 +29,13 @@ export default function Home() {
         }
     });
     const [refresh, setRefresh] = useState(false);
-    const taskPaging = useFetch('POST', '/api/task/paging', {
-        page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 0
+    const taskPaging = useFetch({
+        method: 'POST',
+        url: '/api/task/paging',
+        params: {
+            page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 0
+        },
+        setLoading: setLoading
     });
 
     useEffect(() => {
@@ -94,6 +101,7 @@ export default function Home() {
                 <div className={styles.contentArea}>
                     <TaskCategory categoryId={categoryId}
                                   setCategoryId={setCategoryId}/>
+                    <Loading active={loading}></Loading>
                     {taskPaging.data?.map((one) =>
                         <TaskItem key={'taskInfo_' + one.id}
                                   one={one}
@@ -102,7 +110,8 @@ export default function Home() {
                     <TaskHidden categoryId={categoryId}
                                 refresh={refresh}
                                 setTaskStatusUndo={setTaskStatusUndo}
-                                setTaskStatusCompleted={setTaskStatusCompleted}/>
+                                setTaskStatusCompleted={setTaskStatusCompleted}
+                                setLoading={setLoading}/>
                 </div>
             </main>
         </div>

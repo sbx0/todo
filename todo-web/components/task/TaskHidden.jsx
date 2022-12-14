@@ -3,13 +3,19 @@ import styles from "./TaskHidden.module.css";
 import useFetch from "../../hooks/useFetch";
 import TaskItem from "./TaskItem";
 
-export default function TaskHidden({categoryId, refresh, setTaskStatusCompleted, setTaskStatusUndo}) {
+export default function TaskHidden({categoryId, refresh, setTaskStatusCompleted, setTaskStatusUndo, setLoading}) {
     const [checked, setChecked] = useState(false);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
-    const taskPaging = useFetch('POST', '/api/task/paging', {
-        page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 1
-    }, checked);
+    const taskPaging = useFetch({
+        method: 'POST',
+        url: '/api/task/paging',
+        params: {
+            page: page, pageSize: pageSize, categoryId: categoryId, taskStatus: 1
+        },
+        active: checked,
+        setLoading
+    });
 
     useEffect(() => {
         taskPaging.refresh();

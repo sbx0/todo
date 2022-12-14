@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function useFetch(method, url, params, active) {
+export default function useFetch({method, url, params, active, setLoading}) {
     const [refreshFlag, setRefreshFlag] = useState(false);
     const [data, setData] = useState(null);
 
@@ -31,18 +31,29 @@ export default function useFetch(method, url, params, active) {
         }
         if (url && active) {
             let ignore = false;
+            let begin = Date.now();
+            setLoading(true);
             fetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(params)
-            }).then(response => response.json())
-                .then(json => {
-                    if (!ignore) {
-                        setData(json.data);
-                    }
-                });
+            }).then(response => response.json()).then(json => {
+                if (!ignore) {
+                    setData(json.data);
+                }
+            }).finally(() => {
+                let end = Date.now();
+                let useTime = end - begin;
+                if (useTime < 200) {
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, 200 - useTime);
+                } else {
+                    setLoading(false);
+                }
+            });
             return () => {
                 ignore = true;
             };
