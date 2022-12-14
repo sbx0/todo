@@ -35,3 +35,10 @@ jobs:
         id: gradle
         working-directory: ./todo-service
         run: ./gradlew build
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: NPM run build
+        working-directory: ./todo-service
+        run: npm run build
