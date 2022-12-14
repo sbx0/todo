@@ -29,7 +29,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Make gradlew executable
-        run: chmod +x ./todo-service/gradlew
+        working-directory: ./todo-service
+        run: chmod +x ./gradlew
       - name: Build with Gradle
         id: gradle
-        run: ./todo-service/gradlew build
+        working-directory: ./todo-service
+        run: ./gradlew build
