@@ -11,6 +11,7 @@ import useFetch from "../hooks/useFetch";
 import {saveApi, updateApi} from "../apis/taskApi";
 import Loading from "../components/Loading";
 import Script from "next/script";
+import NavigationBar from "../components/NavigationBar";
 
 export default function Home() {
     const [loading, setLoading] = useState(false);
@@ -115,6 +116,8 @@ export default function Home() {
                                 setLoading={setLoading}/>
                 </div>
             </main>
+
+            <NavigationBar/>
         </div>
     )
 }

@@ -1,0 +1,54 @@
+.container {
+    width: 100vw;
+    height: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.itemContainer {
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 9999;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.item {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.categoryLabel {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    vertical-align: middle;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.categoryItemBackgroundColor {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    margin: 0 auto;
+    cursor: pointer;
+    text-align: center;
+    background: rgba(0, 153, 36, 0.3);
+}
+
+.categoryItemBackgroundColor:hover {
+    background: rgba(0, 153, 36, 0.6);
+}
+
+input[type='radio']:checked + .categoryItemBackgroundColor {
+    color: #ffffff;
+    background: #009924;
+}
