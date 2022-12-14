@@ -1,18 +1,18 @@
 const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true
+    dest: 'public',
+    register: true,
+    skipWaiting: true
 })
-const nextConfig = {
-  reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:9999/:path*' // Proxy to Backend
-      }
-    ]
-  }
+const settings = {
+    reactStrictMode: true,
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:9999/:path*' // Proxy to Backend
+            }
+        ]
+    }
 }
 
-module.exports = withPWA(nextConfig)
+module.exports = process.env.NODE_ENV === 'development' ? settings : withPWA(settings);
