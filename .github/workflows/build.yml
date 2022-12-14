@@ -40,5 +40,5 @@ jobs:
         with:
           node-version: latest
       - name: NPM run build
-        working-directory: ./todo-service
+        working-directory: ./todo-web
         run: npm run build
