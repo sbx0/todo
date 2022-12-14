@@ -117,7 +117,7 @@ export default function Home() {
                 </div>
             </main>
 
-            <NavigationBar/>
+            <NavigationBar active={0}/>
         </div>
     )
 }
