@@ -1,16 +1,20 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import styles from "./TaskCategory.module.css";
-import {listApi} from "../../apis/category";
 import {setCache} from "../Cache";
+import useFetch from "../../hooks/useFetch";
 
 export default function TaskCategory({categoryId, setCategoryId}) {
-    const [list, setList] = useState([]);
-
-    useEffect(() => {
-        listApi({page: 1, pageSize: 20}, true).then((res) => {
-            setList(res.data)
-        })
-    }, []);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(20);
+    const [loading, setLoading] = useState(false);
+    const {data, refresh} = useFetch({
+        method: 'POST',
+        url: '/api/category/paging',
+        params: {
+            page: page, pageSize: pageSize
+        },
+        setLoading: setLoading
+    });
 
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryScrollBar}>
@@ -33,7 +37,7 @@ export default function TaskCategory({categoryId, setCategoryId}) {
                 </div>
             </div>
             {
-                list.map((one, index) => {
+                data?.map((one, index) => {
                     return <div key={one.id + one.categoryName}
                                 className={styles.categoryItem}>
                         <input id={'category_' + one.id}
