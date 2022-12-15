@@ -26,8 +26,7 @@ export default function TaskList({setLoading}) {
             ...task,
             taskStatus: 1
         }).then(() => {
-            taskPaging.refresh();
-            setRefresh(!refresh);
+            refresh();
         })
     }
 
@@ -36,8 +35,7 @@ export default function TaskList({setLoading}) {
             ...task,
             taskStatus: 0
         }).then(() => {
-            taskPaging.refresh();
-            setRefresh(!refresh);
+            refresh();
         })
     }
 
