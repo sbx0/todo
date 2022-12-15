@@ -1,5 +1,25 @@
 .container {
     width: 100%;
-    height: max-content;
-    padding: 10px 10px 40px 10px;
+    height: 100vh;
+    overflow-y: overlay;
+    overflow-x: hidden;
+    padding: 10px 10px 50px 10px;
+}
+
+.container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: rgba(245, 245, 245, 0);
+}
+
+.container::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: rgba(245, 245, 245, 0);
+}
+
+.container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
 }
