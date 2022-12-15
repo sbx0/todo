@@ -59,6 +59,7 @@ export default function Home() {
             taskName: taskName,
             categoryId: categoryId
         }).then(() => {
+            setPage(1);
             taskPaging.refresh();
         })
     }
@@ -68,8 +69,13 @@ export default function Home() {
             ...task,
             taskStatus: 1
         }).then(() => {
-            taskPaging.refresh();
-            setRefresh(!refresh);
+            let newDate = [];
+            for (let i = 0; i < taskPaging.data.length; i++) {
+                if (taskPaging.data[i].id !== task.id) {
+                    newDate.push(taskPaging.data[i]);
+                }
+            }
+            taskPaging.setData(newDate);
         })
     }
 
@@ -78,8 +84,13 @@ export default function Home() {
             ...task,
             taskStatus: 0
         }).then(() => {
-            taskPaging.refresh();
-            setRefresh(!refresh);
+            let newDate = [];
+            for (let i = 0; i < taskPaging.data.length; i++) {
+                if (taskPaging.data[i].id !== task.id) {
+                    newDate.push(taskPaging.data[i]);
+                }
+            }
+            taskPaging.setData(newDate);
         })
     }
 

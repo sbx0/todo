@@ -66,5 +66,5 @@ export default function useFetch({method, url, params, active, setLoading}) {
         }
     }, [buildCacheKey(url, params), refreshFlag]);
 
-    return {data, refresh, totalPage};
+    return {data, refresh, totalPage, setData};
 }

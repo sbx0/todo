@@ -7,7 +7,7 @@ import {updateApi} from "../apis/taskApi";
 export default function TaskList({setLoading}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
-    const {data, refresh, totalPage} = useFetch({
+    const {data, refresh, totalPage, setData} = useFetch({
         method: 'POST',
         url: '/api/task/paging',
         params: {
@@ -26,7 +26,13 @@ export default function TaskList({setLoading}) {
             ...task,
             taskStatus: 1
         }).then(() => {
-            refresh();
+            let newDate = [];
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].id !== task.id) {
+                    newDate.push(data[i]);
+                }
+            }
+            setData(newDate);
         })
     }
 
@@ -35,7 +41,13 @@ export default function TaskList({setLoading}) {
             ...task,
             taskStatus: 0
         }).then(() => {
-            refresh();
+            let newDate = [];
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].id !== task.id) {
+                    newDate.push(data[i]);
+                }
+            }
+            setData(newDate);
         })
     }
 
