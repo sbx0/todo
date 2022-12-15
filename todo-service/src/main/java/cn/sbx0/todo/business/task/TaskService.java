@@ -1,10 +1,11 @@
-package cn.sbx0.todo.service;
+package cn.sbx0.todo.business.task;
 
+import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
-import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.repositories.TaskRepository;
+import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;

@@ -1,14 +1,5 @@
-package cn.sbx0.todo.service;
+package cn.sbx0.todo.business.category;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
-import cn.sbx0.todo.entity.CategoryEntity;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.CategoryRepository;
 import cn.sbx0.todo.service.common.Code;
@@ -16,9 +7,6 @@ import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Paging.PagingCommon;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +16,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 /**
  * @author sbx0

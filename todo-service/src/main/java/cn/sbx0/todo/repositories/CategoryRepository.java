@@ -1,6 +1,6 @@
 package cn.sbx0.todo.repositories;
 
-import cn.sbx0.todo.entity.CategoryEntity;
+import cn.sbx0.todo.business.category.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

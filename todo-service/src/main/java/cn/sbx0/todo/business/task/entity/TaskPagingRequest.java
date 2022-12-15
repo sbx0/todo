@@ -1,5 +1,6 @@
-package cn.sbx0.todo.entity;
+package cn.sbx0.todo.business.task.entity;
 
+import cn.sbx0.todo.entity.PagingRequest;
 import lombok.Setter;
 
 import java.util.Objects;

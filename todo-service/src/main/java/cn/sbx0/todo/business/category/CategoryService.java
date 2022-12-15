@@ -1,19 +1,20 @@
-package cn.sbx0.todo.service;
+package cn.sbx0.todo.business.category;
 
-import cn.sbx0.todo.entity.CategoryEntity;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.CategoryRepository;
+import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author sbx0

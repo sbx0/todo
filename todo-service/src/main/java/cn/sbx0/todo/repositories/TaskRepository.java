@@ -1,7 +1,7 @@
 package cn.sbx0.todo.repositories;
 
+import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.entity.PagingRequest;
-import cn.sbx0.todo.entity.TaskEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,8 +1,6 @@
-package cn.sbx0.todo.controller;
+package cn.sbx0.todo.business.category;
 
-import cn.sbx0.todo.entity.CategoryEntity;
 import cn.sbx0.todo.entity.PagingRequest;
-import cn.sbx0.todo.service.CategoryService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
