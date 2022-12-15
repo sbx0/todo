@@ -59,6 +59,7 @@ services:
     ports:
       - "1112:9999"
     volumes:
+      - /etc/timezone:/etc/timezone
       - ./logs:/logs
       - ./extLibs:/extLibs
 ```
