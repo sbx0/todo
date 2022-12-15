@@ -10,9 +10,11 @@ export default function Setting() {
     const [loading, setLoading] = useState(false);
 
     return <div className={styles.container}>
-        <StatisticsPanel setLoading={setLoading}/>
-        <TaskList setLoading={setLoading}/>
-        <NavigationBar active={1}/>
-        <Loading active={loading}></Loading>
+        <div className={styles.innerContainer}>
+            <StatisticsPanel setLoading={setLoading}/>
+            <TaskList setLoading={setLoading}/>
+            <NavigationBar active={1}/>
+            <Loading active={loading}></Loading>
+        </div>
     </div>
 }

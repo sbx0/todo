@@ -7,7 +7,7 @@ import {updateApi} from "../apis/taskApi";
 export default function TaskList({setLoading}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
-    const {data, refresh} = useFetch({
+    const {data, refresh, totalPage} = useFetch({
         method: 'POST',
         url: '/api/task/paging',
         params: {
@@ -45,5 +45,19 @@ export default function TaskList({setLoading}) {
                       one={one}
                       setTaskStatusUndo={setTaskStatusUndo}
                       setTaskStatusCompleted={setTaskStatusCompleted}/>)}
+        {
+            page < totalPage ?
+                <button className={styles.button} onClick={() => setPage((prev) => {
+                    prev = prev + 1;
+                    if (prev > totalPage) {
+                        prev = totalPage;
+                    }
+                    return prev;
+                })}>
+                    Load More
+                </button>
+                :
+                <></>
+        }
     </div>;
 }

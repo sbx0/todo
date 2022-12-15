@@ -5,7 +5,6 @@ import Head from 'next/head';
 import TaskInput from "../components/task/TaskInput";
 import TaskItem from "../components/task/TaskItem";
 import TaskCategory from "../components/task/TaskCategory";
-import TaskHidden from "../components/task/TaskHidden";
 import {getCache} from "../components/Cache";
 import useFetch from "../hooks/useFetch";
 import {saveApi, updateApi} from "../apis/taskApi";
@@ -102,18 +101,28 @@ export default function Home() {
                 </div>
                 <div className={styles.contentArea}>
                     <TaskCategory categoryId={categoryId}
-                                  setCategoryId={setCategoryId}/>
+                                  setCategoryId={setCategoryId}
+                                  setTaskPage={setPage}/>
                     <Loading active={loading}></Loading>
                     {taskPaging.data?.map((one) =>
                         <TaskItem key={'taskInfo_' + one.id}
                                   one={one}
                                   setTaskStatusUndo={setTaskStatusUndo}
                                   setTaskStatusCompleted={setTaskStatusCompleted}/>)}
-                    <TaskHidden categoryId={categoryId}
-                                refresh={refresh}
-                                setTaskStatusUndo={setTaskStatusUndo}
-                                setTaskStatusCompleted={setTaskStatusCompleted}
-                                setLoading={setLoading}/>
+                    {
+                        page < taskPaging.totalPage ?
+                            <button className={styles.button} onClick={() => setPage((prev) => {
+                                prev = prev + 1;
+                                if (prev > taskPaging.totalPage) {
+                                    prev = taskPaging.totalPage;
+                                }
+                                return prev;
+                            })}>
+                                Load More
+                            </button>
+                            :
+                            <></>
+                    }
                 </div>
             </main>
 

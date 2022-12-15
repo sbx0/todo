@@ -32,3 +32,13 @@
 .completed {
     color: #00ff36;
 }
+
+.button {
+    height: 50px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #004812;
+    color: #f7f7f7;
+    border-radius: 5px;
+}

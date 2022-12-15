@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 export default function useFetch({method, url, params, active, setLoading}) {
     const [refreshFlag, setRefreshFlag] = useState(false);
     const [data, setData] = useState(null);
+    const [totalPage, setTotalPage] = useState(1);
 
     const refresh = () => {
         setRefreshFlag(!refreshFlag);
@@ -41,7 +42,12 @@ export default function useFetch({method, url, params, active, setLoading}) {
                 body: JSON.stringify(params)
             }).then(response => response.json()).then(json => {
                 if (!ignore) {
-                    setData(json.data);
+                    if (params?.page != null && params.page > 1) {
+                        setData(data.concat(json.data));
+                    } else {
+                        setData(json.data);
+                    }
+                    setTotalPage(json?.common?.totalPage);
                 }
             }).finally(() => {
                 let end = Date.now();
@@ -60,5 +66,5 @@ export default function useFetch({method, url, params, active, setLoading}) {
         }
     }, [buildCacheKey(url, params), refreshFlag]);
 
-    return {data, refresh};
+    return {data, refresh, totalPage};
 }
