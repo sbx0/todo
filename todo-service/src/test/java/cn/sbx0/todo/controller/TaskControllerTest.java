@@ -1,5 +1,6 @@
 package cn.sbx0.todo.controller;
 
+import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.entity.TaskPagingRequest;
 import cn.sbx0.todo.service.TaskService;
@@ -34,6 +35,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,214 +50,258 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 class TaskControllerTest {
 
-  @Resource
-  private TaskService service;
+    @Resource
+    private TaskService service;
 
-  /**
-   * Test for {@link TaskController#paging}
-   *
-   * @throws Exception exception
-   */
-  @Test
-  void paging() throws Exception {
-    TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 10);
-    pagingRequest.setCategoryId(1L);
+    /**
+     * Test for {@link TaskController#statistics}
+     *
+     * @throws Exception exception
+     */
+    @Test
+    void statistics() throws Exception {
+        List<StatisticalIndicators> list = new ArrayList<>();
+        // completed
+        StatisticalIndicators completed = new StatisticalIndicators();
+        completed.setKey("completed");
+        completed.setName("Completed");
+        completed.setValue(1L);
+        list.add(completed);
+        // uncompleted
+        StatisticalIndicators uncompleted = new StatisticalIndicators();
+        uncompleted.setKey("uncompleted");
+        uncompleted.setName("Uncompleted");
+        uncompleted.setValue(2L);
+        list.add(uncompleted);
+        given(service.statistics()).willReturn(Result.success(list));
 
-    Paging<TaskEntity> pagingData = new Paging<>();
-    pagingData.setSuccess(true);
-    pagingData.setMessage(Code.SUCCESS_MESSAGE);
+        String response = mockMvc.perform(get("/task/statistics")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("TaskStatistics",
+                                responseFields(
+                                        fieldWithPath("data[].key").description("Statistics Key"),
+                                        fieldWithPath("data[].name").description("Statistics Name"),
+                                        fieldWithPath("data[].value").description("Statistics Value"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
 
-    List<TaskEntity> data = new ArrayList<>();
-    TaskEntity test = new TaskEntity("Task Name");
-    test.setId(1L);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
-    test.setCreateTime(LocalDateTime.now());
-    test.setUpdateTime(LocalDateTime.now());
-    data.add(test);
-    pagingData.setData(data);
+        log.info(response);
+    }
 
-    pagingData.setCode(Code.SUCCESS);
+    /**
+     * Test for {@link TaskController#paging}
+     *
+     * @throws Exception exception
+     */
+    @Test
+    void paging() throws Exception {
+        TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 10);
+        pagingRequest.setCategoryId(1L);
 
-    pagingData.setCommon(
-        new PagingCommon(
-            pagingRequest.getPage(),
-            pagingRequest.getPageSize(),
-            (long) data.size(),
-            (long) pagingRequest.getPage()
-        )
-    );
+        Paging<TaskEntity> pagingData = new Paging<>();
+        pagingData.setSuccess(true);
+        pagingData.setMessage(Code.SUCCESS_MESSAGE);
 
-    given(service.paging(any())).willReturn(pagingData);
+        List<TaskEntity> data = new ArrayList<>();
+        TaskEntity test = new TaskEntity("Task Name");
+        test.setId(1L);
+        test.setTaskStatus(0);
+        test.setTaskRemark("Task Remark");
+        test.setPlanTime(LocalDateTime.now());
+        test.setCreateTime(LocalDateTime.now());
+        test.setUpdateTime(LocalDateTime.now());
+        data.add(test);
+        pagingData.setData(data);
 
-    String response = mockMvc.perform(post("/task/paging")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON.parse(pagingRequest)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("code").value("0"))
-        .andDo(
-            document("TaskPagingList",
-                requestFields(
-                        fieldWithPath("categoryId").description("Category Id"),
-                        fieldWithPath("taskStatus").description("Task Status"),
-                        fieldWithPath("page").description("Page Number"),
-                        fieldWithPath("pageSize").description("Page Size")
-                ),
-                responseFields(
-                    fieldWithPath("data[].id").description("ID"),
-                    fieldWithPath("data[].taskName").description("Task Name"),
-                    fieldWithPath("data[].taskRemark").description("Task Remark"),
-                    fieldWithPath("data[].taskStatus").description("Task Status"),
-                    fieldWithPath("data[].planTime").description("Plan Time"),
-                    fieldWithPath("data[].categoryId").description("Category Id"),
-                    fieldWithPath("data[].createTime").description("Create Time"),
-                    fieldWithPath("data[].updateTime").description("Update Time"),
-                    fieldWithPath("data").description("Data"),
-                    fieldWithPath("common.page").description("Page Number"),
-                    fieldWithPath("common.pageSize").description("Page Size"),
-                    fieldWithPath("common.total").description("Total"),
-                    fieldWithPath("common.totalPage").description("Total Page"),
-                    fieldWithPath("common").description("Common"),
-                    fieldWithPath("success").description("Is success"),
-                    fieldWithPath("code").description("Status Code"),
-                    fieldWithPath("message").description("Message")
+        pagingData.setCode(Code.SUCCESS);
+
+        pagingData.setCommon(
+                new PagingCommon(
+                        pagingRequest.getPage(),
+                        pagingRequest.getPageSize(),
+                        (long) data.size(),
+                        (long) pagingRequest.getPage()
                 )
-            ))
-        .andReturn().getResponse().getContentAsString();
+        );
 
-    log.info(response);
-  }
+        given(service.paging(any())).willReturn(pagingData);
 
-  /**
-   * Test for {@link TaskController#save}
-   *
-   * @throws Exception exception
-   */
-  @Test
-  void save() throws Exception {
-    long id = 1L;
-    TaskEntity test = new TaskEntity("Task Name");
-    test.setId(id);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
-    test.setCreateTime(LocalDateTime.now());
-    test.setUpdateTime(LocalDateTime.now());
+        String response = mockMvc.perform(post("/task/paging")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.parse(pagingRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("TaskPagingList",
+                                requestFields(
+                                        fieldWithPath("categoryId").description("Category Id"),
+                                        fieldWithPath("taskStatus").description("Task Status"),
+                                        fieldWithPath("page").description("Page Number"),
+                                        fieldWithPath("pageSize").description("Page Size")
+                                ),
+                                responseFields(
+                                        fieldWithPath("data[].id").description("ID"),
+                                        fieldWithPath("data[].taskName").description("Task Name"),
+                                        fieldWithPath("data[].taskRemark").description("Task Remark"),
+                                        fieldWithPath("data[].taskStatus").description("Task Status"),
+                                        fieldWithPath("data[].planTime").description("Plan Time"),
+                                        fieldWithPath("data[].categoryId").description("Category Id"),
+                                        fieldWithPath("data[].createTime").description("Create Time"),
+                                        fieldWithPath("data[].updateTime").description("Update Time"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("common.page").description("Page Number"),
+                                        fieldWithPath("common.pageSize").description("Page Size"),
+                                        fieldWithPath("common.total").description("Total"),
+                                        fieldWithPath("common.totalPage").description("Total Page"),
+                                        fieldWithPath("common").description("Common"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
 
-    given(service.save(any())).willReturn(Result.success(test));
+        log.info(response);
+    }
 
-    String response = mockMvc.perform(post("/task/save")
-            .accept(MediaType.APPLICATION_JSON)
-            .content(JSON.parse(test))
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("code").value("0"))
-        .andDo(
-            document("TaskSave",
-                requestFields(
-                    fieldWithPath("id").description("ID"),
-                    fieldWithPath("taskName").description("Task Name"),
-                    fieldWithPath("taskRemark").description("Task Remark"),
-                    fieldWithPath("taskStatus").description("Task Status"),
-                    fieldWithPath("planTime").description("Plan Time"),
-                    fieldWithPath("categoryId").description("Category Id"),
-                    fieldWithPath("createTime").description("Create Time"),
-                    fieldWithPath("updateTime").description("Update Time")
-                ),
-                responseFields(
-                    fieldWithPath("data.id").description("ID"),
-                    fieldWithPath("data.taskName").description("Task Name"),
-                    fieldWithPath("data.taskRemark").description("Task Remark"),
-                    fieldWithPath("data.taskStatus").description("Task Status"),
-                    fieldWithPath("data.planTime").description("Plan Time"),
-                    fieldWithPath("data.categoryId").description("Category Id"),
-                    fieldWithPath("data.createTime").description("Create Time"),
-                    fieldWithPath("data.updateTime").description("Update Time"),
-                    fieldWithPath("data").description("Data"),
-                    fieldWithPath("success").description("Is success"),
-                    fieldWithPath("code").description("Status Code"),
-                    fieldWithPath("message").description("Message")
+    /**
+     * Test for {@link TaskController#save}
+     *
+     * @throws Exception exception
+     */
+    @Test
+    void save() throws Exception {
+        long id = 1L;
+        TaskEntity test = new TaskEntity("Task Name");
+        test.setId(id);
+        test.setTaskStatus(0);
+        test.setTaskRemark("Task Remark");
+        test.setPlanTime(LocalDateTime.now());
+        test.setCreateTime(LocalDateTime.now());
+        test.setUpdateTime(LocalDateTime.now());
+
+        given(service.save(any())).willReturn(Result.success(test));
+
+        String response = mockMvc.perform(post("/task/save")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(JSON.parse(test))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("TaskSave",
+                                requestFields(
+                                        fieldWithPath("id").description("ID"),
+                                        fieldWithPath("taskName").description("Task Name"),
+                                        fieldWithPath("taskRemark").description("Task Remark"),
+                                        fieldWithPath("taskStatus").description("Task Status"),
+                                        fieldWithPath("planTime").description("Plan Time"),
+                                        fieldWithPath("categoryId").description("Category Id"),
+                                        fieldWithPath("createTime").description("Create Time"),
+                                        fieldWithPath("updateTime").description("Update Time")
+                                ),
+                                responseFields(
+                                        fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.taskName").description("Task Name"),
+                                        fieldWithPath("data.taskRemark").description("Task Remark"),
+                                        fieldWithPath("data.taskStatus").description("Task Status"),
+                                        fieldWithPath("data.planTime").description("Plan Time"),
+                                        fieldWithPath("data.categoryId").description("Category Id"),
+                                        fieldWithPath("data.createTime").description("Create Time"),
+                                        fieldWithPath("data.updateTime").description("Update Time"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
+
+        log.info(response);
+    }
+
+    /**
+     * Test for {@link TaskController#update}
+     *
+     * @throws Exception exception
+     */
+    @Test
+    void update() throws Exception {
+        long id = 1L;
+        TaskEntity test = new TaskEntity("Task Name");
+        test.setId(id);
+        test.setTaskStatus(0);
+        test.setTaskRemark("Task Remark");
+        test.setPlanTime(LocalDateTime.now());
+        test.setCreateTime(LocalDateTime.now());
+        test.setUpdateTime(LocalDateTime.now());
+
+        given(service.update(any())).willReturn(Result.success(test));
+
+        String response = mockMvc.perform(post("/task/update")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(JSON.parse(test))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("TaskUpdate",
+                                requestFields(
+                                        fieldWithPath("id").description("ID"),
+                                        fieldWithPath("taskName").description("Task Name"),
+                                        fieldWithPath("taskRemark").description("Task Remark"),
+                                        fieldWithPath("taskStatus").description("Task Status"),
+                                        fieldWithPath("planTime").description("Plan Time"),
+                                        fieldWithPath("categoryId").description("Category Id"),
+                                        fieldWithPath("createTime").description("Create Time"),
+                                        fieldWithPath("updateTime").description("Update Time")
+                                ),
+                                responseFields(
+                                        fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.taskName").description("Task Name"),
+                                        fieldWithPath("data.taskRemark").description("Task Remark"),
+                                        fieldWithPath("data.taskStatus").description("Task Status"),
+                                        fieldWithPath("data.planTime").description("Plan Time"),
+                                        fieldWithPath("data.categoryId").description("Category Id"),
+                                        fieldWithPath("data.createTime").description("Create Time"),
+                                        fieldWithPath("data.updateTime").description("Update Time"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
+
+        log.info(response);
+    }
+
+    protected MockMvc mockMvc;
+
+    @BeforeEach
+    public void setUp(
+            WebApplicationContext webApplicationContext,
+            RestDocumentationContextProvider restDocumentation
+    ) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(
+                        documentationConfiguration(restDocumentation)
+                                .uris().withScheme("http").withHost("127.0.0.1").withPort(9999)
+                                .and()
+                                .operationPreprocessors()
+                                .withRequestDefaults(prettyPrint())
+                                .withResponseDefaults(prettyPrint())
                 )
-            ))
-        .andReturn().getResponse().getContentAsString();
-
-    log.info(response);
-  }
-
-  /**
-   * Test for {@link TaskController#update}
-   *
-   * @throws Exception exception
-   */
-  @Test
-  void update() throws Exception {
-    long id = 1L;
-    TaskEntity test = new TaskEntity("Task Name");
-    test.setId(id);
-    test.setTaskStatus(0);
-    test.setTaskRemark("Task Remark");
-    test.setPlanTime(LocalDateTime.now());
-    test.setCreateTime(LocalDateTime.now());
-    test.setUpdateTime(LocalDateTime.now());
-
-    given(service.update(any())).willReturn(Result.success(test));
-
-    String response = mockMvc.perform(post("/task/update")
-            .accept(MediaType.APPLICATION_JSON)
-            .content(JSON.parse(test))
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("code").value("0"))
-        .andDo(
-            document("TaskUpdate",
-                requestFields(
-                    fieldWithPath("id").description("ID"),
-                    fieldWithPath("taskName").description("Task Name"),
-                    fieldWithPath("taskRemark").description("Task Remark"),
-                    fieldWithPath("taskStatus").description("Task Status"),
-                    fieldWithPath("planTime").description("Plan Time"),
-                    fieldWithPath("categoryId").description("Category Id"),
-                    fieldWithPath("createTime").description("Create Time"),
-                    fieldWithPath("updateTime").description("Update Time")
-                ),
-                responseFields(
-                    fieldWithPath("data.id").description("ID"),
-                    fieldWithPath("data.taskName").description("Task Name"),
-                    fieldWithPath("data.taskRemark").description("Task Remark"),
-                    fieldWithPath("data.taskStatus").description("Task Status"),
-                    fieldWithPath("data.planTime").description("Plan Time"),
-                    fieldWithPath("data.categoryId").description("Category Id"),
-                    fieldWithPath("data.createTime").description("Create Time"),
-                    fieldWithPath("data.updateTime").description("Update Time"),
-                    fieldWithPath("data").description("Data"),
-                    fieldWithPath("success").description("Is success"),
-                    fieldWithPath("code").description("Status Code"),
-                    fieldWithPath("message").description("Message")
-                )
-            ))
-        .andReturn().getResponse().getContentAsString();
-
-    log.info(response);
-  }
-
-  protected MockMvc mockMvc;
-
-  @BeforeEach
-  public void setUp(
-      WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation
-  ) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .uris().withScheme("http").withHost("127.0.0.1").withPort(9999)
-                .and()
-                .operationPreprocessors()
-                .withRequestDefaults(prettyPrint())
-                .withResponseDefaults(prettyPrint())
-        )
-        .build();
-  }
+                .build();
+    }
 }

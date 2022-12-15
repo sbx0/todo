@@ -53,4 +53,22 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query(value = CUSTOM_PAGING_SQL, countQuery = CUSTOM_PAGING_COUNT_SQL, nativeQuery = true)
     <T extends PagingRequest> Page<TaskEntity> paging(T pagingRequest, Pageable pageable);
+
+    //language=MySQL
+    String CUSTOM_COMPLETED_STATISTICAL = """
+            SELECT COUNT(*)
+            FROM tasks
+            WHERE task_status = 1""";
+
+    @Query(value = CUSTOM_COMPLETED_STATISTICAL, nativeQuery = true)
+    Long completedStatistical();
+
+    //language=MySQL
+    String CUSTOM_UNCOMPLETED_STATISTICAL = """
+            SELECT COUNT(*)
+            FROM tasks
+            WHERE task_status = 0""";
+
+    @Query(value = CUSTOM_UNCOMPLETED_STATISTICAL, nativeQuery = true)
+    Long uncompletedStatistical();
 }

@@ -1,6 +1,7 @@
 package cn.sbx0.todo.service;
 
 import cn.sbx0.todo.entity.PagingRequest;
+import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.Paging;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,6 +29,29 @@ public class TaskService implements JpaService<TaskEntity, Long> {
 
     @Resource
     private TaskRepository repository;
+
+    /**
+     * <p>Statistical</p>
+     * <p>Unit Test is {@link  TaskServiceTest#statistics}</p>
+     *
+     * @return Statistical Indicators
+     */
+    public Result<List<StatisticalIndicators>> statistics() {
+        List<StatisticalIndicators> list = new ArrayList<>();
+        // completed
+        StatisticalIndicators completed = new StatisticalIndicators();
+        completed.setKey("completed");
+        completed.setName("Completed");
+        completed.setValue(repository.completedStatistical());
+        list.add(completed);
+        // uncompleted
+        StatisticalIndicators uncompleted = new StatisticalIndicators();
+        uncompleted.setKey("uncompleted");
+        uncompleted.setName("Uncompleted");
+        uncompleted.setValue(repository.uncompletedStatistical());
+        list.add(uncompleted);
+        return Result.success(list);
+    }
 
     /**
      * <p>Task paging list</p>

@@ -1,15 +1,15 @@
 package cn.sbx0.todo.controller;
 
+import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.entity.TaskPagingRequest;
 import cn.sbx0.todo.service.TaskService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author sbx0
@@ -21,6 +21,17 @@ public class TaskController {
 
     @Resource
     private TaskService service;
+
+    /**
+     * <p>Statistical</p>
+     * <p>Unit Test is {@link  TaskControllerTest#statistics}</p>
+     *
+     * @return Statistical Indicators
+     */
+    @GetMapping("/statistics")
+    public Result<List<StatisticalIndicators>> statistics() {
+        return service.statistics();
+    }
 
     /**
      * <p>Task paging list</p>
