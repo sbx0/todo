@@ -3,6 +3,8 @@ package cn.sbx0.todo.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * @author sbx0
  * @since 2022/12/8
@@ -11,14 +13,16 @@ import lombok.Setter;
 @Setter
 public class PagingRequest {
 
-  protected Integer page;
-  protected Integer pageSize;
+    protected Integer page;
+    protected Integer pageSize;
 
-  public PagingRequest() {
-  }
+    List<OrderRequest> orders;
 
-  public PagingRequest(Integer page, Integer pageSize) {
-    this.page = page;
-    this.pageSize = pageSize;
-  }
+    public PagingRequest() {
+    }
+
+    public PagingRequest(Integer page, Integer pageSize) {
+        this.page = page;
+        this.pageSize = pageSize;
+    }
 }

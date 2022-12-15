@@ -1,5 +1,6 @@
 package cn.sbx0.todo.controller;
 
+import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.entity.TaskEntity;
 import cn.sbx0.todo.entity.TaskPagingRequest;
@@ -106,6 +107,7 @@ class TaskControllerTest {
     void paging() throws Exception {
         TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 10);
         pagingRequest.setCategoryId(1L);
+        pagingRequest.setOrders(List.of(new OrderRequest("id", "desc")));
 
         Paging<TaskEntity> pagingData = new Paging<>();
         pagingData.setSuccess(true);
@@ -147,7 +149,10 @@ class TaskControllerTest {
                                         fieldWithPath("categoryId").description("Category Id"),
                                         fieldWithPath("taskStatus").description("Task Status"),
                                         fieldWithPath("page").description("Page Number"),
-                                        fieldWithPath("pageSize").description("Page Size")
+                                        fieldWithPath("pageSize").description("Page Size"),
+                                        fieldWithPath("orders").description("Orders"),
+                                        fieldWithPath("orders[].name").description("Order Name"),
+                                        fieldWithPath("orders[].direction").description("Order Direction")
                                 ),
                                 responseFields(
                                         fieldWithPath("data[].id").description("ID"),

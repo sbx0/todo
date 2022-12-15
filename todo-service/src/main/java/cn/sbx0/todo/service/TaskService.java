@@ -1,5 +1,6 @@
 package cn.sbx0.todo.service;
 
+import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.entity.TaskEntity;
@@ -13,9 +14,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ public class TaskService implements JpaService<TaskEntity, Long> {
 
     @Resource
     private TaskRepository repository;
+    // default order
+    public static final List<Order> ORDERS = Arrays.asList(Order.asc("task_status"), Order.desc("id"));
 
     /**
      * <p>Statistical</p>
@@ -57,15 +62,29 @@ public class TaskService implements JpaService<TaskEntity, Long> {
      * <p>Task paging list</p>
      * <p>Unit Test is {@link  TaskServiceTest#paging}</p>
      *
-     * @param page     page
-     * @param pageSize pageSize
+     * @param pagingRequest pagingRequest
      * @return Task list
      */
     @Override
     public <TaskPagingRequest extends PagingRequest> Paging<TaskEntity> paging(TaskPagingRequest pagingRequest) {
+        List<Order> orders;
+        if (CollectionUtils.isEmpty(pagingRequest.getOrders())) {
+            // default order when empty
+            orders = ORDERS;
+        } else {
+            orders = new ArrayList<>();
+            List<OrderRequest> requestOrders = pagingRequest.getOrders();
+            for (OrderRequest requestOrder : requestOrders) {
+                // todo check the parameter name is legitimate
+                if (requestOrder.getDirection().equals("desc")) {
+                    orders.add(Order.desc(requestOrder.getName()));
+                } else {
+                    orders.add(Order.asc(requestOrder.getName()));
+                }
+            }
+        }
         Page<TaskEntity> pagingData = repository.paging(pagingRequest, Paging.build(
-                pagingRequest.getPage(), pagingRequest.getPageSize(),
-                Sort.by(Order.asc("task_status"), Order.desc("id"))
+                pagingRequest.getPage(), pagingRequest.getPageSize(), Sort.by(orders)
         ));
         return Paging.success(
                 pagingData.getContent(),

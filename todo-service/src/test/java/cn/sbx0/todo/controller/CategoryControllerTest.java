@@ -1,20 +1,8 @@
 package cn.sbx0.todo.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import cn.sbx0.todo.entity.CategoryEntity;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
-import cn.sbx0.todo.entity.PagingRequest;
+import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.service.CategoryService;
 import cn.sbx0.todo.service.common.Code;
 import cn.sbx0.todo.service.common.Paging;
@@ -22,9 +10,6 @@ import cn.sbx0.todo.service.common.Paging.PagingCommon;
 import cn.sbx0.todo.service.common.Result;
 import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +24,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author sbx0
@@ -61,6 +60,7 @@ class CategoryControllerTest {
   @Test
   void paging() throws Exception {
     DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 10);
+    pagingRequest.setOrders(List.of(new OrderRequest("id", "desc")));
 
     Paging<CategoryEntity> pagingData = new Paging<>();
     pagingData.setSuccess(true);
@@ -89,16 +89,19 @@ class CategoryControllerTest {
     given(service.paging(any())).willReturn(pagingData);
 
     String response = mockMvc.perform(post("/category/paging")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON.parse(new PagingRequest(1, 10))))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JSON.parse(pagingRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("code").value("0"))
         .andDo(
             document("CategoryPagingList",
                 requestFields(
-                    fieldWithPath("page").description("Page Number"),
-                    fieldWithPath("pageSize").description("Page Size")
+                        fieldWithPath("page").description("Page Number"),
+                        fieldWithPath("pageSize").description("Page Size"),
+                        fieldWithPath("orders").description("Orders"),
+                        fieldWithPath("orders[].name").description("Order Name"),
+                        fieldWithPath("orders[].direction").description("Order Direction")
                 ),
                 responseFields(
                     fieldWithPath("data[].id").description("ID"),
