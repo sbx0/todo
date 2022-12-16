@@ -12,7 +12,6 @@
   word-break: break-word;
   flex-wrap: wrap;
   cursor: pointer;
-  animation: slideFadeDown 250ms forwards;
 }
 
 .taskItemBody:hover {

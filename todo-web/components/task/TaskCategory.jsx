@@ -3,7 +3,7 @@ import styles from "./TaskCategory.module.css";
 import {setCache} from "../Cache";
 import useFetch from "../../hooks/useFetch";
 
-export default function TaskCategory({categoryId, setCategoryId, clickEvent}) {
+export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent}) {
         params: {
             page: page, pageSize: pageSize
         },
-        setLoading: setLoading
+        setLoading: setLoading, initData: initData
     });
 
     return <div className={styles.categoryContainer}>

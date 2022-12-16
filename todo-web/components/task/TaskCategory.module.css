@@ -37,7 +37,6 @@
   height: 35px;
   margin: 10px 5px;
   font-size: 16px;
-  animation: slideFadeDown 750ms forwards;
   border-radius: 5px;
   cursor: pointer;
 }

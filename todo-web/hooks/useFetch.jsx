@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 
-export default function useFetch({method, url, params, active, setLoading}) {
+export default function useFetch({method, url, params, active, setLoading, initData}) {
     const [refreshFlag, setRefreshFlag] = useState(false);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(initData);
     const [totalPage, setTotalPage] = useState(1);
 
     const refresh = () => {

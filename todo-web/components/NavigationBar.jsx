@@ -25,6 +25,13 @@ export default function NavigationBar({active}) {
             value: 2,
             path: '/done',
             label: 'Done'
+        },
+        {
+            id: 'navigation_bar_setting',
+            name: 'navigation_bar',
+            value: 3,
+            path: '/setting',
+            label: 'Setting'
         }
     ];
 
