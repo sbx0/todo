@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -44,10 +45,10 @@ class TaskServiceTest {
 
     @Test
     public void statistics() {
-        given(repository.completedStatistical()).willReturn(1L);
-        given(repository.uncompletedStatistical()).willReturn(2L);
+        given(repository.completedStatistical(anyLong())).willReturn(1L);
+        given(repository.uncompletedStatistical(anyLong())).willReturn(2L);
 
-        Result<List<StatisticalIndicators>> result = service.statistics();
+        Result<List<StatisticalIndicators>> result = service.statistics(anyLong());
         assertNotNull(result);
         assertTrue(result.getSuccess());
         assertEquals(Code.SUCCESS, result.getCode());

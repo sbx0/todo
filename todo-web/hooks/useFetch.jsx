@@ -34,32 +34,61 @@ export default function useFetch({method, url, params, active, setLoading}) {
             let ignore = false;
             let begin = Date.now();
             setLoading(true);
-            fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(params)
-            }).then(response => response.json()).then(json => {
-                if (!ignore) {
-                    if (params?.page != null && params.page > 1) {
-                        setData(data.concat(json.data));
-                    } else {
-                        setData(json.data);
+            if (method === 'POST') {
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params)
+                }).then(response => response.json()).then(json => {
+                    if (!ignore) {
+                        if (params?.page != null && params.page > 1) {
+                            setData(data.concat(json.data));
+                        } else {
+                            setData(json.data);
+                        }
+                        setTotalPage(json?.common?.totalPage);
                     }
-                    setTotalPage(json?.common?.totalPage);
-                }
-            }).finally(() => {
-                let end = Date.now();
-                let useTime = end - begin;
-                if (useTime < 200) {
-                    setTimeout(() => {
+                }).finally(() => {
+                    let end = Date.now();
+                    let useTime = end - begin;
+                    if (useTime < 200) {
+                        setTimeout(() => {
+                            setLoading(false);
+                        }, 200 - useTime);
+                    } else {
                         setLoading(false);
-                    }, 200 - useTime);
-                } else {
-                    setLoading(false);
-                }
-            });
+                    }
+                });
+            } else {
+                url = buildCacheKey(url, params);
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => response.json()).then(json => {
+                    if (!ignore) {
+                        if (params?.page != null && params.page > 1) {
+                            setData(data.concat(json.data));
+                        } else {
+                            setData(json.data);
+                        }
+                        setTotalPage(json?.common?.totalPage);
+                    }
+                }).finally(() => {
+                    let end = Date.now();
+                    let useTime = end - begin;
+                    if (useTime < 200) {
+                        setTimeout(() => {
+                            setLoading(false);
+                        }, 200 - useTime);
+                    } else {
+                        setLoading(false);
+                    }
+                });
+            }
             return () => {
                 ignore = true;
             };

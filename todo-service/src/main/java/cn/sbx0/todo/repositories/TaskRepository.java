@@ -58,17 +58,19 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
     String CUSTOM_COMPLETED_STATISTICAL = """
             SELECT COUNT(*)
             FROM tasks
-            WHERE task_status = 1""";
+            WHERE task_status = 1
+              and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""";
 
     @Query(value = CUSTOM_COMPLETED_STATISTICAL, nativeQuery = true)
-    Long completedStatistical();
+    Long completedStatistical(Long categoryId);
 
     //language=MySQL
     String CUSTOM_UNCOMPLETED_STATISTICAL = """
             SELECT COUNT(*)
             FROM tasks
-            WHERE task_status = 0""";
+            WHERE task_status = 0
+              and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""";
 
     @Query(value = CUSTOM_UNCOMPLETED_STATISTICAL, nativeQuery = true)
-    Long uncompletedStatistical();
+    Long uncompletedStatistical(Long categoryId);
 }

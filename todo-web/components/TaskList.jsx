@@ -6,6 +6,7 @@ import {updateApi} from "../apis/taskApi";
 import Loading from "./Loading";
 import TaskCategory from "./task/TaskCategory";
 import {getCache} from "./Cache";
+import StatisticsPanel from "./StatisticsPanel";
 
 export default function TaskList({taskStatus, orderBy, timeType}) {
     const [categoryId, setCategoryId] = useState(() => {
@@ -72,6 +73,7 @@ export default function TaskList({taskStatus, orderBy, timeType}) {
     }
 
     return <>
+        <StatisticsPanel categoryId={categoryId}/>
         <TaskCategory categoryId={categoryId}
                       setCategoryId={setCategoryId}
                       clickEvent={categoryClickEvent}/>

@@ -30,11 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,15 +76,19 @@ class TaskControllerTest {
         uncompleted.setName("Uncompleted");
         uncompleted.setValue(2L);
         list.add(uncompleted);
-        given(service.statistics()).willReturn(Result.success(list));
+        given(service.statistics(anyLong())).willReturn(Result.success(list));
 
         String response = mockMvc.perform(get("/task/statistics")
                         .accept(MediaType.APPLICATION_JSON)
+                        .queryParam("categoryId", "0")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("0"))
                 .andDo(
                         document("TaskStatistics",
+                                queryParameters(
+                                        parameterWithName("categoryId").description("Category Id")
+                                ),
                                 responseFields(
                                         fieldWithPath("data[].key").description("Statistics Key"),
                                         fieldWithPath("data[].name").description("Statistics Name"),

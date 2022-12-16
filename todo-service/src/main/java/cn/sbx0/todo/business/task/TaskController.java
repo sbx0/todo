@@ -28,8 +28,8 @@ public class TaskController {
      * @return Statistical Indicators
      */
     @GetMapping("/statistics")
-    public Result<List<StatisticalIndicators>> statistics() {
-        return service.statistics();
+    public Result<List<StatisticalIndicators>> statistics(@RequestParam(value = "categoryId", required = false) Long categoryId) {
+        return service.statistics(categoryId);
     }
 
     /**
