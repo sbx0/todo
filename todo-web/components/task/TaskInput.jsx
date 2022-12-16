@@ -3,8 +3,10 @@ import {saveApi} from "../../apis/taskApi";
 import {useState} from "react";
 import TaskCategory from "./TaskCategory";
 import {getCache} from "../Cache";
+import {useRouter} from "next/router";
 
 export default function TaskInput() {
+    const router = useRouter()
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
         if (typeof window !== 'undefined') {
@@ -34,7 +36,7 @@ export default function TaskInput() {
             taskName: taskName,
             categoryId: categoryId
         }).then(() => {
-
+            router.push('/').then(r => r)
         })
     }
 

@@ -13,18 +13,18 @@ export default function NavigationBar({active}) {
             label: 'Todo'
         },
         {
-            id: 'navigation_bar_done',
-            name: 'navigation_bar',
-            value: 1,
-            path: '/done',
-            label: 'Done'
-        },
-        {
             id: 'navigation_bar_new',
             name: 'navigation_bar',
-            value: 2,
+            value: 1,
             path: '/new',
             label: 'New'
+        },
+        {
+            id: 'navigation_bar_done',
+            name: 'navigation_bar',
+            value: 2,
+            path: '/done',
+            label: 'Done'
         }
     ];
 

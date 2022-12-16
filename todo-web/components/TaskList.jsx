@@ -7,7 +7,7 @@ import Loading from "./Loading";
 import TaskCategory from "./task/TaskCategory";
 import {getCache} from "./Cache";
 
-export default function TaskList({taskStatus, timeType}) {
+export default function TaskList({taskStatus, orderBy, timeType}) {
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
         if (typeof window !== 'undefined') {
@@ -29,7 +29,7 @@ export default function TaskList({taskStatus, timeType}) {
         params: {
             page: page, pageSize: pageSize, taskStatus: taskStatus, categoryId: categoryId, orders: [
                 {
-                    name: 'update_time',
+                    name: orderBy,
                     direction: 'desc'
                 }
             ]

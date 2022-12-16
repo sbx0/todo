@@ -45,7 +45,7 @@ export default function TaskItem({
             {one.taskName}
         </div>
         <div className={styles.time}>
-            {moment(timeType === 'updateTime' ? one.updateTime : one.createTime).fromNow()}
+            {moment(timeType === 'update_time' ? one.updateTime : one.createTime).fromNow()}
         </div>
     </div>;
 }

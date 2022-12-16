@@ -6,6 +6,6 @@ export default function New() {
 
     return <Container>
         <TaskInput/>
-        <NavigationBar active={2}/>
+        <NavigationBar active={1}/>
     </Container>
 }

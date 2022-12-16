@@ -5,7 +5,7 @@ import TaskList from "../components/TaskList";
 export default function Home() {
 
     return <Container>
-        <TaskList taskStatus={0} timeType={'createTime'}/>
+        <TaskList taskStatus={0} orderBy={'create_time'} timeType={'create_time'}/>
         <NavigationBar active={0}/>
     </Container>
 }
