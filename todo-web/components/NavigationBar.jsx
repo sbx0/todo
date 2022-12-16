@@ -4,48 +4,54 @@ import {useRouter} from "next/router";
 export default function NavigationBar({active}) {
     const router = useRouter()
 
+    const bars = [
+        {
+            id: 'navigation_bar_home',
+            name: 'navigation_bar',
+            value: 0,
+            path: '/',
+            label: 'Todo'
+        },
+        {
+            id: 'navigation_bar_done',
+            name: 'navigation_bar',
+            value: 1,
+            path: '/done',
+            label: 'Done'
+        },
+        {
+            id: 'navigation_bar_new',
+            name: 'navigation_bar',
+            value: 2,
+            path: '/new',
+            label: 'New'
+        }
+    ];
+
     return <div className={styles.container}>
         <div className={styles.itemContainer}>
-            <div className={styles.item}>
-                <input id={'navigation_bar_home'}
-                       name={'navigation_bar'}
-                       type="radio"
-                       defaultChecked={active === 0}
-                       value={0}
-                       onClick={event => {
-                           if (active !== 0) {
-                               router.push("/").then(r => r);
-                           }
-                           event.preventDefault();
-                       }}
-                       hidden/>
-                <div className={styles.categoryItemBackgroundColor}>
-                    <label className={styles.categoryLabel}
-                           htmlFor={'navigation_bar_home'}>
-                        Home
-                    </label>
-                </div>
-            </div>
-            <div className={styles.item}>
-                <input id={'navigation_bar_setting'}
-                       name={'navigation_bar'}
-                       type="radio"
-                       defaultChecked={active === 1}
-                       value={1}
-                       onClick={event => {
-                           if (active !== 1) {
-                               router.push("/setting").then(r => r);
-                           }
-                           event.preventDefault();
-                       }}
-                       hidden/>
-                <div className={styles.categoryItemBackgroundColor}>
-                    <label className={styles.categoryLabel}
-                           htmlFor={'navigation_bar_setting'}>
-                        Setting
-                    </label>
-                </div>
-            </div>
+            {
+                bars.map((one) => <div key={one.id} className={styles.item}>
+                    <input id={one.id}
+                           name={one.name}
+                           type="radio"
+                           defaultChecked={active === one.value}
+                           value={one.value}
+                           onClick={event => {
+                               if (active !== one.value) {
+                                   router.push(one.path).then(r => r);
+                               }
+                               event.preventDefault();
+                           }}
+                           hidden/>
+                    <div className={styles.categoryItemBackgroundColor}>
+                        <label className={styles.categoryLabel}
+                               htmlFor={one.id}>
+                            {one.label}
+                        </label>
+                    </div>
+                </div>)
+            }
         </div>
     </div>;
 }

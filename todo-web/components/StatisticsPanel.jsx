@@ -2,7 +2,8 @@ import styles from "./StatisticsPanel.module.css";
 import useFetch from "../hooks/useFetch";
 import {useEffect, useState} from "react";
 
-export default function StatisticsPanel({setLoading}) {
+export default function StatisticsPanel() {
+    const [loading, setLoading] = useState(false);
     const {data, refresh} = useFetch({
         method: 'GET',
         url: '/api/task/statistics',

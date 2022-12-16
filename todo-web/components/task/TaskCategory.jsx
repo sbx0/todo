@@ -3,7 +3,7 @@ import styles from "./TaskCategory.module.css";
 import {setCache} from "../Cache";
 import useFetch from "../../hooks/useFetch";
 
-export default function TaskCategory({categoryId, setCategoryId, setTaskPage}) {
+export default function TaskCategory({categoryId, setCategoryId, clickEvent}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function TaskCategory({categoryId, setCategoryId, setTaskPage}) {
                        value={0}
                        onClick={event => {
                            setCache('categoryId', event.target.value);
-                           setTaskPage(1);
+                           clickEvent(event.target.value);
                            setCategoryId(event.target.value)
                        }}
                        hidden/>
@@ -48,7 +48,7 @@ export default function TaskCategory({categoryId, setCategoryId, setTaskPage}) {
                                defaultChecked={categoryId === one.id}
                                onClick={event => {
                                    setCache('categoryId', event.target.value);
-                                   setTaskPage(1);
+                                   clickEvent(event.target.value);
                                    setCategoryId(event.target.value);
                                }}
                                hidden/>

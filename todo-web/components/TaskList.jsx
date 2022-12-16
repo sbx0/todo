@@ -3,15 +3,31 @@ import useFetch from "../hooks/useFetch";
 import {useState} from "react";
 import TaskItem from "./task/TaskItem";
 import {updateApi} from "../apis/taskApi";
+import Loading from "./Loading";
+import TaskCategory from "./task/TaskCategory";
+import {getCache} from "./Cache";
 
-export default function TaskList({setLoading}) {
+export default function TaskList({taskStatus, timeType}) {
+    const [categoryId, setCategoryId] = useState(() => {
+        // just for next.js
+        if (typeof window !== 'undefined') {
+            let cache = getCache('categoryId');
+            if (cache == null) {
+                cache = '0';
+            }
+            return parseInt(cache);
+        } else {
+            return 0;
+        }
+    });
+    const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const {data, refresh, totalPage, setData} = useFetch({
         method: 'POST',
         url: '/api/task/paging',
         params: {
-            page: page, pageSize: pageSize, taskStatus: 1, orders: [
+            page: page, pageSize: pageSize, taskStatus: taskStatus, categoryId: categoryId, orders: [
                 {
                     name: 'update_time',
                     direction: 'desc'
@@ -51,11 +67,18 @@ export default function TaskList({setLoading}) {
         })
     }
 
-    return <div className={styles.container}>
+    const categoryClickEvent = (value) => {
+        setPage(1);
+    }
+
+    return <>
+        <TaskCategory categoryId={categoryId}
+                      setCategoryId={setCategoryId}
+                      clickEvent={categoryClickEvent}/>
         {data?.map((one) =>
-            <TaskItem key={'taskInfo_' + one.id}
+            <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                       one={one}
-                      timeType={'updateTime'}
+                      timeType={timeType}
                       setTaskStatusUndo={setTaskStatusUndo}
                       setTaskStatusCompleted={setTaskStatusCompleted}/>)}
         {
@@ -72,5 +95,6 @@ export default function TaskList({setLoading}) {
                 :
                 <></>
         }
-    </div>;
+        <Loading active={loading}/>
+    </>;
 }
