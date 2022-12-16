@@ -33,7 +33,7 @@
 }
 
 .button {
-    height: 50px;
+    height: 40px;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -41,4 +41,5 @@
     color: #f7f7f7;
     border-radius: 5px;
     border: 0;
+    cursor: pointer;
 }

@@ -119,6 +119,7 @@ export default function Home() {
                     {taskPaging.data?.map((one) =>
                         <TaskItem key={'taskInfo_' + one.id}
                                   one={one}
+                                  timeType={'createTime'}
                                   setTaskStatusUndo={setTaskStatusUndo}
                                   setTaskStatusCompleted={setTaskStatusCompleted}/>)}
                     {
