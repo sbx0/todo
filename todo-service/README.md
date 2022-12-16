@@ -18,6 +18,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: justfordev
+      TZ: Asia/Shanghai
     ports:
       - 3306:3306
     volumes:
