@@ -8,7 +8,7 @@ import TaskCategory from "./task/TaskCategory";
 import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
 
-export default function TaskList({initData, category, taskStatus, orderBy, timeType}) {
+export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
         if (typeof window !== 'undefined') {
@@ -74,7 +74,8 @@ export default function TaskList({initData, category, taskStatus, orderBy, timeT
     }
 
     return <>
-        <StatisticsPanel categoryId={categoryId}/>
+        <StatisticsPanel categoryId={categoryId}
+                         initData={statistics}/>
         <TaskCategory categoryId={categoryId}
                       initData={category}
                       setCategoryId={setCategoryId}

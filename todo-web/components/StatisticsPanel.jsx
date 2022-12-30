@@ -2,7 +2,7 @@ import styles from "./StatisticsPanel.module.css";
 import useFetch from "../hooks/useFetch";
 import {useEffect, useState} from "react";
 
-export default function StatisticsPanel({categoryId}) {
+export default function StatisticsPanel({categoryId, initData}) {
     const [loading, setLoading] = useState(false);
     const {data, refresh} = useFetch({
         method: 'GET',
@@ -10,7 +10,8 @@ export default function StatisticsPanel({categoryId}) {
         params: {
             categoryId: categoryId
         },
-        setLoading: setLoading
+        setLoading: setLoading,
+        initData: initData
     });
     const [completed, setCompleted] = useState(0);
     const [uncompleted, setUncompleted] = useState(0);

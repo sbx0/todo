@@ -27,11 +27,11 @@ export default function NavigationBar({active}) {
             label: 'Done'
         },
         {
-            id: 'navigation_bar_setting',
+            id: 'navigation_bar_dev',
             name: 'navigation_bar',
             value: 3,
-            path: '/setting',
-            label: 'Setting'
+            path: '/dev',
+            label: 'Dev'
         }
     ];
 
