@@ -108,3 +108,17 @@ chmod u+x quick.sh
 ./quick.sh up
 
 ./quick.sh
+
+# XShell Connect to WSL2
+
+apt-get remove --purge openssh-server  
+apt-get install openssh-server -y  
+vim /etc/ssh/sshd_config
+
+```
+Port 22
+ListenAddress 0.0.0.0
+PasswordAuthentication yes
+```
+
+service ssh --full-restart
