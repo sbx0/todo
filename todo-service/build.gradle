@@ -57,11 +57,11 @@ tasks.named('asciidoctor') {
 }
 
 task cleanExtLib(type: Delete) {
-    delete "$buildDir/libs/extLibs"
+    delete "$buildDir/libs/dependency"
 }
 
 task copyExtLib(type: Copy) {
-    into "$buildDir/libs/extLibs"
+    into "$buildDir/libs/dependency"
     from configurations.default
 }
 
@@ -72,6 +72,6 @@ bootJar {
     dependsOn copyExtLib
 
     manifest {
-        attributes "Manifest-Version": 1.0, 'Class-Path': configurations.default.files.collect { "./extLibs/$it.name" }.join(' ')
+        attributes "Manifest-Version": 1.0, 'Class-Path': configurations.default.files.collect { "./dependency/$it.name" }.join(' ')
     }
 }

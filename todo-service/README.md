@@ -4,6 +4,21 @@ _- install wsl2 Ubuntu 22.04.1 LTS
 - `su root`
 - [install docker](https://docs.docker.com/engine/install/ubuntu/)
 - `update-alternatives --config iptables` change to iptables-legacy
+
+# XShell Connect to WSL2
+
+apt-get remove --purge openssh-server  
+apt-get install openssh-server -y  
+vim /etc/ssh/sshd_config
+
+```
+Port 22
+ListenAddress 0.0.0.0
+PasswordAuthentication yes
+```
+
+service ssh --full-restart
+
 - give C:\Windows\System32\drivers\etc permission to User
 - `apt install openjdk-17-jdk -y`
 - `apt install net-tools -y`
@@ -156,6 +171,7 @@ services:
 # after wsl start, run this to config host and start docker
 # change windows and wsl2 host file
 java WSL2Support
+service ssh start
 apt update
 apt upgrade -y
 # start docker
@@ -195,7 +211,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone
       - ./logs:/logs
-      - ./extLibs:/extLibs
+      - ./dependency:/dependency
 ```
 
 vim quick.sh
@@ -234,6 +250,9 @@ case "$1" in
 esac
 ```
 
+copy todo-service/libs/dependency to /home/sbx0/todo/service
+copy todo-service/libs/todo-service-*.jar to /home/sbx0/todo/service
+
 chmod u+x quick.sh
 
 ./quick.sh build
@@ -241,17 +260,3 @@ chmod u+x quick.sh
 ./quick.sh up
 
 ./quick.sh
-
-# XShell Connect to WSL2
-
-apt-get remove --purge openssh-server  
-apt-get install openssh-server -y  
-vim /etc/ssh/sshd_config
-
-```
-Port 22
-ListenAddress 0.0.0.0
-PasswordAuthentication yes
-```
-
-service ssh --full-restart
