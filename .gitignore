@@ -3,7 +3,6 @@
 .gradle
 HELP.md
 *.iml
-package-lock.json
 .next
 node_modules
 build
