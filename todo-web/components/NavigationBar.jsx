@@ -1,5 +1,6 @@
 import styles from "./NavigationBar.module.css";
 import {useRouter} from "next/router";
+import {buildPath} from "../apis/taskApi";
 
 export default function NavigationBar({active}) {
     const router = useRouter()
@@ -46,7 +47,7 @@ export default function NavigationBar({active}) {
                            value={one.value}
                            onClick={event => {
                                if (active !== one.value) {
-                                   router.push(one.path).then(r => r);
+                                   router.push(buildPath(one.path, router.query)).then(r => r);
                                }
                                event.preventDefault();
                            }}

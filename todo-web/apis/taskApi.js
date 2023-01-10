@@ -8,6 +8,23 @@ function hash(str) {
     return hash.toString();
 }
 
+export function buildPath(url, params) {
+    if (params) {
+        const paramsArray = [];
+        Object.keys(params).forEach((key) =>
+            paramsArray.push(key + '=' + encodeURI(params[key]))
+        );
+        if (paramsArray.length > 0) {
+            if (url.search(/\?/) === -1) {
+                url += '?' + paramsArray.join('&');
+            } else {
+                url += '&' + paramsArray.join('&');
+            }
+        }
+    }
+    return url;
+}
+
 export async function callApi({method, url, params}) {
     let res;
     if (method === 'POST') {
@@ -19,20 +36,7 @@ export async function callApi({method, url, params}) {
             body: JSON.stringify(params)
         });
     } else {
-        if (params) {
-            const paramsArray = [];
-            Object.keys(params).forEach((key) =>
-                paramsArray.push(key + '=' + encodeURI(params[key]))
-            );
-            if (paramsArray.length > 0) {
-                if (url.search(/\?/) === -1) {
-                    url += '?' + paramsArray.join('&');
-                } else {
-                    url += '&' + paramsArray.join('&');
-                }
-            }
-        }
-        res = await fetch(url, {
+        res = await fetch(buildPath(url, params), {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
