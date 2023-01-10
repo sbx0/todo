@@ -30,3 +30,13 @@ export function buildDefaultParamsForTaskStatistics(categoryId) {
         "categoryId": categoryId,
     };
 }
+
+export const AssetRecordPaging = "/api/asset/record/paging";
+
+export function buildDefaultParamsForAssetRecordPaging() {
+    return {
+        "page": 1,
+        "pageSize": 20,
+        "orders": [{"name": "create_time", "direction": "desc"}]
+    };
+}
