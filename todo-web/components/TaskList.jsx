@@ -72,7 +72,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     }
 
     const categoryClickEvent = (value) => {
-        console.log('categoryClickEvent', value)
         router.replace({
             query: {...router.query, categoryId: value},
         });
