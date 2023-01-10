@@ -17,6 +17,10 @@ export default ({initData, category, statistics}) => {
 }
 
 export async function getServerSideProps({req, query}) {
+    let categoryId = 0;
+    if (query.categoryId != null) {
+        categoryId = query.categoryId;
+    }
     const result = await callApi({
         method: 'POST',
         url: "http://" + req.headers.host + "/api/task/paging",
@@ -24,7 +28,7 @@ export async function getServerSideProps({req, query}) {
             "page": 1,
             "pageSize": 20,
             "taskStatus": 0,
-            "categoryId": 0,
+            "categoryId": categoryId,
             "orders": [{"name": "create_time", "direction": "desc"}]
         }
     });
@@ -43,7 +47,7 @@ export async function getServerSideProps({req, query}) {
         method: 'GET',
         url: "http://" + req.headers.host + "/api/task/statistics",
         params: {
-            "categoryId": 0,
+            "categoryId": categoryId,
         }
     });
 

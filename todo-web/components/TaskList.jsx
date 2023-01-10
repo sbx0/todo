@@ -7,8 +7,10 @@ import Loading from "./Loading";
 import TaskCategory from "./task/TaskCategory";
 import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
+import {useRouter} from "next/router";
 
 export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
+    const router = useRouter()
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
         if (typeof window !== 'undefined') {
@@ -70,6 +72,10 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     }
 
     const categoryClickEvent = (value) => {
+        console.log('categoryClickEvent', value)
+        router.replace({
+            query: {...router.query, categoryId: value},
+        });
         setPage(1);
     }
 

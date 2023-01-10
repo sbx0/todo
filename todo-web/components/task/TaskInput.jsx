@@ -41,7 +41,10 @@ export default function TaskInput() {
     }
 
     const categoryClickEvent = (value) => {
-
+        console.log('categoryClickEvent', value)
+        router.replace({
+            query: {...router.query, categoryId: value},
+        });
     }
 
     return <>
