@@ -17,6 +17,7 @@ public class WSL2Support {
   public static final String WINDOWS_HOSTS = "/mnt/c/Windows/System32/drivers/etc/hosts";
   public static final String WSL_DOMAIN = "wsl2.sbx0.cn";
   public static final String WINDOWS_DOMAIN = "win.sbx0.cn";
+  public static final String TODO_DOMAIN = "todo.sbx0.cn";
 
   public static void main(String[] args) {
     String wslIp = exec("ifconfig eth0 | grep -w inet | awk '{print $2}'");
@@ -61,6 +62,7 @@ public class WSL2Support {
       if (!findWindowsDomain) {
         lines.add(winIp.append("\t" + WINDOWS_DOMAIN).toString());
       }
+      lines.add(wslIp.append("\t" + TODO_DOMAIN).toString());
       write(host, lines);
     } catch (IOException e) {
       throw new RuntimeException(e);

@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  todo-service:
+    image: todo-web:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - /etc/timezone:/etc/timezone

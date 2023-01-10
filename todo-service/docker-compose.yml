@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  todo-service:
+    image: todo-service:latest
+    ports:
+      - "1112:9999"
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./logs:/logs
+      - ./dependency:/dependency

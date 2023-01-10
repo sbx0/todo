@@ -19,7 +19,7 @@ export default ({initData, category, statistics}) => {
 export async function getServerSideProps({req, query}) {
     const result = await callApi({
         method: 'POST',
-        url: "http://localhost:9999/task/paging",
+        url: "http://todo.sbx0.cn/api/task/paging",
         params: {
             "page": 1,
             "pageSize": 20,
@@ -31,7 +31,7 @@ export async function getServerSideProps({req, query}) {
 
     const category = await callApi({
         method: 'POST',
-        url: "http://localhost:9999/category/paging",
+        url: "http://todo.sbx0.cn/api/category/paging",
         params: {
             "page": 1,
             "pageSize": 20,
@@ -41,7 +41,7 @@ export async function getServerSideProps({req, query}) {
 
     const statistics = await callApi({
         method: 'GET',
-        url: "http://localhost:9999/task/statistics",
+        url: "http://todo.sbx0.cn/api/task/statistics",
         params: {
             "categoryId": 0,
         }

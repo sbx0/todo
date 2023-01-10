@@ -4,6 +4,7 @@ const withPWA = require('next-pwa')({
     skipWaiting: true
 })
 const settings = {
+    output: 'standalone',
     reactStrictMode: true,
     async rewrites() {
         return [
