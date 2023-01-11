@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactEcharts from "echarts-for-react"
+import {callApi} from "../../apis/taskApi";
+import {GET} from "../../apis/apiPath";
 
 function MyChart() {
-    const options = {
+    const [category, setCategory] = useState(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    const [options, setOptions] = useState({
         tooltip: {
             trigger: 'axis'
         },
@@ -20,7 +23,7 @@ function MyChart() {
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: category
         },
         yAxis: {
             type: 'value'
@@ -57,7 +60,24 @@ function MyChart() {
                 data: [820, 932, 901, 934, 1290, 1330, 1320]
             }
         ]
-    };
+    });
+
+    useEffect(() => {
+        callApi({method: GET, url: "/api/asset/record/getRecentRecordTimeList"}).then(r => {
+            let data = r.data;
+            for (let i = 0; i < data.length; i++) {
+                data[i] = data[i].substring(5, 10);
+            }
+            setOptions({
+                ...options, xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: data
+                }
+            })
+        })
+    }, []);
+
 
     return <ReactEcharts option={options} style={{width: "600px", height: "600px"}}/>
 }

@@ -4,10 +4,9 @@ import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author sbx0
@@ -19,6 +18,12 @@ public class AssetRecordController {
 
     @Resource
     private AssetRecordService service;
+
+    @GetMapping("/getRecentRecordTimeList")
+    public Result<List<String>> getRecentRecordTimeList() {
+        return service.getRecentRecordTimeList();
+    }
+
 
     /**
      * <p>AssetRecord paging list</p>
