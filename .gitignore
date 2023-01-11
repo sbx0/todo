@@ -18,3 +18,4 @@ htmlReport
 /logs/
 */logs/
 /.fleet/
+/wsl/out/
