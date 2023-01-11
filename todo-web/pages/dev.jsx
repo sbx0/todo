@@ -2,6 +2,7 @@ import NavigationBar from "../components/NavigationBar";
 import Container from "../components/Container";
 import {callApi} from "../apis/taskApi";
 import {
+    API,
     ApiPrefix,
     AssetRecordPaging,
     AssetTypePaging,
@@ -11,23 +12,41 @@ import {
 import AssetType from "../components/asset/AssetType";
 import {useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
+import RecordTime from "../components/asset/RecordTime";
+import moment from "moment";
+
 
 export default ({data, assetType}) => {
     const [asset, setAsset] = useState({
         typeId: 1,
         recordValue: 0.00,
-        recordTime: 'yyyy-MM-dd HH:mm:ss'
+        recordTime: '2023-01-11'
     });
+
+    function saveAsset() {
+        asset.recordValue = (Math.round(asset.recordValue * 100) / 100).toFixed(2);
+        asset.recordTime = moment(asset.recordTime).format('yyyy-MM-DD HH:mm:ss');
+
+        callApi({
+            method: POST,
+            url: API + "/asset/record/save",
+            params: asset
+        }).then(r => {
+
+        })
+    }
 
     function setAssetType(value) {
         setAsset({...asset, typeId: parseInt(value)})
     }
 
     function setRecordValue(value) {
-        // (Math.round(value * 100) / 100).toFixed(2)
         setAsset({...asset, recordValue: value})
     }
 
+    function setRecordTime(value) {
+        setAsset({...asset, recordTime: value})
+    }
 
     return <Container>
         <AssetType value={asset.typeId}
@@ -35,7 +54,11 @@ export default ({data, assetType}) => {
                    callback={setAssetType}/>
         <RecordValue value={asset.recordValue}
                      callback={setRecordValue}/>
+        <RecordTime value={asset.recordTime}
+                    callback={setRecordTime}/>
+        <button style={{width: '100%', height: '40px', margin: '5px auto'}} onClick={saveAsset}>Save</button>
         {JSON.stringify(asset)}
+        {JSON.stringify(data)}
         <NavigationBar active={2}/>
     </Container>
 }
