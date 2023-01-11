@@ -1,6 +1,7 @@
 export const POST = "POST";
 export const GET = "GET";
 export const ApiPrefix = "http://";
+export const API = "/api";
 export const TaskPaging = "/api/task/paging";
 
 export function buildDefaultParamsForTaskPaging(categoryId) {
@@ -13,7 +14,7 @@ export function buildDefaultParamsForTaskPaging(categoryId) {
     };
 }
 
-export const CategoryPaging = "/api/category/paging";
+export const CategoryPaging = API + "/category/paging";
 
 export function buildDefaultParamsForCategoryPaging() {
     return {
@@ -23,7 +24,7 @@ export function buildDefaultParamsForCategoryPaging() {
     };
 }
 
-export const TaskStatistics = "/api/task/statistics";
+export const TaskStatistics = API + "/task/statistics";
 
 export function buildDefaultParamsForTaskStatistics(categoryId) {
     return {
@@ -31,7 +32,7 @@ export function buildDefaultParamsForTaskStatistics(categoryId) {
     };
 }
 
-export const AssetRecordPaging = "/api/asset/record/paging";
+export const AssetRecordPaging = API + "/asset/record/paging";
 
 export function buildDefaultParamsForAssetRecordPaging() {
     return {
@@ -40,3 +41,5 @@ export function buildDefaultParamsForAssetRecordPaging() {
         "orders": [{"name": "create_time", "direction": "desc"}]
     };
 }
+
+export const AssetTypePaging = API + "/asset/type/paging";
