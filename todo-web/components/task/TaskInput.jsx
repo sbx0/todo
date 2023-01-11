@@ -2,23 +2,10 @@ import styles from "./TaskInput.module.css";
 import {saveApi} from "../../apis/taskApi";
 import {useState} from "react";
 import TaskCategory from "./TaskCategory";
-import {getCache} from "../Cache";
 import {useRouter} from "next/router";
 
-export default function TaskInput() {
+export default function TaskInput({categoryId, initData, setCategoryId, saveEvent, clickEvent}) {
     const router = useRouter()
-    const [categoryId, setCategoryId] = useState(() => {
-        // just for next.js
-        if (typeof window !== 'undefined') {
-            let cache = getCache('categoryId');
-            if (cache == null) {
-                cache = '0';
-            }
-            return parseInt(cache);
-        } else {
-            return 0;
-        }
-    });
     const [newTask, setNewTask] = useState('');
     const saveNewTask = () => {
         let taskName = newTask;
@@ -36,20 +23,15 @@ export default function TaskInput() {
             taskName: taskName,
             categoryId: categoryId
         }).then(() => {
-            router.push('/').then(r => r)
+            saveEvent()
         })
     }
 
-    const categoryClickEvent = (value) => {
-        router.replace({
-            query: {...router.query, categoryId: value},
-        });
-    }
-
     return <>
-        <TaskCategory categoryId={categoryId}
+        <TaskCategory initData={initData}
+                      categoryId={categoryId}
                       setCategoryId={setCategoryId}
-                      clickEvent={categoryClickEvent}/>
+                      clickEvent={clickEvent}/>
         <input type='text'
                id='taskInput'
                placeholder='Input New Task'

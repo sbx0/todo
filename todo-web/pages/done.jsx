@@ -8,6 +8,6 @@ export default function Done() {
         <TaskList timeType={'update_time'}
                   orderBy={'update_time'}
                   taskStatus={1}/>
-        <NavigationBar active={2}/>
+        <NavigationBar active={1}/>
     </Container>
 }

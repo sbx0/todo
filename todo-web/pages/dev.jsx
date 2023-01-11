@@ -7,7 +7,7 @@ export default ({data}) => {
 
     return <Container>
         {JSON.stringify(data)}
-        <NavigationBar active={3}/>
+        <NavigationBar active={2}/>
     </Container>
 }
 

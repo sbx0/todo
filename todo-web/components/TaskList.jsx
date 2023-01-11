@@ -2,12 +2,12 @@ import styles from "./TaskList.module.css";
 import useFetch from "../hooks/useFetch";
 import {useState} from "react";
 import TaskItem from "./task/TaskItem";
-import {updateApi} from "../apis/taskApi";
+import {buildPath, updateApi} from "../apis/taskApi";
 import Loading from "./Loading";
-import TaskCategory from "./task/TaskCategory";
 import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
+import TaskInput from "./task/TaskInput";
 
 export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
     const router = useRouter()
@@ -78,13 +78,20 @@ export default function TaskList({initData, category, statistics, taskStatus, or
         setPage(1);
     }
 
+    const saveEvent = () => {
+        router.push(buildPath("/", router.query)).then(r => r);
+        setPage(1);
+        refresh();
+    }
+
     return <>
         <StatisticsPanel categoryId={categoryId}
                          initData={statistics}/>
-        <TaskCategory categoryId={categoryId}
-                      initData={category}
-                      setCategoryId={setCategoryId}
-                      clickEvent={categoryClickEvent}/>
+        <TaskInput categoryId={categoryId}
+                   initData={category}
+                   setCategoryId={setCategoryId}
+                   saveEvent={saveEvent}
+                   clickEvent={categoryClickEvent}/>
         {data?.map((one) =>
             <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                       one={one}
