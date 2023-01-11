@@ -14,6 +14,7 @@ import {useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
+import MyChart from "../components/echart/MyChart";
 
 
 export default ({data, assetType}) => {
@@ -57,8 +58,7 @@ export default ({data, assetType}) => {
         <RecordTime value={asset.recordTime}
                     callback={setRecordTime}/>
         <button style={{width: '100%', height: '40px', margin: '5px auto'}} onClick={saveAsset}>Save</button>
-        {JSON.stringify(asset)}
-        {JSON.stringify(data)}
+        <MyChart/>
         <NavigationBar active={2}/>
     </Container>
 }
