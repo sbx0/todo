@@ -10,6 +10,7 @@ import {
 } from "../apis/apiPath";
 import AssetType from "../components/asset/AssetType";
 import {useState} from "react";
+import RecordValue from "../components/asset/RecordValue";
 
 export default ({data, assetType}) => {
     const [asset, setAsset] = useState({
@@ -19,13 +20,21 @@ export default ({data, assetType}) => {
     });
 
     function setAssetType(value) {
-        setAsset({...asset, typeId: value})
+        setAsset({...asset, typeId: parseInt(value)})
     }
+
+    function setRecordValue(value) {
+        // (Math.round(value * 100) / 100).toFixed(2)
+        setAsset({...asset, recordValue: value})
+    }
+
 
     return <Container>
         <AssetType value={asset.typeId}
                    initData={assetType}
                    callback={setAssetType}/>
+        <RecordValue value={asset.recordValue}
+                     callback={setRecordValue}/>
         {JSON.stringify(asset)}
         <NavigationBar active={2}/>
     </Container>
