@@ -19,6 +19,11 @@ public class AssetRecordController {
     @Resource
     private AssetRecordService service;
 
+    @GetMapping("/getRecords")
+    public Result<List<RecordItem>> getRecords() {
+        return service.getRecords();
+    }
+
     @GetMapping("/getRecentRecordTimeList")
     public Result<List<String>> getRecentRecordTimeList() {
         return service.getRecentRecordTimeList();

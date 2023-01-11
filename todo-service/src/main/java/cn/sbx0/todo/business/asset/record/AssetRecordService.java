@@ -1,7 +1,9 @@
 package cn.sbx0.todo.business.asset.record;
 
+import cn.sbx0.todo.business.asset.type.AssetType;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.AssetRecordRepository;
+import cn.sbx0.todo.repositories.AssetTypeRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +31,28 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
 
     @Resource
     private AssetRecordRepository repository;
+    @Resource
+    private AssetTypeRepository assetTypeRepository;
+
+    public Result<List<RecordItem>> getRecords() {
+        List<RecordItem> records = new ArrayList<>();
+        List<AssetType> types = assetTypeRepository.getTypes();
+        for (AssetType type : types) {
+            RecordItem record = new RecordItem();
+            record.setName(type.getTypeName());
+            record.setType("line");
+            record.setStack("Total");
+            record.setYAxisIndex((type.getId().intValue() - 1));
+            List<AssetRecord> assetRecords = repository.getRecordsByTypeId(type.getId());
+            List<BigDecimal> data = new ArrayList<>();
+            for (AssetRecord assetRecord : assetRecords) {
+                data.add(assetRecord.getRecordValue());
+            }
+            record.setData(data);
+            records.add(record);
+        }
+        return Result.success(records);
+    }
 
     public Result<List<String>> getRecentRecordTimeList() {
         return Result.success(repository.getRecentRecordTimeList());
