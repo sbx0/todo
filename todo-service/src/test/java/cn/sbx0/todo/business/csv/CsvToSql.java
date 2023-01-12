@@ -1,7 +1,5 @@
 package cn.sbx0.todo.business.csv;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,7 +39,6 @@ public class CsvToSql {
         }
     }
 
-    @Test
     void readCsvDataToSQL() throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
