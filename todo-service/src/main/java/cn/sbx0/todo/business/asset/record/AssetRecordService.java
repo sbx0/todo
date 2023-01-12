@@ -37,6 +37,16 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
     public Result<List<RecordItem>> getRecords() {
         List<RecordItem> records = new ArrayList<>();
         List<AssetType> types = assetTypeRepository.getTypes();
+        RecordItem totalRecordItem = new RecordItem();
+        totalRecordItem.setName("Total");
+        totalRecordItem.setType("line");
+        totalRecordItem.setStack("Total");
+        totalRecordItem.setYAxisIndex(0);
+        List<BigDecimal> totalData = new ArrayList<>();
+        List<String> recordTimeList = repository.getRecentRecordTimeList();
+        for (int i = 0; i < recordTimeList.size(); i++) {
+            totalData.add(new BigDecimal(0));
+        }
         for (AssetType type : types) {
             RecordItem record = new RecordItem();
             record.setName(type.getTypeName());
@@ -45,12 +55,18 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
             record.setYAxisIndex((type.getId().intValue() - 1));
             List<AssetRecord> assetRecords = repository.getRecordsByTypeId(type.getId());
             List<BigDecimal> data = new ArrayList<>();
-            for (AssetRecord assetRecord : assetRecords) {
+            for (int i = 0; i < assetRecords.size(); i++) {
+                AssetRecord assetRecord = assetRecords.get(i);
                 data.add(assetRecord.getRecordValue());
+                BigDecimal bigDecimal = totalData.get(i);
+                bigDecimal = bigDecimal.add(assetRecord.getRecordValue());
+                totalData.set(i, bigDecimal);
             }
             record.setData(data);
             records.add(record);
         }
+        totalRecordItem.setData(totalData);
+        records.add(totalRecordItem);
         return Result.success(records);
     }
 
