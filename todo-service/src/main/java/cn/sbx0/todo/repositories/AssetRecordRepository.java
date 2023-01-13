@@ -26,4 +26,12 @@ public interface AssetRecordRepository extends JpaRepository<AssetRecord, Long> 
             order by record_time
             """, nativeQuery = true)
     List<AssetRecord> getRecordsByTypeId(Long typeId);
+
+    @Query(value = """
+            select *
+            from asset_records
+            where type_id = :#{#entity.typeId}
+            and record_time = :#{#entity.recordTime}
+            """, nativeQuery = true)
+    AssetRecord findByTypeIdAndRecordTime(AssetRecord entity);
 }

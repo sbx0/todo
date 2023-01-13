@@ -19,3 +19,6 @@ htmlReport
 */logs/
 /.fleet/
 /wsl/out/
+/todo-service/src/test/resources/flow.csv
+/todo-service/src/test/resources/flow.xlsx
+/todo-service/src/test/resources/out.sql

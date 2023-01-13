@@ -17,5 +17,7 @@ public class RecordItem {
     private String type;
     private String stack;
     private Integer yAxisIndex;
+    private Boolean smooth;
+    private Boolean showSymbol;
     private List<BigDecimal> data;
 }

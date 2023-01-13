@@ -42,6 +42,8 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
         totalRecordItem.setType("line");
         totalRecordItem.setStack("Total");
         totalRecordItem.setYAxisIndex(0);
+        totalRecordItem.setSmooth(false);
+        totalRecordItem.setShowSymbol(false);
         List<BigDecimal> totalData = new ArrayList<>();
         List<String> recordTimeList = repository.getRecentRecordTimeList();
         for (int i = 0; i < recordTimeList.size(); i++) {
@@ -52,6 +54,8 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
             record.setName(type.getTypeName());
             record.setType("line");
             record.setStack("Total");
+            record.setSmooth(false);
+            record.setShowSymbol(false);
             record.setYAxisIndex((type.getId().intValue() - 1));
             List<AssetRecord> assetRecords = repository.getRecordsByTypeId(type.getId());
             List<BigDecimal> data = new ArrayList<>();
@@ -110,7 +114,14 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
         if (entity == null) {
             return Result.failed();
         }
-        entity.setCreateTime(LocalDateTime.now());
+        // find one by record time and typeId
+        AssetRecord assetRecord = repository.findByTypeIdAndRecordTime(entity);
+        if (assetRecord != null) {
+            assetRecord.setRecordValue(entity.getRecordValue());
+            entity = assetRecord;
+        } else {
+            entity.setCreateTime(LocalDateTime.now());
+        }
         entity = repository.save(entity);
         if (entity.getId() != null) {
             return Result.success(entity);
