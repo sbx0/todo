@@ -1,7 +1,7 @@
 import NavigationBar from "../components/NavigationBar";
 import Container from "../components/Container";
 import {callApi} from "../apis/taskApi";
-import {API, ApiPrefix, AssetTypePaging, buildDefaultParamsForAssetRecordPaging, GET, POST} from "../apis/apiPath";
+import {API, ApiPrefix, AssetTypePaging, GET, POST} from "../apis/apiPath";
 import AssetType from "../components/asset/AssetType";
 import {useEffect, useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
@@ -130,7 +130,11 @@ export async function getServerSideProps({req, query}) {
     const assetType = await callApi({
         method: POST,
         url: ApiPrefix + req.headers.host + AssetTypePaging,
-        params: buildDefaultParamsForAssetRecordPaging()
+        params: {
+            "page": 1,
+            "pageSize": 20,
+            "orders": [{"name": "create_time", "direction": "desc"}]
+        }
     });
 
     return {
