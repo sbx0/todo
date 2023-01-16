@@ -42,3 +42,7 @@
     border: 0;
     cursor: pointer;
 }
+
+.taskItemList {
+    margin-bottom: 10px;
+}

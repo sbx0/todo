@@ -33,13 +33,14 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             ...task,
             taskStatus: 1
         }).then(() => {
-            let newDate = [];
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id !== task.id) {
-                    newDate.push(data[i]);
+            let newData = [];
+            console.log(data.data)
+            for (let i = 0; i < data.data.length; i++) {
+                if (data.data[i].id !== task.id) {
+                    newData.push(data.data[i]);
                 }
             }
-            setData(newDate);
+            setData({...data, data: newData});
         })
     }
 
@@ -48,42 +49,49 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             ...task,
             taskStatus: 0
         }).then(() => {
-            let newDate = [];
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id !== task.id) {
-                    newDate.push(data[i]);
+            let newData = [];
+            console.log(data.data)
+            for (let i = 0; i < data.data.length; i++) {
+                if (data.data[i].id !== task.id) {
+                    newData.push(data.data[i]);
                 }
             }
-            setData(newDate);
+            setData({...data, data: newData});
         })
     }
 
-    const getTaskPaging = (page, pageSize, categoryId) => {
+    const getTaskPaging = (page, pageSize, categoryId, taskStatus) => {
+        setPage(page);
+        setPageSize(pageSize);
         callApi({
             method: POST,
             url: TaskPaging,
             params: {
                 "page": page,
                 "pageSize": pageSize,
-                "taskStatus": 0,
+                "taskStatus": taskStatus,
                 "categoryId": categoryId,
                 "orders": [{"name": "create_time", "direction": "desc"}]
             }
         }).then(r => {
-            setData(r);
+            if (page != null && page > 1) {
+                setData({...r, data: data.data.concat(r.data)});
+            } else {
+                setData(r);
+            }
         });
     }
 
     const categoryClickEvent = (value) => {
         router.replace({query: {...router.query, categoryId: value},});
         setPage(1);
-        getTaskPaging(1, pageSize, value);
+        getTaskPaging(1, pageSize, value, taskStatus);
     }
 
     const saveEvent = () => {
         router.push(buildPath("/", router.query)).then(r => r);
         setPage(1);
-        getTaskPaging(1, pageSize, categoryId);
+        getTaskPaging(1, pageSize, categoryId, taskStatus);
     }
 
     return <>
@@ -94,26 +102,24 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                    setCategoryId={setCategoryId}
                    saveEvent={saveEvent}
                    clickEvent={categoryClickEvent}/>
-        {data?.data?.map((one) =>
-            <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
-                      one={one}
-                      timeType={timeType}
-                      setTaskStatusUndo={setTaskStatusUndo}
-                      setTaskStatusCompleted={setTaskStatusCompleted}/>)}
-        {
-            page < data?.common?.totalPage ?
-                <button className={styles.button} onClick={() => setPage((prev) => {
-                    prev = prev + 1;
-                    if (prev > data.common.totalPage) {
-                        prev = data.common.totalPage;
-                    }
-                    return prev;
-                })}>
-                    Load More
-                </button>
-                :
-                <></>
-        }
+        <div className={styles.taskItemList}>
+            {data?.data?.map((one) =>
+                <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
+                          one={one}
+                          timeType={timeType}
+                          setTaskStatusUndo={setTaskStatusUndo}
+                          setTaskStatusCompleted={setTaskStatusCompleted}/>)}
+            {
+                page < data?.common?.totalPage ?
+                    <button className={styles.button} onClick={() => {
+                        getTaskPaging(page + 1, pageSize, categoryId, taskStatus);
+                    }}>
+                        Load More
+                    </button>
+                    :
+                    <></>
+            }
+        </div>
         <Loading active={loading}/>
     </>;
 }
