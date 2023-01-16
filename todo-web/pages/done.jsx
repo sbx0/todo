@@ -2,17 +2,7 @@ import NavigationBar from "../components/NavigationBar";
 import TaskList from "../components/TaskList";
 import Container from "../components/Container";
 import {callApi} from "../apis/taskApi";
-import {
-    ApiPrefix,
-    buildDefaultParamsForCategoryPaging,
-    buildDefaultParamsForTaskPaging,
-    buildDefaultParamsForTaskStatistics,
-    CategoryPaging,
-    GET,
-    POST,
-    TaskPaging,
-    TaskStatistics
-} from "../apis/apiPath";
+import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
 
 export default ({initData, category, statistics}) => {
 
@@ -36,19 +26,31 @@ export async function getServerSideProps({req, query}) {
     const result = await callApi({
         method: POST,
         url: ApiPrefix + req.headers.host + TaskPaging,
-        params: buildDefaultParamsForTaskPaging(categoryId, 1)
+        params: {
+            "page": 1,
+            "pageSize": 20,
+            "taskStatus": 1,
+            "categoryId": categoryId,
+            "orders": [{"name": "update_time", "direction": "desc"}]
+        }
     });
 
     const category = await callApi({
         method: POST,
         url: ApiPrefix + req.headers.host + CategoryPaging,
-        params: buildDefaultParamsForCategoryPaging()
+        params: {
+            "page": 1,
+            "pageSize": 20,
+            "orders": [{"name": "create_time", "direction": "desc"}]
+        }
     });
 
     const statistics = await callApi({
         method: GET,
         url: ApiPrefix + req.headers.host + TaskStatistics,
-        params: buildDefaultParamsForTaskStatistics(categoryId)
+        params: {
+            "categoryId": categoryId,
+        }
     });
 
     return {
