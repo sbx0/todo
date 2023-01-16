@@ -23,7 +23,7 @@ export async function getServerSideProps({req, query}) {
         categoryId = query.categoryId;
     }
 
-    const result = await callApi({
+    const taskPaging = await callApi({
         method: POST,
         url: ApiPrefix + req.headers.host + TaskPaging,
         params: {
@@ -55,7 +55,7 @@ export async function getServerSideProps({req, query}) {
 
     return {
         props: {
-            initData: result.data,
+            initData: taskPaging,
             category: category.data,
             statistics: statistics.data
         }

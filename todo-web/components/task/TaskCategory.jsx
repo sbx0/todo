@@ -1,20 +1,12 @@
 import {useState} from "react";
 import styles from "./TaskCategory.module.css";
 import {setCache} from "../Cache";
-import useFetch from "../../hooks/useFetch";
 
 export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [loading, setLoading] = useState(false);
-    const {data, refresh} = useFetch({
-        method: 'POST',
-        url: '/api/category/paging',
-        params: {
-            page: page, pageSize: pageSize
-        },
-        setLoading: setLoading, initData: initData
-    });
+    const [data, setData] = useState(initData);
 
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryScrollBar}>
