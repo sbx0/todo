@@ -4,11 +4,11 @@ export const ApiPrefix = "http://";
 export const API = "/api";
 export const TaskPaging = "/api/task/paging";
 
-export function buildDefaultParamsForTaskPaging(categoryId) {
+export function buildDefaultParamsForTaskPaging(categoryId, taskStatus) {
     return {
         "page": 1,
         "pageSize": 20,
-        "taskStatus": 0,
+        "taskStatus": taskStatus,
         "categoryId": categoryId,
         "orders": [{"name": "create_time", "direction": "desc"}]
     };

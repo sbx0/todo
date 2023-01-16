@@ -36,7 +36,7 @@ export async function getServerSideProps({req, query}) {
     const result = await callApi({
         method: POST,
         url: ApiPrefix + req.headers.host + TaskPaging,
-        params: buildDefaultParamsForTaskPaging(categoryId)
+        params: buildDefaultParamsForTaskPaging(categoryId, 0)
     });
 
     const category = await callApi({
