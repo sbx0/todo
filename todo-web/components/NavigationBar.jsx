@@ -30,29 +30,31 @@ export default function NavigationBar({active}) {
     ];
 
     return <div className={styles.container}>
-        <div className={styles.itemContainer}>
-            {
-                bars.map((one) => <div key={one.id} className={styles.item}>
-                    <input id={one.id}
-                           name={one.name}
-                           type="radio"
-                           defaultChecked={active === one.value}
-                           value={one.value}
-                           onClick={event => {
-                               if (active !== one.value) {
-                                   router.push(buildPath(one.path, router.query)).then(r => r);
-                               }
-                               event.preventDefault();
-                           }}
-                           hidden/>
-                    <div className={styles.categoryItemBackgroundColor}>
-                        <label className={styles.categoryLabel}
-                               htmlFor={one.id}>
-                            {one.label}
-                        </label>
-                    </div>
-                </div>)
-            }
+        <div className={styles.centerContainer}>
+            <div className={styles.itemContainer}>
+                {
+                    bars.map((one) => <div key={one.id} className={styles.item}>
+                        <input id={one.id}
+                               name={one.name}
+                               type="radio"
+                               defaultChecked={active === one.value}
+                               value={one.value}
+                               onClick={event => {
+                                   if (active !== one.value) {
+                                       router.push(buildPath(one.path, router.query)).then(r => r);
+                                   }
+                                   event.preventDefault();
+                               }}
+                               hidden/>
+                        <div className={styles.categoryItemBackgroundColor}>
+                            <label className={styles.categoryLabel}
+                                   htmlFor={one.id}>
+                                {one.label}
+                            </label>
+                        </div>
+                    </div>)
+                }
+            </div>
         </div>
     </div>;
 }
