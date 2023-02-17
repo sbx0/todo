@@ -1,11 +1,6 @@
-import Container from "../components/Container";
-import NavigationBar from "../components/NavigationBar";
-import TaskInput from "../components/task/TaskInput";
+import styles from "../styles/New.module.css";
+import TopBar from "../components/TopBar";
 
 export default function New() {
-
-    return <Container>
-        <TaskInput/>
-        <NavigationBar active={1}/>
-    </Container>
+    return <TopBar/>
 }
