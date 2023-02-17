@@ -1,6 +1,11 @@
-import styles from "../styles/New.module.css";
 import TopBar from "../components/TopBar";
+import TwoEightLayout from "../components/TwoEightLayout";
 
 export default function New() {
-    return <TopBar/>
+    return <div>
+        <TopBar/>
+        <TwoEightLayout two={'Two'}>
+            Eight
+        </TwoEightLayout>
+    </div>
 }
