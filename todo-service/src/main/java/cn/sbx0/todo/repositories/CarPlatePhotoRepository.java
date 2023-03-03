@@ -30,4 +30,7 @@ public interface CarPlatePhotoRepository extends JpaRepository<CarPlatePhoto, Lo
 
     @Query(value = CUSTOM_PAGING_SQL, countQuery = CUSTOM_PAGING_COUNT_SQL, nativeQuery = true)
     <T extends PagingRequest> Page<CarPlatePhoto> paging(T pagingRequest, Pageable pageable);
+
+    @Query(value = "SELECT imgUrl FROM CarPlatePhoto ORDER BY id DESC LIMIT 1")
+    String getLastPhoto();
 }

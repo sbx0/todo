@@ -6,6 +6,7 @@ import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.CarPlatePhotoRepository;
 import cn.sbx0.todo.service.common.Paging;
+import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,5 +60,18 @@ public class CarPlatePhotoService {
                 pagingData.getTotalElements(),
                 pagingData.getTotalPages()
         );
+    }
+
+    public String getLastPhoto() {
+        return repository.getLastPhoto();
+    }
+
+    public Boolean save(CarPlatePhoto entity) {
+        if (entity == null) {
+            return false;
+        }
+        entity.setCreateTime(LocalDateTime.now());
+        entity = repository.save(entity);
+        return entity.getId() != null;
     }
 }

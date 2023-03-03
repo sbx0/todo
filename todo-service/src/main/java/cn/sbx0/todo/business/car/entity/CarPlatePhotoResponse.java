@@ -11,12 +11,12 @@ public class CarPlatePhotoResponse {
     private ResponseData data;
 
     @Data
-    private static class ResponseData {
+    public static class ResponseData {
 
         private CarPlaceInfo carPlaceInfo;
 
         @Data
-        private static class CarPlaceInfo {
+        public static class CarPlaceInfo {
 
             private String carPlateNum;
             private String lotName;
@@ -26,7 +26,7 @@ public class CarPlatePhotoResponse {
             private String imgUrl;
 
             @Data
-            private static class FloorInfo {
+            public static class FloorInfo {
                 private String floorName;
             }
         }
