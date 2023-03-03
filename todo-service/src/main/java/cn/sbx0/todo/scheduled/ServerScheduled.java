@@ -47,7 +47,6 @@ public class ServerScheduled {
                 ApiParam param = new ApiParam(carConfig.getLotId(), carConfig.getCarPlateNum());
                 String response = CallApi.post(carConfig.getApiHost(), carConfig.getApiPath(), JSON.parse(param));
                 CarPlatePhotoResponse carPlatePhoto = JSON.format(response, CarPlatePhotoResponse.class);
-                log.info(JSON.parse(carPlatePhoto));
                 String lastPhoto = carPlatePhotoService.getLastPhoto();
                 CarPlatePhotoResponse.ResponseData responseData = carPlatePhoto.getData();
                 if (responseData != null) {
@@ -63,6 +62,7 @@ public class ServerScheduled {
                                 newPhoto.setParkNo(carPlaceInfo.getParkNo());
                                 newPhoto.setImgUrl(carPlaceInfo.getImgUrl());
                                 carPlatePhotoService.save(newPhoto);
+                                log.info("car plate photo has changed. [" + newPhoto.getImgUrl() + "]");
                             }
                         }
                     }
