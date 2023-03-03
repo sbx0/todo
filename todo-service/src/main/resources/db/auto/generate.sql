@@ -31,6 +31,7 @@ create table car_config
 create table car_plate_photo
 (
     id            bigint not null auto_increment,
+    area_name     varchar(255),
     car_plate_num varchar(255),
     create_time   datetime(6),
     floor_name    varchar(255),

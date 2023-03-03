@@ -28,6 +28,7 @@ public class CarPlatePhoto {
     private String floorName;
     private String parkNo;
     private String imgUrl;
+    private String areaName;
 
     // when create
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

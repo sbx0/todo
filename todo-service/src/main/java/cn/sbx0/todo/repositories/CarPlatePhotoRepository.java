@@ -18,6 +18,7 @@ public interface CarPlatePhotoRepository extends JpaRepository<CarPlatePhoto, Lo
                    car_plate_num,
                    lot_name,
                    floor_name,
+                   area_name,
                    park_no,
                    img_url,
                    create_time,

@@ -26,6 +26,13 @@ export default function NavigationBar({active}) {
             value: 2,
             path: '/dev',
             label: 'Dev'
+        },
+        {
+            id: 'navigation_bar_car',
+            name: 'navigation_bar',
+            value: 3,
+            path: '/car',
+            label: 'Car'
         }
     ];
 

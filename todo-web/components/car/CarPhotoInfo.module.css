@@ -1,0 +1,38 @@
+.container {
+    width: 100%;
+    margin: 10px;
+}
+
+.innerContainer {
+    margin: 0 auto;
+    max-width: 1000px;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.infoContainer {
+    font-size: 18px;
+    margin: 10px;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.img {
+    width: 408px;
+    height: 312px;
+    border: 1px solid white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.textRight {
+    text-align: right;
+}
+
+.title {
+    font-size: 25px;
+}
+
+.bolder {
+    font-weight: bolder;
+}

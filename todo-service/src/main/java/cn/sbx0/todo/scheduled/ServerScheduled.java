@@ -61,6 +61,7 @@ public class ServerScheduled {
                                 newPhoto.setFloorName(carPlaceInfo.getFloorInfo().getFloorName());
                                 newPhoto.setParkNo(carPlaceInfo.getParkNo());
                                 newPhoto.setImgUrl(carPlaceInfo.getImgUrl());
+                                newPhoto.setAreaName(carPlaceInfo.getAreaName());
                                 carPlatePhotoService.save(newPhoto);
                                 log.info("car plate photo has changed. [" + newPhoto.getImgUrl() + "]");
                             }
