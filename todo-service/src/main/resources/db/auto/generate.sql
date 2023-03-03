@@ -17,6 +17,29 @@ create table asset_types
     update_time datetime(6),
     primary key (id)
 ) engine = InnoDB;
+create table car_config
+(
+    id            bigint not null auto_increment,
+    api_host      varchar(255),
+    api_path      varchar(255),
+    car_plate_num varchar(255),
+    create_time   datetime(6),
+    lot_id        varchar(255),
+    update_time   datetime(6),
+    primary key (id)
+) engine = InnoDB;
+create table car_plate_photo
+(
+    id            bigint not null auto_increment,
+    car_plate_num varchar(255),
+    create_time   datetime(6),
+    floor_name    varchar(255),
+    img_url       varchar(255),
+    lot_name      varchar(255),
+    park_no       varchar(255),
+    update_time   datetime(6),
+    primary key (id)
+) engine = InnoDB;
 create table categories
 (
     id              bigint not null auto_increment,
