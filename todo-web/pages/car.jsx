@@ -2,6 +2,8 @@ import CarPhotoInfo from "../components/car/CarPhotoInfo";
 import {useEffect, useState} from "react";
 import {callApi} from "../apis/taskApi";
 import {POST} from "../apis/apiPath";
+import NavigationBar from "../components/NavigationBar";
+import Container from "../components/Container";
 
 export default function Car() {
     const [infos, setInfos] = useState([]);
@@ -16,7 +18,7 @@ export default function Car() {
         })
     }, [])
 
-    return <div>
+    return <Container>
         {
             infos.map(one => {
                 return <CarPhotoInfo key={one.id}
@@ -29,5 +31,6 @@ export default function Car() {
                                      createTime={one.createTime}/>
             })
         }
-    </div>
+        <NavigationBar active={3}/>
+    </Container>
 }
