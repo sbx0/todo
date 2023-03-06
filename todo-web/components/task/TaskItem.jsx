@@ -1,7 +1,5 @@
 import styles from "./TaskItem.module.css";
-import moment from "moment";
-// import 'moment/locale/zh-cn';
-
+import FormatTime from "../time/FormatTime";
 export default function TaskItem({
                                      one,
                                      setTaskStatusUndo,
@@ -45,7 +43,7 @@ export default function TaskItem({
             {one.taskName}
         </div>
         <div className={styles.time}>
-            {moment(timeType === 'update_time' ? one.updateTime : one.createTime).fromNow()}
+            <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
         </div>
     </div>;
 }

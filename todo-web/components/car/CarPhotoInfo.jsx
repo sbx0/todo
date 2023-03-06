@@ -1,4 +1,5 @@
 import styles from './CarPhotoInfo.module.css';
+import FormatTime from "../time/FormatTime";
 
 export default ({
                     lotName,
@@ -27,7 +28,9 @@ export default ({
                     <p className={styles.bolder}>{areaName}</p>
                     <p className={styles.bolder}>{parkNo}</p>
                     <p>{lotName}</p>
-                    <p>{createTime}</p>
+                    <p>
+                        <FormatTime time={createTime}/>
+                    </p>
                 </div>
             </div>
             <div>
