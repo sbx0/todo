@@ -25,7 +25,7 @@ export async function getServerSideProps({req, query}) {
 
     const taskPaging = await callApi({
         method: POST,
-        url: ApiPrefix + req.headers.host + TaskPaging,
+        url: ApiPrefix + process.env.API_HOST + TaskPaging,
         params: {
             "page": 1,
             "pageSize": 20,
@@ -37,7 +37,7 @@ export async function getServerSideProps({req, query}) {
 
     const category = await callApi({
         method: POST,
-        url: ApiPrefix + req.headers.host + CategoryPaging,
+        url: ApiPrefix + process.env.API_HOST + CategoryPaging,
         params: {
             "page": 1,
             "pageSize": 20,
@@ -47,7 +47,7 @@ export async function getServerSideProps({req, query}) {
 
     const statistics = await callApi({
         method: GET,
-        url: ApiPrefix + req.headers.host + TaskStatistics,
+        url: ApiPrefix + process.env.API_HOST + TaskStatistics,
         params: {
             "categoryId": categoryId,
         }

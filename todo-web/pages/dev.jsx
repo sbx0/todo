@@ -129,7 +129,7 @@ export default ({assetType}) => {
 export async function getServerSideProps({req, query}) {
     const assetType = await callApi({
         method: POST,
-        url: ApiPrefix + req.headers.host + AssetTypePaging,
+        url: ApiPrefix + process.env.API_HOST + AssetTypePaging,
         params: {
             "page": 1,
             "pageSize": 20,

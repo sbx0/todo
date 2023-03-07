@@ -8,3 +8,9 @@ services:
       - /etc/timezone:/etc/timezone
       - ./logs:/logs
       - ./dependency:/dependency
+    networks:
+      - default-network
+networks:
+  default-network:
+    name: default-network
+    external: true
