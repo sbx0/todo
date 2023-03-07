@@ -10,7 +10,7 @@ const settings = {
         return [
             {
                 source: '/api/:path*',
-                destination: 'http://' + process.env.API_HOST + '/:path*' // Proxy to Backend
+                destination: 'http://' + process.env.NODE_ENV === 'development' ? 'localhost:9999' : 'todo-service:9999' + '/:path*' // Proxy to Backend
             }
         ]
     }
