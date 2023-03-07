@@ -4,7 +4,7 @@ import Container from "../components/Container";
 import {callApi} from "../apis/taskApi";
 import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
 
-export default ({initData, category, statistics}) => {
+export default function Done({initData, category, statistics}) {
 
     return <Container>
         <TaskList initData={initData}
