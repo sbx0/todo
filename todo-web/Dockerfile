@@ -52,6 +52,6 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
-ENV API_HOST todo-service:9999
+ENV API_HOST todo.sbx0.cn
 
 CMD ["node", "server.js"]
