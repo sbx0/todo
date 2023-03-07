@@ -10,7 +10,7 @@ import moment from "moment";
 import ReactEcharts from "echarts-for-react";
 
 
-export default function Dev({assetType}) {
+export default function Asset({assetType}) {
     const [asset, setAsset] = useState({
         typeId: 1,
         recordValue: 0.00,

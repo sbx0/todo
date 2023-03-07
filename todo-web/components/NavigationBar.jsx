@@ -21,11 +21,11 @@ export default function NavigationBar({active}) {
             label: 'Done'
         },
         {
-            id: 'navigation_bar_dev',
+            id: 'navigation_bar_asset',
             name: 'navigation_bar',
             value: 2,
-            path: '/dev',
-            label: 'Dev'
+            path: '/asset',
+            label: 'Asset'
         },
         {
             id: 'navigation_bar_car',
