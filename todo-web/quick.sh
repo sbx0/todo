@@ -17,7 +17,6 @@ build() {
 
 up() {
  docker compose -p $NAME up -d --build
- log
 }
 
 case "$1" in
