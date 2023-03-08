@@ -7,8 +7,8 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone
     networks:
-      - default-network
+      - default_network
 networks:
-  default-network:
-    name: default-network
+  default_network:
+    name: default_network
     external: true
