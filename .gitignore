@@ -22,3 +22,4 @@ htmlReport
 /todo-service/src/test/resources/flow.csv
 /todo-service/src/test/resources/flow.xlsx
 /todo-service/src/test/resources/out.sql
+/todo-service/src/main/resources/db/auto/generate.sql

@@ -8,6 +8,7 @@ import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
 import {POST, TaskPaging} from "../apis/apiPath";
+import Model from "./model/Model";
 
 export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
     const router = useRouter()
@@ -27,6 +28,8 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
+    const [modalShow, setModalShow] = useState(false);
+    const [modalData, setModalData] = useState(null);
 
     const setTaskStatusCompleted = (task) => {
         updateApi({
@@ -94,6 +97,11 @@ export default function TaskList({initData, category, statistics, taskStatus, or
         getTaskPaging(1, pageSize, categoryId, taskStatus);
     }
 
+    function clickTaskItem(one) {
+        setModalData(one);
+        setModalShow(true);
+    }
+
     return <>
         <StatisticsPanel categoryId={categoryId}
                          initData={statistics}/>
@@ -107,6 +115,7 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
                           timeType={timeType}
+                          clickTaskItem={clickTaskItem}
                           setTaskStatusUndo={setTaskStatusUndo}
                           setTaskStatusCompleted={setTaskStatusCompleted}/>)}
             {
@@ -120,6 +129,8 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                     <></>
             }
         </div>
+        <Model show={modalShow} close={() => setModalShow(false)}
+               data={modalData}/>
         <Loading active={loading}/>
     </>;
 }

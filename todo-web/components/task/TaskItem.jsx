@@ -1,10 +1,12 @@
 import styles from "./TaskItem.module.css";
 import FormatTime from "../time/FormatTime";
+
 export default function TaskItem({
                                      one,
                                      setTaskStatusUndo,
                                      setTaskStatusCompleted,
-                                     timeType
+                                     timeType,
+                                     clickTaskItem
                                  }) {
     let isCompleted = 1 === one.taskStatus;
     let isCompletedClassName = isCompleted ? styles.taskItemBodyCompleted : '';
@@ -39,10 +41,10 @@ export default function TaskItem({
                 </svg>
             }
         </div>
-        <div className={styles.taskNameContainer}>
+        <div onClick={() => clickTaskItem(one)} className={styles.taskNameContainer}>
             {one.taskName}
         </div>
-        <div className={styles.time}>
+        <div onClick={() => clickTaskItem(one)} className={styles.time}>
             <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
         </div>
     </div>;
