@@ -14,7 +14,7 @@ export default function TaskItem({
     const [modalShow, setModalShow] = useState(false);
 
     return <div className={divClassName}>
-        <div className={styles.taskCheckIconContainer}
+        <div className={styles.leftContainer}
              onClick={() => {
                  if (isCompleted) {
                      one.taskStatus = 0;
@@ -44,11 +44,18 @@ export default function TaskItem({
                 </svg>
             }
         </div>
-        <div onClick={() => setModalShow(true)} className={styles.taskNameContainer}>
-            {one.taskName}
-        </div>
-        <div onClick={() => setModalShow(true)} className={styles.time}>
-            <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
+        <div onClick={() => setModalShow(true)}
+             className={styles.rightContainer}>
+            <div className={styles.textContainer}>
+                <span className={styles.textCenteredVertically}>
+                    {one.taskName}
+                </span>
+            </div>
+            <div className={styles.textContainer}>
+                <div className={`${styles.textCenteredVertically} ${styles.time}`}>
+                    <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
+                </div>
+            </div>
         </div>
         <Model show={modalShow}
                close={() => setModalShow(false)}
