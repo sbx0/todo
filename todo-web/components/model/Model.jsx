@@ -1,6 +1,7 @@
 import styles from "./Model.module.css";
 import TaskItem from "../task/TaskItem";
 import {useState} from "react";
+import FoamBox from "../layout/FoamBox";
 
 export default function Model({show, close, data}) {
     const [addDeadline, setAddDeadline] = useState(false);
@@ -41,42 +42,42 @@ export default function Model({show, close, data}) {
                 {
                     addDeadline ?
                         <div className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     添加截至时间
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div onClick={() => clickAddDeadline(0, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>今天</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickAddDeadline(1, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>明天</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickAddDeadline(2, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>下周</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <input type='date' className={styles.button}/>
-                                </div>
+                                </FoamBox>
                             </div>
                         </div>
                         :
                         <div onClick={() => reset(1)} className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     添加截至时间
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div></div>
                         </div>
                 }
@@ -84,42 +85,42 @@ export default function Model({show, close, data}) {
                 {
                     addRemind ?
                         <div className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     提醒我
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div onClick={() => clickAddRemind(0, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>今天晚些时候</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickAddRemind(1, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>明天 9:00</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickAddRemind(2, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>下周一 9:00</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <input type='datetime-local' className={styles.button}/>
-                                </div>
+                                </FoamBox>
                             </div>
                         </div>
                         :
                         <div onClick={() => reset(2)} className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     提醒我
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div></div>
                         </div>
                 }
@@ -127,69 +128,69 @@ export default function Model({show, close, data}) {
                 {
                     useRepeat ?
                         <div className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     重复
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div onClick={() => clickUseRepeat(0, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>每天</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickUseRepeat(1, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>工作日</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickUseRepeat(2, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>每周</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickUseRepeat(3, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>每月</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickUseRepeat(4, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>每年</button>
-                                </div>
+                                </FoamBox>
                             </div>
                             <div></div>
                             <div onClick={() => clickUseRepeat(5, 'time')}>
-                                <div className={styles.fullWidthPadding}>
+                                <FoamBox>
                                     <button className={styles.button}>自定义</button>
-                                </div>
+                                </FoamBox>
                             </div>
                         </div>
                         :
                         <div onClick={() => reset(3)} className={styles.operateContainer}>
-                            <div className={styles.fullWidthPadding}>
+                            <FoamBox>
                                 <div className={styles.select}>
                                     重复
                                 </div>
-                            </div>
+                            </FoamBox>
                             <div></div>
                         </div>
                 }
 
-                <div className={styles.fullWidthPadding}>
+                <FoamBox>
                     <span>备注:</span>
-                </div>
-                <div className={styles.fullWidthPadding}>
+                </FoamBox>
+                <FoamBox>
                     <textarea rows="5" cols="33" className={styles.textarea}/>
-                </div>
-                <div className={styles.fullWidthPadding}>
+                </FoamBox>
+                <FoamBox>
                     <button className={styles.button} onClick={() => closeAndReset()}>
                         Close
                     </button>
-                </div>
+                </FoamBox>
             </div>
         </div>
     } else {
