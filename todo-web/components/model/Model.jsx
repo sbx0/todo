@@ -1,8 +1,8 @@
 import styles from "./Model.module.css";
-import TaskItem from "../task/TaskItem";
 import {useState} from "react";
 import FoamBox from "../layout/FoamBox";
 import {SelectBox} from "../layout/SelectBox";
+import FormatTime from "../time/FormatTime";
 
 export default function Model({show, close, data}) {
     const [deadlineShow, setDeadlineShow] = useState(false);
@@ -23,10 +23,15 @@ export default function Model({show, close, data}) {
     if (show) {
         return <div className={styles.container}>
             <div className={styles.innerContainer}>
-                <TaskItem one={{
-                    taskName: data?.taskName,
-                    createTime: data?.createTime
-                }}/>
+
+                <FoamBox>
+                    <span>名称</span>
+                </FoamBox>
+                <FoamBox>
+                    <input type='text'
+                           defaultValue={data?.taskName}
+                           className={styles.text}/>
+                </FoamBox>
 
                 <SelectBox index={1}
                            title={'添加截至时间'}
@@ -79,11 +84,18 @@ export default function Model({show, close, data}) {
                 />
 
                 <FoamBox>
-                    <span>备注:</span>
+                    <span>备注</span>
+                </FoamBox>
+                <FoamBox>
+                    <textarea rows="5"
+                              cols="33"
+                              defaultValue={data?.taskRemark}
+                              className={styles.textarea}/>
                 </FoamBox>
 
                 <FoamBox>
-                    <textarea rows="5" cols="33" className={styles.textarea}/>
+                    <span>创建于</span>
+                    <span>&nbsp;<FormatTime time={data?.createTime}/></span>
                 </FoamBox>
 
                 <FoamBox>
@@ -91,7 +103,6 @@ export default function Model({show, close, data}) {
                         Close
                     </button>
                 </FoamBox>
-
             </div>
         </div>
     } else {

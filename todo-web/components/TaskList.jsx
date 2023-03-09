@@ -129,7 +129,8 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                     <></>
             }
         </div>
-        <Model show={modalShow} close={() => setModalShow(false)}
+        <Model show={modalShow}
+               close={() => setModalShow(false)}
                data={modalData}/>
         <Loading active={loading}/>
     </>;
