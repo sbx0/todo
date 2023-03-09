@@ -33,15 +33,15 @@ export default function Model({show, close, change, data}) {
                     <span>名称</span>
                 </FoamBox>
                 <FoamBox>
-                    <input type='text'
-                           defaultValue={task?.taskName}
-                           onChange={(event) => {
-                               setTask({
-                                   ...task,
-                                   taskName: event.target.value
-                               })
-                           }}
-                           className={styles.text}/>
+                    <textarea rows="2"
+                              defaultValue={task?.taskName}
+                              onChange={(event) => {
+                                  setTask({
+                                      ...task,
+                                      taskName: event.target.value
+                                  })
+                              }}
+                              className={styles.textarea}/>
                 </FoamBox>
 
                 <SelectBox index={1}
@@ -99,8 +99,13 @@ export default function Model({show, close, change, data}) {
                 </FoamBox>
                 <FoamBox>
                     <textarea rows="5"
-                              cols="33"
                               defaultValue={task?.taskRemark}
+                              onChange={(event) => {
+                                  setTask({
+                                      ...task,
+                                      taskRemark: event.target.value
+                                  })
+                              }}
                               className={styles.textarea}/>
                 </FoamBox>
 
