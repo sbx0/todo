@@ -3,10 +3,40 @@ import {useEffect, useState} from "react";
 import FoamBox from "../layout/FoamBox";
 import {SelectBox} from "../layout/SelectBox";
 import FormatTime from "../time/FormatTime";
+import moment from "moment/moment";
+import 'moment/locale/zh-cn';
 
 export default function Model({show, close, change, data}) {
     const [task, setTask] = useState(data);
-    const [deadlineShow, setDeadlineShow] = useState(false);
+    const [planTimeShow, setPlanTimeShow] = useState(false);
+    const deadlineOptions = [
+        {key: 1, name: '今天', value: 'today'},
+        {key: 2, name: '明天', value: 'tomorrow'},
+        {key: 3, name: '下周', value: 'next week'},
+    ];
+
+    function setDeadline(key) {
+        switch (key) {
+            case 1:
+                task.planTime = moment().format('yyyy-MM-DD HH:mm:ss');
+                setTask(task);
+                change(task);
+                return;
+            case 2:
+                task.planTime = moment().add(1, 'days').format('yyyy-MM-DD HH:mm:ss');
+                setTask(task);
+                change(task);
+                return;
+            case 3:
+                task.planTime = moment().add(1, 'weeks').format('yyyy-MM-DD HH:mm:ss');
+                setTask(task);
+                change(task);
+                return;
+            default:
+                return;
+        }
+    }
+
     const [addRemind, setAddRemind] = useState(false);
     const [useRepeat, setUseRepeat] = useState(false);
 
@@ -15,7 +45,7 @@ export default function Model({show, close, change, data}) {
     }, [show]);
 
     function reset(index = 0) {
-        setDeadlineShow(index === 1);
+        setPlanTimeShow(index === 1);
         setAddRemind(index === 2);
         setUseRepeat(index === 3);
     }
@@ -45,14 +75,11 @@ export default function Model({show, close, change, data}) {
                 </FoamBox>
 
                 <SelectBox index={1}
-                           title={'添加截至时间'}
-                           show={deadlineShow}
+                           title={'计划时间'}
+                           show={planTimeShow}
+                           click={setDeadline}
                            reset={reset}
-                           options={[
-                               {key: 1, name: '今天', value: 'today'},
-                               {key: 2, name: '明天', value: 'tomorrow'},
-                               {key: 3, name: '下周', value: 'next week'},
-                           ]}
+                           options={deadlineOptions}
                            other={
                                <FoamBox>
                                    <input type="date" className={styles.button}/>
@@ -107,6 +134,11 @@ export default function Model({show, close, change, data}) {
                                   })
                               }}
                               className={styles.textarea}/>
+                </FoamBox>
+
+                <FoamBox>
+                    <span>计划时间</span>
+                    <span>&nbsp;{task?.planTime}</span>
                 </FoamBox>
 
                 <FoamBox>

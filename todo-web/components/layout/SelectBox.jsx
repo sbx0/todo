@@ -3,8 +3,8 @@ import FoamBox from "./FoamBox";
 
 export function SelectBox(props) {
 
-    const choose = (value) => {
-        console.log(value);
+    const choose = (key) => {
+        props.click(key);
         props.reset();
     }
 
@@ -21,12 +21,11 @@ export function SelectBox(props) {
                 <div name='options'>
                     {props.options.map((option) =>
                         <FoamBox key={option.key}>
-                            <button onClick={() => choose(option.value)}
+                            <button onClick={() => choose(option.key)}
                                     className={styles.button}>
                                 {option.name}
                             </button>
-                        </FoamBox>
-                    )}
+                        </FoamBox>)}
                     {props.other}
                 </div>
                 :
