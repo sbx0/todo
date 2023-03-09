@@ -7,22 +7,27 @@ export default function Model({show, close, data}) {
     const [addRemind, setAddRemind] = useState(false);
     const [useRepeat, setUseRepeat] = useState(false);
 
+    function reset(index = 0) {
+        setAddDeadline(index === 1);
+        setAddRemind(index === 2);
+        setUseRepeat(index === 3);
+    }
+
+    function closeAndReset() {
+        reset();
+        close();
+    }
+
     function clickAddDeadline(type, time) {
-        setAddDeadline(false);
-        setAddRemind(false);
-        setUseRepeat(false);
+        reset();
     }
 
     function clickAddRemind(type, time) {
-        setAddDeadline(false);
-        setAddRemind(false);
-        setUseRepeat(false);
+        reset();
     }
 
     function clickUseRepeat(type, time) {
-        setAddDeadline(false);
-        setAddRemind(false);
-        setUseRepeat(false);
+        reset();
     }
 
     if (show) {
@@ -66,11 +71,7 @@ export default function Model({show, close, data}) {
                             </div>
                         </div>
                         :
-                        <div onClick={() => {
-                            setAddDeadline(true);
-                            setAddRemind(false);
-                            setUseRepeat(false);
-                        }} className={styles.operateContainer}>
+                        <div onClick={() => reset(1)} className={styles.operateContainer}>
                             <div className={styles.fullWidthPadding}>
                                 <div className={styles.select}>
                                     添加截至时间
@@ -113,12 +114,7 @@ export default function Model({show, close, data}) {
                             </div>
                         </div>
                         :
-                        <div onClick={() => {
-                            setAddRemind(true);
-                            setAddDeadline(false);
-                            setUseRepeat(false);
-                        }}
-                             className={styles.operateContainer}>
+                        <div onClick={() => reset(2)} className={styles.operateContainer}>
                             <div className={styles.fullWidthPadding}>
                                 <div className={styles.select}>
                                     提醒我
@@ -173,12 +169,7 @@ export default function Model({show, close, data}) {
                             </div>
                         </div>
                         :
-                        <div onClick={() => {
-                            setUseRepeat(true);
-                            setAddRemind(false);
-                            setAddDeadline(false);
-                        }}
-                             className={styles.operateContainer}>
+                        <div onClick={() => reset(3)} className={styles.operateContainer}>
                             <div className={styles.fullWidthPadding}>
                                 <div className={styles.select}>
                                     重复
@@ -195,12 +186,8 @@ export default function Model({show, close, data}) {
                     <textarea rows="5" cols="33" className={styles.textarea}/>
                 </div>
                 <div className={styles.fullWidthPadding}>
-                    <button className={styles.button} onClick={() => {
-                        setAddDeadline(false);
-                        setAddRemind(false);
-                        setUseRepeat(false);
-                        close();
-                    }}>Close
+                    <button className={styles.button} onClick={() => closeAndReset()}>
+                        Close
                     </button>
                 </div>
             </div>
