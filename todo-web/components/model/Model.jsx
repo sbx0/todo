@@ -5,6 +5,7 @@ import {SelectBox} from "../layout/SelectBox";
 import FormatTime from "../time/FormatTime";
 import moment from "moment/moment";
 import 'moment/locale/zh-cn';
+import {getCache} from "../Cache";
 
 export default function Model({show, close, change, data}) {
     const [task, setTask] = useState(data);
@@ -20,7 +21,11 @@ export default function Model({show, close, change, data}) {
             closeAndReset();
         }
     }
-    document.addEventListener('mousedown', closeModel);
+
+    // just for next.js
+    if (typeof document !== 'undefined') {
+        document.addEventListener('mousedown', closeModel);
+    }
 
     function setDeadline(key) {
         switch (key) {
