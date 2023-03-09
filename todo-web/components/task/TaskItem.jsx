@@ -17,10 +17,10 @@ export default function TaskItem({
         <div className={styles.taskCheckIconContainer}
              onClick={() => {
                  if (isCompleted) {
-                     one.taskStatus(0);
+                     one.taskStatus = 0;
                      change(one);
                  } else {
-                     one.taskStatus(1);
+                     one.taskStatus = 1;
                      change(one);
                  }
              }}>
