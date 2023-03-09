@@ -1,13 +1,18 @@
 import styles from "./Model.module.css";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FoamBox from "../layout/FoamBox";
 import {SelectBox} from "../layout/SelectBox";
 import FormatTime from "../time/FormatTime";
 
-export default function Model({show, close, data}) {
+export default function Model({show, close, change, data}) {
+    const [task, setTask] = useState(data);
     const [deadlineShow, setDeadlineShow] = useState(false);
     const [addRemind, setAddRemind] = useState(false);
     const [useRepeat, setUseRepeat] = useState(false);
+
+    useEffect(() => {
+        setTask(data);
+    }, [show]);
 
     function reset(index = 0) {
         setDeadlineShow(index === 1);
@@ -29,7 +34,13 @@ export default function Model({show, close, data}) {
                 </FoamBox>
                 <FoamBox>
                     <input type='text'
-                           defaultValue={data?.taskName}
+                           defaultValue={task?.taskName}
+                           onChange={(event) => {
+                               setTask({
+                                   ...task,
+                                   taskName: event.target.value
+                               })
+                           }}
                            className={styles.text}/>
                 </FoamBox>
 
@@ -89,13 +100,19 @@ export default function Model({show, close, data}) {
                 <FoamBox>
                     <textarea rows="5"
                               cols="33"
-                              defaultValue={data?.taskRemark}
+                              defaultValue={task?.taskRemark}
                               className={styles.textarea}/>
                 </FoamBox>
 
                 <FoamBox>
                     <span>创建于</span>
-                    <span>&nbsp;<FormatTime time={data?.createTime}/></span>
+                    <span>&nbsp;<FormatTime time={task?.createTime}/></span>
+                </FoamBox>
+
+                <FoamBox>
+                    <button className={styles.button} onClick={() => change(task)}>
+                        Save
+                    </button>
                 </FoamBox>
 
                 <FoamBox>

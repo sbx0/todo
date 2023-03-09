@@ -8,7 +8,6 @@ import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
 import {POST, TaskPaging} from "../apis/apiPath";
-import Model from "./model/Model";
 
 export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
     const router = useRouter()
@@ -28,8 +27,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
-    const [modalShow, setModalShow] = useState(false);
-    const [modalData, setModalData] = useState(null);
 
     const setTaskStatusCompleted = (task) => {
         updateApi({
@@ -37,7 +34,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             taskStatus: 1
         }).then(() => {
             let newData = [];
-            console.log(data.data)
             for (let i = 0; i < data.data.length; i++) {
                 if (data.data[i].id !== task.id) {
                     newData.push(data.data[i]);
@@ -53,10 +49,23 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             taskStatus: 0
         }).then(() => {
             let newData = [];
-            console.log(data.data)
             for (let i = 0; i < data.data.length; i++) {
                 if (data.data[i].id !== task.id) {
                     newData.push(data.data[i]);
+                }
+            }
+            setData({...data, data: newData});
+        })
+    }
+
+    const changeTask = (task) => {
+        updateApi(task).then(() => {
+            let newData = [];
+            for (let i = 0; i < data.data.length; i++) {
+                if (data.data[i].id !== task.id) {
+                    newData.push(data.data[i]);
+                } else {
+                    newData.push(task);
                 }
             }
             setData({...data, data: newData});
@@ -97,11 +106,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
         getTaskPaging(1, pageSize, categoryId, taskStatus);
     }
 
-    function clickTaskItem(one) {
-        setModalData(one);
-        setModalShow(true);
-    }
-
     return <>
         <StatisticsPanel categoryId={categoryId}
                          initData={statistics}/>
@@ -115,9 +119,7 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
                           timeType={timeType}
-                          clickTaskItem={clickTaskItem}
-                          setTaskStatusUndo={setTaskStatusUndo}
-                          setTaskStatusCompleted={setTaskStatusCompleted}/>)}
+                          change={changeTask}/>)}
             {
                 page < data?.common?.totalPage ?
                     <button className={styles.button} onClick={() => {
@@ -129,9 +131,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                     <></>
             }
         </div>
-        <Model show={modalShow}
-               close={() => setModalShow(false)}
-               data={modalData}/>
         <Loading active={loading}/>
     </>;
 }

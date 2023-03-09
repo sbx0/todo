@@ -1,24 +1,27 @@
 import styles from "./TaskItem.module.css";
 import FormatTime from "../time/FormatTime";
+import Model from "../model/Model";
+import {useState} from "react";
 
 export default function TaskItem({
                                      one,
-                                     setTaskStatusUndo,
-                                     setTaskStatusCompleted,
-                                     timeType,
-                                     clickTaskItem
+                                     change,
+                                     timeType
                                  }) {
     let isCompleted = 1 === one.taskStatus;
     let isCompletedClassName = isCompleted ? styles.taskItemBodyCompleted : '';
     let divClassName = `${styles.taskItemBody} ${isCompletedClassName}`;
+    const [modalShow, setModalShow] = useState(false);
 
     return <div className={divClassName}>
         <div className={styles.taskCheckIconContainer}
              onClick={() => {
                  if (isCompleted) {
-                     setTaskStatusUndo(one);
+                     one.taskStatus(0);
+                     change(one);
                  } else {
-                     setTaskStatusCompleted(one)
+                     one.taskStatus(1);
+                     change(one);
                  }
              }}>
             {isCompleted ?
@@ -41,11 +44,15 @@ export default function TaskItem({
                 </svg>
             }
         </div>
-        <div onClick={() => clickTaskItem(one)} className={styles.taskNameContainer}>
+        <div onClick={() => setModalShow(true)} className={styles.taskNameContainer}>
             {one.taskName}
         </div>
-        <div onClick={() => clickTaskItem(one)} className={styles.time}>
+        <div onClick={() => setModalShow(true)} className={styles.time}>
             <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
         </div>
+        <Model show={modalShow}
+               close={() => setModalShow(false)}
+               change={change}
+               data={one}/>
     </div>;
 }
