@@ -11,7 +11,7 @@ export default function Car() {
     useEffect(() => {
         callApi({
             method: POST, url: "/api/car/plate/photo/paging", params: {
-                page: 1, pageSize: 10
+                page: 1, pageSize: 50
             }
         }).then(r => {
             setInfos(r.data);
