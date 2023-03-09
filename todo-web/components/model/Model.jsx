@@ -1,5 +1,5 @@
 import styles from "./Model.module.css";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import FoamBox from "../layout/FoamBox";
 import {SelectBox} from "../layout/SelectBox";
 import FormatTime from "../time/FormatTime";
@@ -14,6 +14,13 @@ export default function Model({show, close, change, data}) {
         {key: 2, name: '明天', value: 'tomorrow'},
         {key: 3, name: '下周', value: 'next week'},
     ];
+    const modelRef = useRef(null);
+    const closeModel = (e) => {
+        if (modelRef.current && show && !modelRef.current.contains(e.target)) {
+            closeAndReset();
+        }
+    }
+    document.addEventListener('mousedown', closeModel);
 
     function setDeadline(key) {
         switch (key) {
@@ -57,7 +64,7 @@ export default function Model({show, close, change, data}) {
 
     if (show) {
         return <div className={styles.container}>
-            <div className={styles.innerContainer}>
+            <div ref={modelRef} className={styles.innerContainer}>
 
                 <FoamBox>
                     <span>名称</span>
@@ -149,12 +156,6 @@ export default function Model({show, close, change, data}) {
                 <FoamBox>
                     <button className={styles.button} onClick={() => change(task)}>
                         Save
-                    </button>
-                </FoamBox>
-
-                <FoamBox>
-                    <button className={styles.button} onClick={() => closeAndReset()}>
-                        Close
                     </button>
                 </FoamBox>
             </div>
