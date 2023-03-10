@@ -13,7 +13,7 @@ export default function Model({show, close, change, data}) {
     const deadlineOptions = [
         {key: 1, name: '今天', value: 'today'},
         {key: 2, name: '明天', value: 'tomorrow'},
-        {key: 3, name: '下周', value: 'next week'},
+        {key: 3, name: '下周一', value: 'next week'},
     ];
     const modelRef = useRef(null);
     const closeModel = (e) => {
@@ -30,17 +30,22 @@ export default function Model({show, close, change, data}) {
     function setDeadline(key) {
         switch (key) {
             case 1:
-                task.planTime = moment().add(8, 'hours').format('yyyy-MM-DD HH:mm:ss');
+                // today 23:59:59
+                task.planTime = moment().format('yyyy-MM-DD') + ' 23:59:59';
                 setTask(task);
                 change(task);
                 return;
             case 2:
-                task.planTime = moment().add(1, 'days').format('yyyy-MM-DD HH:mm:ss');
+                // tomorrow 23:59:59
+                task.planTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 23:59:59';
                 setTask(task);
                 change(task);
                 return;
             case 3:
-                task.planTime = moment().add(1, 'weeks').format('yyyy-MM-DD HH:mm:ss');
+                // next monday
+                let monday = moment().startOf('week');
+                let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 23:59:59';
+                task.planTime = nextMonday;
                 setTask(task);
                 change(task);
                 return;

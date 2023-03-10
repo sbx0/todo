@@ -1,5 +1,4 @@
 import styles from "./TaskItem.module.css";
-import FormatTime from "../time/FormatTime";
 import Model from "../model/Model";
 import {useState} from "react";
 import CountDown from "../time/CountDown";
@@ -46,23 +45,29 @@ export default function TaskItem({
                     </svg>
                 }
             </div>
-            <div onClick={() => setModalShow(true)}
-                 className={styles.rightContainer}>
-                <div className={styles.textContainer}>
-                <span className={styles.textCenteredVertically}>
-                    {one.taskName}
-                </span>
-                </div>
-                <div className={styles.textContainer}>
-                    <div className={`${styles.textCenteredVertically} ${styles.time}`}>
-                        {one.planTime != null ?
+            {one.planTime != null ?
+                <div onClick={() => setModalShow(true)} className={styles.rightContainerWithCountDown}>
+                    <div className={styles.textContainer}>
+                        <span className={styles.textCenteredVertically}>
+                            {one.taskName}
+                        </span>
+                    </div>
+                    <div className={styles.textContainer}>
+                        <div className={`${styles.textCenteredVertically} ${styles.time}`}>
                             <CountDown time={one.planTime}/>
-                            :
-                            <FormatTime time={timeType === 'update_time' ? one.updateTime : one.createTime}/>
-                        }
+                        </div>
                     </div>
                 </div>
-            </div>
+                :
+                <div onClick={() => setModalShow(true)} className={styles.rightContainer}>
+                    <div className={styles.textContainer}>
+                        <span className={styles.textCenteredVertically}>
+                            {one.taskName}
+                        </span>
+                    </div>
+                </div>
+            }
+
         </div>
         <Model show={modalShow}
                close={() => setModalShow(false)}

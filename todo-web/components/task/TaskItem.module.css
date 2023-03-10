@@ -31,10 +31,17 @@
     justify-content: flex-start;
 }
 
-.rightContainer {
+.rightContainerWithCountDown {
     width: 100%;
     display: grid;
     grid-template-columns: 2fr 1fr;
+    vertical-align: middle;
+}
+
+.rightContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
     vertical-align: middle;
 }
 
