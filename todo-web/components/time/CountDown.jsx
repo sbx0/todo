@@ -9,16 +9,16 @@ export default function CountDown({time}) {
             setLeft(calLeft(moment.now(), moment(time)))
         }, 500);
         return () => clearInterval(timer);
-    }, []);
+    }, [time]);
 
     function calLeft(from, to) {
         let duration = moment.duration(to - from);
         if (duration.asSeconds() > 0) {
-            if (duration.days() === 0 && duration.hours() > 8) {
+            if (duration.days() === 0) {
                 return '今天';
-            } else if (duration.days() === 1 && duration.hours() >= 0) {
+            } else if (duration.days() === 1) {
                 return '明天';
-            } else if (duration.days() === 2 && duration.hours() >= 0) {
+            } else if (duration.days() === 2) {
                 return '后天';
             } else if (duration.days() < (7 - moment(from).day())) {
                 return getWeek(to);
