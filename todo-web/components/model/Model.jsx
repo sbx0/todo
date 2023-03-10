@@ -13,7 +13,7 @@ export default function Model({show, close, change, data}) {
     const deadlineOptions = [
         {key: 1, name: '今天', value: 'today'},
         {key: 2, name: '明天', value: 'tomorrow'},
-        {key: 3, name: '下周一', value: 'next week'},
+        {key: 3, name: '下周', value: 'next week'},
     ];
     const modelRef = useRef(null);
     const closeModel = (e) => {
@@ -42,7 +42,7 @@ export default function Model({show, close, change, data}) {
                 change(task);
                 return;
             case 3:
-                // next monday
+                // next week
                 let monday = moment().startOf('week');
                 let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 23:59:59';
                 task.planTime = nextMonday;
@@ -99,7 +99,13 @@ export default function Model({show, close, change, data}) {
                            options={deadlineOptions}
                            other={
                                <FoamBox>
-                                   <input type="date" className={styles.button}/>
+                                   <input type="date"
+                                          onChange={(event) => {
+                                              task.planTime = event.target.value + ' 23:59:59';
+                                              setTask(task);
+                                              change(task);
+                                          }}
+                                          className={styles.button}/>
                                </FoamBox>
                            }
                 />
@@ -153,10 +159,15 @@ export default function Model({show, close, change, data}) {
                               className={styles.textarea}/>
                 </FoamBox>
 
-                <FoamBox>
-                    <span>计划时间</span>
-                    <span>&nbsp;<CountDown time={task?.planTime}/></span>
-                </FoamBox>
+                {
+                    task.planTime != null ?
+                        <FoamBox>
+                            <span>计划时间</span>
+                            <span>&nbsp;<CountDown time={task?.planTime}/></span>
+                        </FoamBox>
+                        :
+                        <></>
+                }
 
                 <FoamBox>
                     <span>创建于</span>

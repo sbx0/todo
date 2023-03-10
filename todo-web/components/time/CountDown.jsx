@@ -18,20 +18,12 @@ export default function CountDown({time}) {
                 return '今天';
             } else if (duration.days() === 1) {
                 return '明天';
-            } else if (duration.days() === 2) {
-                return '后天';
-            } else if (duration.days() < (7 - moment(from).day())) {
+            } else if (duration.days() <= (7 - moment(from).day())) {
                 return getWeek(to);
-            } else if (duration.days() < (14 - moment(from).day())) {
+            } else if (duration.days() <= (14 - moment(from).day())) {
                 return '下' + getWeek(to);
             } else {
-                let countdown = duration.years() > 0 ? duration.years() + "年" : "";
-                countdown += duration.months() > 0 ? duration.months() + "月" : "";
-                countdown += duration.days() > 0 ? duration.days() + "天" : "";
-                countdown += duration.hours() > 0 ? duration.hours() + "时" : "";
-                countdown += duration.minutes() > 0 ? duration.minutes() + "分" : "";
-                countdown += duration.seconds() > 0 ? duration.seconds() + "秒" : "";
-                return countdown;
+                return duration.days() + ' 天';
             }
         } else {
             return "已超时"
