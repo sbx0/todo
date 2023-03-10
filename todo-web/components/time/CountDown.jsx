@@ -7,7 +7,7 @@ export default function CountDown({time}) {
     useEffect(() => {
         const timer = setInterval(() => {
             setLeft(calLeft(moment.now(), moment(time)))
-        }, 60000);
+        }, 500);
         return () => clearInterval(timer);
     }, [time]);
 
@@ -18,9 +18,9 @@ export default function CountDown({time}) {
                 return '今天';
             } else if (duration.asDays() === 1) {
                 return '明天';
-            } else if (duration.asDays() <= (7 - moment(from).day())) {
+            } else if (duration.asDays() < (8 - moment(from).day())) {
                 return getWeek(to);
-            } else if (duration.asDays() <= (14 - moment(from).day())) {
+            } else if (duration.asDays() < (15 - moment(from).day())) {
                 return '下' + getWeek(to);
             } else {
                 return duration.asDays().toFixed(0) + ' 天';
