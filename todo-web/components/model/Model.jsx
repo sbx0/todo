@@ -5,7 +5,7 @@ import {SelectBox} from "../layout/SelectBox";
 import FormatTime from "../time/FormatTime";
 import moment from "moment/moment";
 import 'moment/locale/zh-cn';
-import {getCache} from "../Cache";
+import CountDown from "../time/CountDown";
 
 export default function Model({show, close, change, data}) {
     const [task, setTask] = useState(data);
@@ -30,7 +30,7 @@ export default function Model({show, close, change, data}) {
     function setDeadline(key) {
         switch (key) {
             case 1:
-                task.planTime = moment().format('yyyy-MM-DD HH:mm:ss');
+                task.planTime = moment().add(8, 'hours').format('yyyy-MM-DD HH:mm:ss');
                 setTask(task);
                 change(task);
                 return;
@@ -150,7 +150,7 @@ export default function Model({show, close, change, data}) {
 
                 <FoamBox>
                     <span>计划时间</span>
-                    <span>&nbsp;{task?.planTime}</span>
+                    <span>&nbsp;<CountDown time={task?.planTime}/></span>
                 </FoamBox>
 
                 <FoamBox>
