@@ -41,7 +41,9 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
             where ((:#{#pagingRequest.categoryId} = 0)
                 or (:#{#pagingRequest.categoryId} <> 0 and category_id = :#{#pagingRequest.categoryId}))
               and ((:#{#pagingRequest.taskStatus} < 0)
-                or (:#{#pagingRequest.taskStatus} >= 0 and task_status = :#{#pagingRequest.taskStatus}))""";
+                or (:#{#pagingRequest.taskStatus} >= 0 and task_status = :#{#pagingRequest.taskStatus}))
+            order by if(plan_time is null, '9999-12-31', plan_time), id desc
+            """;
     //language=MySQL
     String CUSTOM_PAGING_COUNT_SQL = """
             SELECT COUNT(*)
