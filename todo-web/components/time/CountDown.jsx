@@ -14,9 +14,9 @@ export default function CountDown({time}) {
     function calLeft(from, to) {
         let duration = moment.duration(to - from);
         if (duration.asSeconds() > 0) {
-            if (duration.asDays() === 0) {
+            if (duration.asDays().toFixed(0) === '0') {
                 return '今天';
-            } else if (duration.asDays() === 1) {
+            } else if (duration.asDays().toFixed(0) === '1') {
                 return '明天';
             } else if (duration.asDays() < (8 - moment(from).day())) {
                 return getWeek(to);
