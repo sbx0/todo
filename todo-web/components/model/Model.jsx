@@ -6,6 +6,7 @@ import FormatTime from "../time/FormatTime";
 import moment from "moment/moment";
 import 'moment/locale/zh-cn';
 import CountDown from "../time/CountDown";
+import RecordTime from "../asset/RecordTime";
 
 export default function Model({show, close, change, data}) {
     const [task, setTask] = useState(data);
@@ -98,15 +99,30 @@ export default function Model({show, close, change, data}) {
                            reset={reset}
                            options={deadlineOptions}
                            other={
-                               <FoamBox>
-                                   <input type="date"
-                                          onChange={(event) => {
-                                              task.planTime = event.target.value + ' 23:59:59';
-                                              setTask(task);
-                                              change(task);
-                                          }}
-                                          className={styles.button}/>
-                               </FoamBox>
+                               <div>
+                                   <FoamBox>
+                                       <RecordTime value={moment(task.planTime).format('yyyy-MM-DD')}
+                                                   callback={(value) => {
+                                                       task.planTime = value + ' 23:59:59';
+                                                       setTask(task);
+                                                       change(task);
+                                                   }}/>
+                                       <input type="time"
+                                              value={moment(task.planTime).format('HH:mm')}
+                                              onChange={(event) => {
+                                                  if (task.planTime != null) {
+                                                      task.planTime = moment(task.planTime).format('yyyy-MM-DD ') + event.target.value + ':59';
+                                                      setTask(task);
+                                                      change(task);
+                                                  } else {
+                                                      task.planTime = moment().format('yyyy-MM-DD ') + event.target.value + ':59';
+                                                      setTask(task);
+                                                      change(task);
+                                                  }
+                                              }}
+                                              className={styles.button}/>
+                                   </FoamBox>
+                               </div>
                            }
                 />
 

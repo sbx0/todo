@@ -12,22 +12,28 @@ export default function CountDown({time}) {
     }, [time]);
 
     function calLeft(from, to) {
+        let result = '';
+        let time = moment(to).format('HH:mm');
+        if (time !== '23:59') {
+            result += ' ' + time;
+        }
         let duration = moment.duration(to - from);
         if (duration.asSeconds() > 0) {
             if (duration.asDays().toFixed(0) === '0') {
-                return '今天';
+                result = '今天' + result;
             } else if (duration.asDays().toFixed(0) === '1') {
-                return '明天';
+                result = '明天' + result;
             } else if (duration.asDays() < (8 - moment(from).day())) {
-                return getWeek(to);
+                result = getWeek(to) + result;
             } else if (duration.asDays() < (15 - moment(from).day())) {
-                return '下' + getWeek(to);
+                result = '下' + getWeek(to) + result;
             } else {
-                return duration.asDays().toFixed(0) + ' 天';
+                result = duration.asDays().toFixed(0) + ' 天';
             }
         } else {
-            return "已超时"
+            result = to;
         }
+        return result;
     }
 
     function getWeek(date) {
