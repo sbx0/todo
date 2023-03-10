@@ -2,28 +2,28 @@ import moment from "moment";
 import {useEffect, useState} from "react";
 
 export default function CountDown({time}) {
-    const [left, setLeft] = useState(time);
+    const [left, setLeft] = useState(calLeft(moment.now(), moment(time)));
 
     useEffect(() => {
         const timer = setInterval(() => {
             setLeft(calLeft(moment.now(), moment(time)))
-        }, 500);
+        }, 60000);
         return () => clearInterval(timer);
     }, [time]);
 
     function calLeft(from, to) {
         let duration = moment.duration(to - from);
         if (duration.asSeconds() > 0) {
-            if (duration.days() === 0) {
+            if (duration.asDays() === 0) {
                 return '今天';
-            } else if (duration.days() === 1) {
+            } else if (duration.asDays() === 1) {
                 return '明天';
-            } else if (duration.days() <= (7 - moment(from).day())) {
+            } else if (duration.asDays() <= (7 - moment(from).day())) {
                 return getWeek(to);
-            } else if (duration.days() <= (14 - moment(from).day())) {
+            } else if (duration.asDays() <= (14 - moment(from).day())) {
                 return '下' + getWeek(to);
             } else {
-                return duration.days() + ' 天';
+                return duration.asDays().toFixed(0) + ' 天';
             }
         } else {
             return "已超时"
