@@ -31,7 +31,7 @@ export default function CountDown({time}) {
                 result = duration.asDays().toFixed(0) + ' 天';
             }
         } else {
-            result = to;
+            result = moment(to).format('yyyy-MM-DD');
         }
         return result;
     }
