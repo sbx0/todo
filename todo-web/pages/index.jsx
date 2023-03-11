@@ -3,7 +3,6 @@ import Container from "../components/Container";
 import TaskList from "../components/TaskList";
 import {callApi} from "../apis/taskApi";
 import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
-import moment from "moment/moment";
 
 export default function Index({initData, category, statistics}) {
 
@@ -24,7 +23,7 @@ export async function getServerSideProps({req, query}) {
         categoryId = query.categoryId;
     }
 
-    const taskPaging = await callApi({
+    let taskPaging = await callApi({
         method: POST,
         url: ApiPrefix + process.env.API_HOST + TaskPaging,
         params: {
@@ -36,7 +35,12 @@ export async function getServerSideProps({req, query}) {
         }
     });
 
-    const category = await callApi({
+    if (taskPaging == null) {
+        console.log('taskPaging is null.')
+        taskPaging = [];
+    }
+
+    let category = await callApi({
         method: POST,
         url: ApiPrefix + process.env.API_HOST + CategoryPaging,
         params: {
@@ -46,13 +50,23 @@ export async function getServerSideProps({req, query}) {
         }
     });
 
-    const statistics = await callApi({
+    if (category == null) {
+        console.log('category is null.')
+        category = [];
+    }
+
+    let statistics = await callApi({
         method: GET,
         url: ApiPrefix + process.env.API_HOST + TaskStatistics,
         params: {
             "categoryId": categoryId,
         }
     });
+
+    if (statistics == null) {
+        console.log('statistics is null.')
+        statistics = [];
+    }
 
     return {
         props: {
