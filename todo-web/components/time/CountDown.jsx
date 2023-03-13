@@ -1,22 +1,17 @@
 import moment from "moment";
 import {useEffect, useState} from "react";
 
-export default function CountDown({time}) {
-    const [left, setLeft] = useState(calLeft(moment.now(), moment(time)));
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setLeft(calLeft(moment.now(), moment(time)))
-        }, 500);
-        return () => clearInterval(timer);
-    }, [time]);
-
-    function calLeft(from, to) {
-        let result = '';
-        let time = moment(to).format('HH:mm');
-        if (time !== '23:59') {
-            result += ' ' + time;
-        }
+export function calLeft(from, to) {
+    let result = '';
+    let time = moment(to).format('HH:mm');
+    if (time !== '23:59') {
+        result += ' ' + time;
+    }
+    let now = moment(from).format('yyyy-MM-DD');
+    let except = moment(to).format('yyyy-MM-DD');
+    if (now === except) {
+        result = '今天' + result;
+    } else {
         let duration = moment.duration(to - from);
         if (duration.asSeconds() > 0) {
             if (duration.asDays().toFixed(0) === '0') {
@@ -33,28 +28,39 @@ export default function CountDown({time}) {
         } else {
             result = moment(to).format('yyyy-MM-DD');
         }
-        return result;
     }
+    return result;
+}
 
-    function getWeek(date) {
-        let week = moment(date).day()
-        switch (week) {
-            case 1:
-                return '周一'
-            case 2:
-                return '周二'
-            case 3:
-                return '周三'
-            case 4:
-                return '周四'
-            case 5:
-                return '周五'
-            case 6:
-                return '周六'
-            case 0:
-                return '周日'
-        }
+export function getWeek(date) {
+    let week = moment(date).day()
+    switch (week) {
+        case 1:
+            return '周一'
+        case 2:
+            return '周二'
+        case 3:
+            return '周三'
+        case 4:
+            return '周四'
+        case 5:
+            return '周五'
+        case 6:
+            return '周六'
+        case 0:
+            return '周日'
     }
+}
+
+export default function CountDown({time}) {
+    const [left, setLeft] = useState(calLeft(moment.now(), moment(time)));
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setLeft(calLeft(moment.now(), moment(time)))
+        }, 500);
+        return () => clearInterval(timer);
+    }, [time]);
 
     return <span title={time}>
         {left}
