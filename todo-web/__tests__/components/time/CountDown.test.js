@@ -1,4 +1,4 @@
-import {calculateTime} from "../../../components/time/CountDown";
+import {calculateTime, calculateWeek} from "../../../components/time/CountDown";
 import moment from "moment";
 
 const today = '今天';
@@ -11,6 +11,10 @@ const monday_begin_today_expect = today + ' ' + monday_begin.substring(11, 16);
 const monday_earlier_today_expect = today + ' ' + monday_earlier.substring(11, 16);
 const monday_today_expect = today + ' ' + monday.substring(11, 16);
 const monday_later_today_expect = today + ' ' + monday_later.substring(11, 16);
+
+test('周一', () => {
+    expect(calculateWeek(monday)).toBe('周一');
+});
 
 test(monday_begin_today_expect, () => {
     expect(calculateTime(moment(monday), moment(monday_begin))).toBe(monday_begin_today_expect);
@@ -43,6 +47,10 @@ const monday_tomorrow_expect = tomorrow + ' ' + tuesday.substring(11, 16);
 const monday_later_tomorrow_expect = tomorrow + ' ' + tuesday_later.substring(11, 16);
 const tuesday_end_tomorrow_expect = tomorrow;
 
+test('周二', () => {
+    expect(calculateWeek(tuesday)).toBe('周二');
+});
+
 test(monday_begin_tomorrow_expect, () => {
     expect(calculateTime(moment(monday), moment(tuesday_begin))).toBe(monday_begin_tomorrow_expect);
 });
@@ -73,6 +81,10 @@ const wednesday_earlier_wednesday_expect = wednesday_expect + ' ' + wednesday_ea
 const wednesday_wednesday_expect = wednesday_expect + ' ' + wednesday.substring(11, 16);
 const wednesday_later_wednesday_expect = wednesday_expect + ' ' + wednesday_later.substring(11, 16);
 const wednesday_end_wednesday_expect = wednesday_expect;
+
+test(wednesday_expect, () => {
+    expect(calculateWeek(wednesday)).toBe(wednesday_expect);
+});
 
 test(wednesday_begin_tomorrow_expect, () => {
     expect(calculateTime(moment(monday), moment(wednesday_begin))).toBe(wednesday_begin_tomorrow_expect);
@@ -106,6 +118,10 @@ const next_monday_monday_expect = next_monday_expect + ' ' + next_monday.substri
 const next_monday_later_expect = next_monday_expect + ' ' + next_monday_later.substring(11, 16);
 const next_monday_end_expect = next_monday_expect;
 
+test('周一', () => {
+    expect(calculateWeek(next_monday)).toBe('周一');
+});
+
 test(next_monday_begin_expect, () => {
     expect(calculateTime(moment(monday), moment(next_monday_begin))).toBe(next_monday_begin_expect);
 });
@@ -124,4 +140,18 @@ test(next_monday_later_expect, () => {
 
 test(next_monday_end_expect, () => {
     expect(calculateTime(moment(monday), moment(next_monday_end))).toBe(next_monday_end_expect);
+});
+
+const very_far_away = '2024-03-20 18:15:00';
+const very_far_away_expect = '373 天';
+
+test(very_far_away_expect, () => {
+    expect(calculateTime(moment(monday), moment(very_far_away))).toBe(very_far_away_expect);
+});
+
+const passed_away = '2022-03-20 18:15:00';
+const passed_away_expect = '已过期 358 天';
+
+test(passed_away_expect, () => {
+    expect(calculateTime(moment(monday), moment(passed_away))).toBe(passed_away_expect);
 });
