@@ -1,7 +1,7 @@
 import moment from "moment";
 import {useEffect, useState} from "react";
 
-export function calLeft(from, to) {
+export function calculateTime(from, to) {
     let result = '';
     let time = moment(to).format('HH:mm');
     if (time !== '23:59') {
@@ -12,27 +12,28 @@ export function calLeft(from, to) {
     if (now === except) {
         result = '今天' + result;
     } else {
-        let duration = moment.duration(to - from);
-        if (duration.asSeconds() > 0) {
-            if (duration.asDays().toFixed(0) === '0') {
-                result = '今天' + result;
-            } else if (duration.asDays().toFixed(0) === '1') {
-                result = '明天' + result;
-            } else if (duration.asDays() < (8 - moment(from).day())) {
-                result = getWeek(to) + result;
-            } else if (duration.asDays() < (15 - moment(from).day())) {
-                result = '下' + getWeek(to) + result;
-            } else {
-                result = duration.asDays().toFixed(0) + ' 天';
-            }
+        now = moment(from).add(1, 'days').format('yyyy-MM-DD')
+        if (now === except) {
+            result = '明天' + result;
         } else {
-            result = moment(to).format('yyyy-MM-DD');
+            let duration = moment.duration(to - from);
+            if (duration.asSeconds() > 0) {
+                if (duration.asDays() < (8 - moment(from).day())) {
+                    result = calculateWeek(to) + result;
+                } else if (duration.asDays() < (15 - moment(from).day())) {
+                    result = '下' + calculateWeek(to) + result;
+                } else {
+                    result = duration.asDays().toFixed(0) + ' 天';
+                }
+            } else {
+                result = moment(to).format('yyyy-MM-DD');
+            }
         }
     }
     return result;
 }
 
-export function getWeek(date) {
+export function calculateWeek(date) {
     let week = moment(date).day()
     switch (week) {
         case 1:
@@ -53,11 +54,11 @@ export function getWeek(date) {
 }
 
 export default function CountDown({time}) {
-    const [left, setLeft] = useState(calLeft(moment.now(), moment(time)));
+    const [left, setLeft] = useState(calculateTime(moment.now(), moment(time)));
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setLeft(calLeft(moment.now(), moment(time)))
+            setLeft(calculateTime(moment.now(), moment(time)))
         }, 500);
         return () => clearInterval(timer);
     }, [time]);
