@@ -93,3 +93,35 @@ test(wednesday_later_wednesday_expect, () => {
 test(wednesday_end_wednesday_expect, () => {
     expect(calculateTime(moment(monday), moment(wednesday_end))).toBe(wednesday_end_wednesday_expect);
 });
+
+const next_monday_expect = '下周一';
+const next_monday_begin = '2023-03-20 00:00:00';
+const next_monday_earlier = '2023-03-20 07:59:59';
+const next_monday = '2023-03-20 18:15:00';
+const next_monday_later = '2023-03-20 19:23:59';
+const next_monday_end = '2023-03-20 23:59:59';
+const next_monday_begin_expect = next_monday_expect + ' ' + next_monday_begin.substring(11, 16);
+const next_monday_earlier_expect = next_monday_expect + ' ' + next_monday_earlier.substring(11, 16);
+const next_monday_monday_expect = next_monday_expect + ' ' + next_monday.substring(11, 16);
+const next_monday_later_expect = next_monday_expect + ' ' + next_monday_later.substring(11, 16);
+const next_monday_end_expect = next_monday_expect;
+
+test(next_monday_begin_expect, () => {
+    expect(calculateTime(moment(monday), moment(next_monday_begin))).toBe(next_monday_begin_expect);
+});
+
+test(next_monday_earlier_expect, () => {
+    expect(calculateTime(moment(monday), moment(next_monday_earlier))).toBe(next_monday_earlier_expect);
+});
+
+test(next_monday_monday_expect, () => {
+    expect(calculateTime(moment(monday), moment(next_monday))).toBe(next_monday_monday_expect);
+});
+
+test(next_monday_later_expect, () => {
+    expect(calculateTime(moment(monday), moment(next_monday_later))).toBe(next_monday_later_expect);
+});
+
+test(next_monday_end_expect, () => {
+    expect(calculateTime(moment(monday), moment(next_monday_end))).toBe(next_monday_end_expect);
+});

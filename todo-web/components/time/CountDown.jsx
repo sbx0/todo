@@ -11,24 +11,25 @@ export function calculateTime(from, to) {
     let except = moment(to).format('yyyy-MM-DD');
     if (now === except) {
         result = '今天' + result;
-    } else {
-        now = moment(from).add(1, 'days').format('yyyy-MM-DD')
-        if (now === except) {
-            result = '明天' + result;
+        return result;
+    }
+    now = moment(from).add(1, 'days').format('yyyy-MM-DD')
+    if (now === except) {
+        result = '明天' + result;
+        return result;
+    }
+    let duration = moment.duration(to - from);
+    let number = duration.asDays();
+    if (number > 0) {
+        if (number < (7 - moment(from).day())) {
+            result = calculateWeek(to) + result;
+        } else if (number < (14 - moment(from).day())) {
+            result = '下' + calculateWeek(to) + result;
         } else {
-            let duration = moment.duration(to - from);
-            if (duration.asSeconds() > 0) {
-                if (duration.asDays() < (8 - moment(from).day())) {
-                    result = calculateWeek(to) + result;
-                } else if (duration.asDays() < (15 - moment(from).day())) {
-                    result = '下' + calculateWeek(to) + result;
-                } else {
-                    result = duration.asDays().toFixed(0) + ' 天';
-                }
-            } else {
-                result = moment(to).format('yyyy-MM-DD');
-            }
+            result = number.toFixed(0) + ' 天';
         }
+    } else {
+        result = '已过期 ' + -number + ' 天';
     }
     return result;
 }
