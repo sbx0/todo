@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.asset.type;
 
 import cn.sbx0.todo.repositories.AssetTypeRepository;
 import cn.sbx0.todo.service.JpaService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,14 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class AssetTypeService extends JpaService<AssetTypeRepository, AssetType, Long> {
+    @Resource
+    private AssetTypeRepository repository;
+
+    @Override
+    protected AssetTypeRepository repository() {
+        return this.repository;
+    }
+
     @Override
     protected Long getId(AssetType assetType) {
         return assetType.getId();

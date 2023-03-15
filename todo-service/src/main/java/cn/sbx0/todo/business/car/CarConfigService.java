@@ -6,6 +6,7 @@ import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.CarConfigRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,13 @@ import java.util.List;
 @Service
 public class CarConfigService extends JpaService<CarConfigRepository, CarConfig, Long> {
     public static final List<Sort.Order> ORDERS = List.of(Sort.Order.desc("id"));
+    @Resource
+    private CarConfigRepository repository;
+
+    @Override
+    protected CarConfigRepository repository() {
+        return this.repository;
+    }
 
     @Override
     protected Long getId(CarConfig carConfig) {

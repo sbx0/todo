@@ -3,7 +3,6 @@ package cn.sbx0.todo.service;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
-import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,15 +15,14 @@ import java.util.Optional;
  * @since 2023/3/15
  */
 public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
-    @Resource
-    protected R repository;
+    protected abstract R repository();
 
     protected abstract ID getId(T t);
 
     protected abstract T saveBefore(T t);
 
     public <DefaultPagingRequest extends PagingRequest> Paging<T> paging(DefaultPagingRequest pagingRequest) {
-        Page<T> pagingData = repository.findAll(Paging.build(
+        Page<T> pagingData = repository().findAll(Paging.build(
                 pagingRequest.getPage(), pagingRequest.getPageSize(),
                 Sort.by(Sort.Order.asc("id"))
         ));
@@ -42,7 +40,7 @@ public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
         if (entity == null) {
             return Result.failed();
         }
-        entity = repository.save(saveBefore(entity));
+        entity = repository().save(saveBefore(entity));
         if (getId(entity) != null) {
             return Result.success(entity);
         } else {
@@ -55,17 +53,17 @@ public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
         if (entity == null || getId(entity) == null) {
             return Result.failed();
         }
-        repository.save(entity);
+        repository().save(entity);
         return Result.success(entity);
     }
 
     public Result<T> findById(ID id) {
-        Optional<T> result = repository.findById(id);
+        Optional<T> result = repository().findById(id);
         return result.map(Result::success).orElseGet(Result::failed);
     }
 
     public Result<Void> deleteById(ID id) {
-        repository.deleteById(id);
+        repository().deleteById(id);
         return Result.success();
     }
 }

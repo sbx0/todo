@@ -7,6 +7,7 @@ import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,14 @@ import java.util.List;
 @Slf4j
 @Service
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long> {
+    @Resource
+    private TaskRepository repository;
+
+    @Override
+    protected TaskRepository repository() {
+        return this.repository;
+    }
+
     @Override
     protected Long getId(TaskEntity taskEntity) {
         return taskEntity.getId();
