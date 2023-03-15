@@ -1,5 +1,8 @@
 package cn.sbx0.todo.business.user;
 
+import cn.sbx0.todo.business.user.entity.RegisterParam;
+import cn.sbx0.todo.service.common.Result;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +10,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -17,10 +22,17 @@ import java.util.stream.Collectors;
  * @since 2023/3/14
  */
 @RestController
-public class TokenController {
-
+@RequestMapping(("/user/client"))
+public class ClientUserController {
     @Autowired
     JwtEncoder encoder;
+    @Resource
+    private ClientUserService service;
+
+    @PostMapping("/register")
+    public Result<Long> register(@RequestBody RegisterParam param) {
+        return service.register(param);
+    }
 
     @PostMapping("/token")
     public String token(Authentication authentication) {

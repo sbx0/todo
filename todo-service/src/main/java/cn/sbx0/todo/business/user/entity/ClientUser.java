@@ -23,6 +23,8 @@ public class ClientUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    // email
+    private String email;
     // nickname
     private String nickname;
     // password

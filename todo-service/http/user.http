@@ -14,3 +14,12 @@ Content-Type: application/json
   "page": 1,
   "pageSize": 10
 }
+
+### register
+POST win.sbx0.cn:9999/user/client/register
+Content-Type: application/json
+
+{
+  "email": "admin@sbx0.cn",
+  "password": "admin@sbx0.cn"
+}
