@@ -4,7 +4,7 @@ import cn.sbx0.todo.business.asset.type.AssetType;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.AssetRecordRepository;
 import cn.sbx0.todo.repositories.AssetTypeRepository;
-import cn.sbx0.todo.service.JpaService;
+import cn.sbx0.todo.service.JpaServiceImpl;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -27,12 +27,20 @@ import java.util.Optional;
  */
 @Slf4j
 @Service
-public class AssetRecordService implements JpaService<AssetRecord, Long> {
-
-    @Resource
-    private AssetRecordRepository repository;
+public class AssetRecordService extends JpaServiceImpl<AssetRecordRepository, AssetRecord, Long> {
     @Resource
     private AssetTypeRepository assetTypeRepository;
+
+    @Override
+    protected Long getId(AssetRecord assetRecord) {
+        return assetRecord.getId();
+    }
+
+    @Override
+    protected AssetRecord saveBefore(AssetRecord assetRecord) {
+        assetRecord.setCreateTime(LocalDateTime.now());
+        return assetRecord;
+    }
 
     public Result<List<RecordItem>> getRecords() {
         List<RecordItem> records = new ArrayList<>();
@@ -45,7 +53,7 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
         totalRecordItem.setSmooth(false);
         totalRecordItem.setShowSymbol(false);
         List<BigDecimal> totalData = new ArrayList<>();
-        List<String> recordTimeList = repository.getRecentRecordTimeList();
+        List<String> recordTimeList = r.getRecentRecordTimeList();
         for (int i = 0; i < recordTimeList.size(); i++) {
             totalData.add(new BigDecimal(0));
         }
@@ -57,7 +65,7 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
             record.setSmooth(false);
             record.setShowSymbol(false);
             record.setYAxisIndex((type.getId().intValue() - 1));
-            List<AssetRecord> assetRecords = repository.getRecordsByTypeId(type.getId());
+            List<AssetRecord> assetRecords = r.getRecordsByTypeId(type.getId());
             List<BigDecimal> data = new ArrayList<>();
             for (int i = 0; i < assetRecords.size(); i++) {
                 AssetRecord assetRecord = assetRecords.get(i);
@@ -75,20 +83,12 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
     }
 
     public Result<List<String>> getRecentRecordTimeList() {
-        return Result.success(repository.getRecentRecordTimeList());
+        return Result.success(r.getRecentRecordTimeList());
     }
 
-    /**
-     * <p>Paging list</p>
-     * <p>Unit Test is {@link  AssetRecordServiceTest#paging}</p>
-     *
-     * @param page     page
-     * @param pageSize pageSize
-     * @return Paging list
-     */
     @Override
     public <DefaultPagingRequest extends PagingRequest> Paging<AssetRecord> paging(DefaultPagingRequest pagingRequest) {
-        Page<AssetRecord> pagingData = repository.findAll(Paging.build(
+        Page<AssetRecord> pagingData = r.findAll(Paging.build(
                 pagingRequest.getPage(), pagingRequest.getPageSize(),
                 Sort.by(Order.asc("id"))
         ));
@@ -115,47 +115,18 @@ public class AssetRecordService implements JpaService<AssetRecord, Long> {
             return Result.failed();
         }
         // find one by record time and typeId
-        AssetRecord assetRecord = repository.findByTypeIdAndRecordTime(entity);
+        AssetRecord assetRecord = r.findByTypeIdAndRecordTime(entity);
         if (assetRecord != null) {
             assetRecord.setRecordValue(entity.getRecordValue());
             entity = assetRecord;
         } else {
             entity.setCreateTime(LocalDateTime.now());
         }
-        entity = repository.save(entity);
+        entity = r.save(entity);
         if (entity.getId() != null) {
             return Result.success(entity);
         } else {
             return Result.failed();
         }
-    }
-
-    /**
-     * <p>Update</p>
-     * <p>Unit Test is {@link  AssetRecordServiceTest#update}</p>
-     *
-     * @param entity entity
-     * @return new entity
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Result<AssetRecord> update(AssetRecord entity) {
-        if (entity == null || entity.getId() == null) {
-            return Result.failed();
-        }
-        repository.save(entity);
-        return Result.success(entity);
-    }
-
-    @Override
-    public Result<AssetRecord> findById(Long id) {
-        Optional<AssetRecord> result = repository.findById(id);
-        return result.map(Result::success).orElseGet(Result::failed);
-    }
-
-    @Override
-    public Result<Void> deleteById(Long id) {
-        repository.deleteById(id);
-        return Result.success();
     }
 }
