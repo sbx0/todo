@@ -1,14 +1,18 @@
 package cn.sbx0.todo.business.time;
 
+import cn.sbx0.todo.business.task.TaskController;
+import cn.sbx0.todo.config.RestConfig;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -38,8 +42,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @Slf4j
 @MockBean(classes = {TimeService.class})
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@WebMvcTest({TimeController.class})
+@ExtendWith({RestDocumentationExtension.class})
+@Import(RestConfig.class)
 class TimeControllerTest {
 
   @Resource

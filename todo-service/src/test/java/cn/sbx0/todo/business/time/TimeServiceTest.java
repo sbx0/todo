@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.given;
  * @since 2022/12/8
  */
 @MockBean(classes = {DualRepository.class})
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = {TimeService.class})
 class TimeServiceTest {
 
     @Autowired

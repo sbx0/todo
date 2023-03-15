@@ -7,3 +7,6 @@ spring:
       ddl-auto: create
   flyway:
     enabled: false
+jwt:
+  private.key: classpath:app.key
+  public.key: classpath:app.pub

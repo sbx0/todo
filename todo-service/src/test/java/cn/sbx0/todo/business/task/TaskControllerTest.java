@@ -1,7 +1,9 @@
 package cn.sbx0.todo.business.task;
 
+import cn.sbx0.todo.business.category.CategoryController;
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.config.RestConfig;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Code;
@@ -14,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -49,8 +53,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @Slf4j
 @MockBean(classes = {TaskService.class})
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@WebMvcTest({TaskController.class})
+@ExtendWith({RestDocumentationExtension.class})
+@Import(RestConfig.class)
 class TaskControllerTest {
 
     @Resource

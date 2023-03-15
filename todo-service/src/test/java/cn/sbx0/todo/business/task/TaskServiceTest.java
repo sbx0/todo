@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.given;
  * @since 2022/12/1
  */
 @MockBean(classes = {TaskRepository.class})
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = {TaskService.class})
 class TaskServiceTest {
 
     @Autowired

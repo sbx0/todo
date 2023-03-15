@@ -44,6 +44,7 @@ export async function callApi({method, url, params}) {
         });
     }
     if (!res.ok) {
+        console.log(res);
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data');
     }
@@ -59,6 +60,7 @@ export async function saveApi(params) {
         body: JSON.stringify(params)
     });
     if (!res.ok) {
+        console.log(res);
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data');
     }
@@ -74,6 +76,7 @@ export async function updateApi(params) {
         body: JSON.stringify(params)
     });
     if (!res.ok) {
+        console.log(res);
         // This will activate the closest `error.js` Error Boundary
         throw new Error('Failed to fetch data');
     }
