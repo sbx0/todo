@@ -33,6 +33,7 @@ logging:
   level:
     root: info
     org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security: debug
 jwt:
   private.key: classpath:app.key
   public.key: classpath:app.pub

@@ -25,30 +25,37 @@ export function buildPath(url, params) {
     return url;
 }
 
-export async function callApi({method, url, params}) {
+export async function callApi({
+                                  method,
+                                  url,
+                                  params,
+                                  headers = {
+                                      'Content-Type': 'application/json',
+                                  }
+                              }) {
     let res;
     if (method === 'POST') {
         res = await fetch(url, {
             method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(params)
         });
     } else {
         res = await fetch(buildPath(url, params), {
             method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            headers: headers
         });
     }
     if (!res.ok) {
-        console.log(res);
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data');
+        return {
+            "code": 1,
+            "success": false,
+            "message": res.status + " " + res.statusText,
+            "data": null
+        }
+    } else {
+        return res.json();
     }
-    return res.json();
 }
 
 export async function saveApi(params) {

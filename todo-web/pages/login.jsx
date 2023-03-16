@@ -4,12 +4,31 @@ import FoamBox from "../components/layout/FoamBox";
 import Input from "../components/basic/Input";
 import NavigationBar from "../components/NavigationBar";
 import Button from "../components/basic/Button";
+import {callApi} from "../apis/taskApi";
+import {POST} from "../apis/apiPath";
 
 export default function Login() {
     const [account, setAccount] = useState(null);
 
     function login() {
-        console.log(account)
+        if (account == null || account.username == null || account.password == null) {
+            return;
+        }
+        const token = btoa(`${account.username}:${account.password}`);
+        callApi({
+            method: POST,
+            url: "/api/user/client/login",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + token,
+            }
+        }).then(r => {
+            if (!r.success) {
+                console.log(r.message)
+            } else {
+                console.log(r.data)
+            }
+        });
     }
 
     return <Container>
@@ -43,6 +62,6 @@ export default function Login() {
         <FoamBox>
             <Button name={"登录"} onClick={login}/>
         </FoamBox>
-        <NavigationBar/>
+        <NavigationBar active={4}/>
     </Container>
 }

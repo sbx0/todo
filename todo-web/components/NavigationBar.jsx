@@ -1,7 +1,7 @@
 import styles from "./NavigationBar.module.css";
 import {useRouter} from "next/router";
 import {buildPath} from "../apis/taskApi";
-import {FileMediaIcon, GraphIcon, ListUnorderedIcon, TasklistIcon} from "@primer/octicons-react";
+import {FileMediaIcon, GraphIcon, ListUnorderedIcon, PersonIcon, TasklistIcon} from "@primer/octicons-react";
 
 export default function NavigationBar({active}) {
     const router = useRouter()
@@ -34,6 +34,13 @@ export default function NavigationBar({active}) {
             value: 3,
             path: '/car',
             label: <FileMediaIcon size={24}/>
+        },
+        {
+            id: 'navigation_bar_login',
+            name: 'navigation_bar',
+            value: 4,
+            path: '/login',
+            label: <PersonIcon size={24}/>
         }
     ];
 
