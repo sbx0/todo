@@ -1,7 +1,6 @@
 package cn.sbx0.todo.business.time;
 
-import cn.sbx0.todo.business.task.TaskController;
-import cn.sbx0.todo.config.RestConfig;
+import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -9,18 +8,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -41,10 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {TimeService.class})
+@MockBean(classes = {TimeService.class, DataSource.class})
 @WebMvcTest({TimeController.class})
 @ExtendWith({RestDocumentationExtension.class})
-@Import(RestConfig.class)
+@Import(SpringSecurityConfig.class)
 class TimeControllerTest {
 
   @Resource

@@ -1,6 +1,6 @@
 package cn.sbx0.todo.business.category;
 
-import cn.sbx0.todo.config.RestConfig;
+import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.service.common.Code;
@@ -19,11 +19,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +43,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {CategoryService.class})
+@MockBean(classes = {CategoryService.class, DataSource.class})
 @WebMvcTest({CategoryController.class})
 @ExtendWith({RestDocumentationExtension.class})
-@Import(RestConfig.class)
+@Import({SpringSecurityConfig.class})
 class CategoryControllerTest {
 
     protected MockMvc mockMvc;

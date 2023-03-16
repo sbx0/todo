@@ -1,9 +1,8 @@
 package cn.sbx0.todo.business.task;
 
-import cn.sbx0.todo.business.category.CategoryController;
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
-import cn.sbx0.todo.config.RestConfig;
+import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Code;
@@ -17,18 +16,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +49,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/2
  */
 @Slf4j
-@MockBean(classes = {TaskService.class})
+@MockBean(classes = {TaskService.class, DataSource.class})
 @WebMvcTest({TaskController.class})
 @ExtendWith({RestDocumentationExtension.class})
-@Import(RestConfig.class)
+@Import(SpringSecurityConfig.class)
 class TaskControllerTest {
 
     @Resource

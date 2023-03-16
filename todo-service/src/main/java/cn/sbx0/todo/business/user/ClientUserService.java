@@ -7,10 +7,15 @@ import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
@@ -23,6 +28,8 @@ import java.time.LocalDateTime;
 public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long> {
     @Resource
     private ClientUserRepository repository;
+    @Resource
+    private DataSource dataSource;
 
     @Override
     protected ClientUserRepository repository() {
@@ -41,11 +48,12 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     }
 
     public Result<Long> register(RegisterParam param) {
-        ClientUser clientUser = new ClientUser();
-        clientUser.setEmail(param.getEmail());
-        clientUser.setNickname("USER-" + DigestUtils.md5DigestAsHex((param.getEmail()).getBytes(StandardCharsets.UTF_8)));
-        clientUser.setPwd(BCrypt.hashpw(param.getPassword(), BCrypt.gensalt()));
-        Result<ClientUser> result = this.save(clientUser);
-        return result.isSuccess() ? Result.success() : Result.failed();
+        UserDetails user = User.builder()
+                .username(param.getEmail())
+                .password(BCrypt.hashpw(param.getPassword(), BCrypt.gensalt()))
+                .roles("USER")
+                .build();
+        new JdbcUserDetailsManager(dataSource).createUser(user);
+        return Result.success();
     }
 }
