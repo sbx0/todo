@@ -38,20 +38,20 @@ public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
     @Transactional(rollbackFor = Exception.class)
     public Result<T> save(T entity) {
         if (entity == null) {
-            return Result.failed();
+            return Result.failure();
         }
         entity = repository().save(saveBefore(entity));
         if (getId(entity) != null) {
             return Result.success(entity);
         } else {
-            return Result.failed();
+            return Result.failure();
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
     public Result<T> update(T entity) {
         if (entity == null || getId(entity) == null) {
-            return Result.failed();
+            return Result.failure();
         }
         repository().save(entity);
         return Result.success(entity);
@@ -59,7 +59,7 @@ public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
 
     public Result<T> findById(ID id) {
         Optional<T> result = repository().findById(id);
-        return result.map(Result::success).orElseGet(Result::failed);
+        return result.map(Result::success).orElseGet(Result::failure);
     }
 
     public Result<Void> deleteById(ID id) {

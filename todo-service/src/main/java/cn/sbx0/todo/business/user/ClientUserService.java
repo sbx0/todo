@@ -9,14 +9,11 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 /**
@@ -26,10 +23,15 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long> {
+    private final JdbcUserDetailsManager jdbcUserDetailsManager;
     @Resource
     private ClientUserRepository repository;
     @Resource
-    private DataSource dataSource;
+    private PasswordEncoder passwordEncoder;
+
+    public ClientUserService(DataSource dataSource) {
+        this.jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+    }
 
     @Override
     protected ClientUserRepository repository() {
@@ -50,10 +52,15 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     public Result<Long> register(RegisterParam param) {
         UserDetails user = User.builder()
                 .username(param.getEmail())
-                .password(BCrypt.hashpw(param.getPassword(), BCrypt.gensalt()))
+                .password(passwordEncoder.encode(param.getPassword()))
                 .roles("USER")
                 .build();
-        new JdbcUserDetailsManager(dataSource).createUser(user);
+        try {
+            jdbcUserDetailsManager.createUser(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.failure(e.getMessage());
+        }
         return Result.success();
     }
 }

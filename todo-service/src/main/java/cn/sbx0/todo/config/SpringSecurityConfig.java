@@ -11,10 +11,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -35,32 +36,51 @@ import java.security.interfaces.RSAPublicKey;
 @Configuration
 public class SpringSecurityConfig {
     @Value("${jwt.public.key}")
-    private RSAPublicKey key;
+    private RSAPublicKey publicKey;
 
     @Value("${jwt.private.key}")
-    private RSAPrivateKey priv;
+    private RSAPrivateKey privateKey;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize.requestMatchers(
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // @formatter:off
+        http
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(
                                 "/task/*",
                                 "/category/*",
-                                "/car/*",
+                                "/car/plate/photo/*",
                                 "/asset/record/*",
                                 "/asset/type/*",
-                                "/user/client/register",
-                                "/user/client/login",
-                                "/time/now"
+                                "/time/now",
+                                "/user/client/register"
                         ).permitAll()
-                        .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
+                        .anyRequest().authenticated()
+                )
+                .csrf((csrf) -> csrf.ignoringRequestMatchers(
+                        "/task/*",
+                        "/category/*",
+                        "/car/plate/photo/*",
+                        "/asset/record/*",
+                        "/asset/type/*",
+                        "/time/now",
+                        "/user/client/register",
+                        "/user/client/login"
+                ))
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+                );
+        // @formatter:on
         return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
@@ -70,13 +90,13 @@ public class SpringSecurityConfig {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.key).build();
+        return NimbusJwtDecoder.withPublicKey(this.publicKey).build();
     }
 
     @Bean
     JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(this.key).privateKey(this.priv).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
+        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
+        JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwkSource);
     }
 }

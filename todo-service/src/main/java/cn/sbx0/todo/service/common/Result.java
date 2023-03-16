@@ -34,7 +34,7 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> failed() {
+    public static <T> Result<T> failure() {
         Result<T> result = new Result<>();
         result.setSuccess(false);
         result.setCode(Code.FAILED);
@@ -42,12 +42,12 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> failed(T data) {
+    public static <T> Result<T> failure(String message) {
         Result<T> result = new Result<>();
         result.setSuccess(false);
         result.setCode(Code.FAILED);
-        result.setMessage(Code.FAILED_MESSAGE);
-        result.setData(data);
+        result.setMessage(message);
+        result.setData(null);
         return result;
     }
 
