@@ -42,7 +42,6 @@ export default function TaskHidden({categoryId, refresh, setTaskStatusCompleted,
             taskPaging.data?.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id}
                           one={one}
-                          timeType={'updateTime'}
                           setTaskStatusUndo={setTaskStatusUndo}
                           setTaskStatusCompleted={setTaskStatusCompleted}/>)
             : <></>

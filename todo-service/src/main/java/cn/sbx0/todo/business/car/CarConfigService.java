@@ -1,6 +1,7 @@
 package cn.sbx0.todo.business.car;
 
 import cn.sbx0.todo.business.car.entity.CarConfig;
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.repositories.CarConfigRepository;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class CarConfigService extends JpaService<CarConfigRepository, CarConfig, Long> {
+public class CarConfigService extends JpaService<CarConfigRepository, CarConfig, Long, DefaultPagingRequest> {
     public static final List<Sort.Order> ORDERS = List.of(Sort.Order.desc("id"));
     @Resource
     private CarConfigRepository repository;
@@ -45,7 +46,13 @@ public class CarConfigService extends JpaService<CarConfigRepository, CarConfig,
     }
 
     @Override
-    public <C extends PagingRequest> Paging<CarConfig> paging(C pagingRequest) {
+    protected CarConfig updateBefore(CarConfig entity) {
+        entity.setUpdateTime(LocalDateTime.now());
+        return entity;
+    }
+
+    @Override
+    public Paging<CarConfig> paging(DefaultPagingRequest pagingRequest) {
         List<Sort.Order> orders;
         if (CollectionUtils.isEmpty(pagingRequest.getOrders())) {
             // default order when empty

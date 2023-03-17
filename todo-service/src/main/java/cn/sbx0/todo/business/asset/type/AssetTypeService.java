@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.asset.type;
 
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.AssetTypeRepository;
 import cn.sbx0.todo.service.JpaService;
 import jakarta.annotation.Resource;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Service
-public class AssetTypeService extends JpaService<AssetTypeRepository, AssetType, Long> {
+public class AssetTypeService extends JpaService<AssetTypeRepository, AssetType, Long, DefaultPagingRequest> {
     @Resource
     private AssetTypeRepository repository;
 
@@ -32,5 +33,11 @@ public class AssetTypeService extends JpaService<AssetTypeRepository, AssetType,
     protected AssetType saveBefore(AssetType assetType) {
         assetType.setCreateTime(LocalDateTime.now());
         return assetType;
+    }
+
+    @Override
+    protected AssetType updateBefore(AssetType entity) {
+        entity.setUpdateTime(LocalDateTime.now());
+        return entity;
     }
 }

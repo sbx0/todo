@@ -1,7 +1,7 @@
 package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
-import cn.sbx0.todo.entity.PagingRequest;
+import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.JpaService;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class TaskService extends JpaService<TaskRepository, TaskEntity, Long> {
+public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
     @Resource
     private TaskRepository repository;
 
@@ -41,6 +41,12 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long> {
         taskEntity.setTaskStatus(0);
         taskEntity.setCreateTime(LocalDateTime.now());
         return taskEntity;
+    }
+
+    @Override
+    protected TaskEntity updateBefore(TaskEntity entity) {
+        entity.setUpdateTime(LocalDateTime.now());
+        return entity;
     }
 
     /**
@@ -74,11 +80,19 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long> {
      * @return Task list
      */
     @Override
-    public <TaskPagingRequest extends PagingRequest> Paging<TaskEntity> paging(TaskPagingRequest pagingRequest) {
-        Page<TaskEntity> pagingData = repository.paging(pagingRequest, Paging.build(
-                pagingRequest.getPage(),
-                pagingRequest.getPageSize()
-        ));
+    public Paging<TaskEntity> paging(TaskPagingRequest pagingRequest) {
+        Page<TaskEntity> pagingData;
+        if (pagingRequest.getTaskStatus() == 0) {
+            pagingData = repository.pagingOrderByPlanTime(pagingRequest, Paging.build(
+                    pagingRequest.getPage(),
+                    pagingRequest.getPageSize()
+            ));
+        } else {
+            pagingData = repository.pagingOrderByUpdateTime(pagingRequest, Paging.build(
+                    pagingRequest.getPage(),
+                    pagingRequest.getPageSize()
+            ));
+        }
         return Paging.success(
                 pagingData.getContent(),
                 pagingData.getPageable().getPageNumber(),

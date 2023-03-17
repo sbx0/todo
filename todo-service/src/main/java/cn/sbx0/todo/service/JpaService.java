@@ -14,14 +14,16 @@ import java.util.Optional;
  * @author sbx0
  * @since 2023/3/15
  */
-public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
+public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID, DefaultPagingRequest extends PagingRequest> {
     protected abstract R repository();
 
     protected abstract ID getId(T t);
 
     protected abstract T saveBefore(T t);
 
-    public <DefaultPagingRequest extends PagingRequest> Paging<T> paging(DefaultPagingRequest pagingRequest) {
+    protected abstract T updateBefore(T t);
+
+    public Paging<T> paging(DefaultPagingRequest pagingRequest) {
         Page<T> pagingData = repository().findAll(Paging.build(
                 pagingRequest.getPage(), pagingRequest.getPageSize(),
                 Sort.by(Sort.Order.asc("id"))
@@ -53,7 +55,7 @@ public abstract class JpaService<R extends JpaRepository<T, ID>, T, ID> {
         if (entity == null || getId(entity) == null) {
             return Result.failure();
         }
-        repository().save(entity);
+        repository().save(updateBefore(entity));
         return Result.success(entity);
     }
 

@@ -1,6 +1,7 @@
 package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
+import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.repositories.TaskRepository;
@@ -65,7 +66,7 @@ class TaskServiceTest {
 
     @Test
     public void paging() {
-        DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 0);
+        TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 0);
 
         List<TaskEntity> data = new ArrayList<>();
         data.add(new TaskEntity("test"));
@@ -73,7 +74,8 @@ class TaskServiceTest {
                 Paging.build(pagingRequest.getPage(), pagingRequest.getPageSize()),
                 data.size()
         );
-        given(repository.paging(any(), ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
+        given(repository.pagingOrderByPlanTime(any(), ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
+        given(repository.pagingOrderByUpdateTime(any(), ArgumentMatchers.any(Pageable.class))).willReturn(pagingData);
 
         Paging<TaskEntity> paging = service.paging(pagingRequest);
         assertNotNull(paging);

@@ -1,6 +1,7 @@
 package cn.sbx0.todo.business.asset.record;
 
 import cn.sbx0.todo.business.asset.type.AssetType;
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.AssetRecordRepository;
 import cn.sbx0.todo.repositories.AssetTypeRepository;
 import cn.sbx0.todo.service.JpaService;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class AssetRecordService extends JpaService<AssetRecordRepository, AssetRecord, Long> {
+public class AssetRecordService extends JpaService<AssetRecordRepository, AssetRecord, Long, DefaultPagingRequest> {
     @Resource
     private AssetRecordRepository repository;
     @Resource
@@ -46,6 +47,12 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
         } else {
             entity.setCreateTime(LocalDateTime.now());
         }
+        return entity;
+    }
+
+    @Override
+    protected AssetRecord updateBefore(AssetRecord entity) {
+        entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }
 

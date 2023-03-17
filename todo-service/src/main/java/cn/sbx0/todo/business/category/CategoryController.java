@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.category;
 
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
@@ -28,7 +29,7 @@ public class CategoryController {
    * @return Category list
    */
   @PostMapping("/paging")
-  public Paging<CategoryEntity> paging(@RequestBody PagingRequest pagingRequest) {
+  public Paging<CategoryEntity> paging(@RequestBody DefaultPagingRequest pagingRequest) {
     return service.paging(pagingRequest);
   }
 

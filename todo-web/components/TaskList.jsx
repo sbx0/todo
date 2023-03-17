@@ -96,7 +96,6 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             {data?.data?.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
-                          timeType={timeType}
                           change={changeTask}/>)}
             {
                 page < data?.common?.totalPage ?

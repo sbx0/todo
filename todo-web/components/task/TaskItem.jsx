@@ -6,8 +6,7 @@ import {CheckCircleFillIcon, CircleIcon} from "@primer/octicons-react";
 
 export default function TaskItem({
                                      one,
-                                     change,
-                                     timeType
+                                     change
                                  }) {
     let isCompleted = 1 === one.taskStatus;
     let isCompletedClassName = isCompleted ? styles.taskItemBodyCompleted : '';
@@ -32,7 +31,7 @@ export default function TaskItem({
                     <CircleIcon/>
                 }
             </div>
-            {one.planTime != null ?
+            {one.taskStatus === 0 && one.planTime != null ?
                 <div onClick={() => setModalShow(true)} className={styles.rightContainerWithCountDown}>
                     <div className={styles.textContainer}>
                         <span className={styles.textCenteredVertically}>

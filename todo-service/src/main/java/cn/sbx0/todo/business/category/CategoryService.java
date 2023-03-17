@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.category;
 
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.CategoryRepository;
 import cn.sbx0.todo.service.JpaService;
 import jakarta.annotation.Resource;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Service
-public class CategoryService extends JpaService<CategoryRepository, CategoryEntity, Long> {
+public class CategoryService extends JpaService<CategoryRepository, CategoryEntity, Long, DefaultPagingRequest> {
     @Resource
     private CategoryRepository repository;
 
@@ -32,5 +33,11 @@ public class CategoryService extends JpaService<CategoryRepository, CategoryEnti
     protected CategoryEntity saveBefore(CategoryEntity categoryEntity) {
         categoryEntity.setCreateTime(LocalDateTime.now());
         return categoryEntity;
+    }
+
+    @Override
+    protected CategoryEntity updateBefore(CategoryEntity entity) {
+        entity.setUpdateTime(LocalDateTime.now());
+        return entity;
     }
 }

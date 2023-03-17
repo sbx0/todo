@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.user;
 
 import cn.sbx0.todo.business.user.entity.ClientUser;
 import cn.sbx0.todo.business.user.entity.RegisterParam;
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.ClientUserRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Result;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Service
-public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long> {
+public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long, DefaultPagingRequest> {
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
     @Resource
     private ClientUserRepository repository;
@@ -46,6 +47,12 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     @Override
     protected ClientUser saveBefore(ClientUser entity) {
         entity.setCreateTime(LocalDateTime.now());
+        return entity;
+    }
+
+    @Override
+    protected ClientUser updateBefore(ClientUser entity) {
+        entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }
 

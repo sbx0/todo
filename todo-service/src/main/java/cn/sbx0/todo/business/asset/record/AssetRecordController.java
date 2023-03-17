@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.asset.record;
 
+import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
@@ -38,7 +39,7 @@ public class AssetRecordController {
      * @return AssetRecord list
      */
     @PostMapping("/paging")
-    public Paging<AssetRecord> paging(@RequestBody PagingRequest pagingRequest) {
+    public Paging<AssetRecord> paging(@RequestBody DefaultPagingRequest pagingRequest) {
         return service.paging(pagingRequest);
     }
 
