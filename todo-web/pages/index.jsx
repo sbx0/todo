@@ -3,6 +3,7 @@ import Container from "../components/Container";
 import TaskList from "../components/TaskList";
 import {callApi} from "../apis/taskApi";
 import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
+import {getSourceCookie} from "../apis/cookies";
 
 export default function Index({initData, category, statistics}) {
 
@@ -33,13 +34,8 @@ export async function getServerSideProps({req, query}) {
             "categoryId": categoryId,
             "orders": [{"name": "create_time", "direction": "desc"}]
         },
-        token: req.headers.Authorization
+        token: getSourceCookie(req.headers.cookie, 'token')
     });
-
-    if (taskPaging == null) {
-        console.log('taskPaging is null.')
-        taskPaging = [];
-    }
 
     let category = await callApi({
         method: POST,
@@ -51,23 +47,14 @@ export async function getServerSideProps({req, query}) {
         }
     });
 
-    if (category == null) {
-        console.log('category is null.')
-        category = [];
-    }
-
     let statistics = await callApi({
         method: GET,
         url: ApiPrefix + process.env.API_HOST + TaskStatistics,
         params: {
             "categoryId": categoryId,
-        }
+        },
+        token: getSourceCookie(req.headers.cookie, 'token')
     });
-
-    if (statistics == null) {
-        console.log('statistics is null.')
-        statistics = [];
-    }
 
     return {
         props: {

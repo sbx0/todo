@@ -37,12 +37,12 @@ export async function callApi({
                                   token
                               }) {
     if (typeof document !== 'undefined') {
-        token = 'Bearer ' + getCookie('token');
+        token = getCookie('token');
     }
     if (token != null && token.trim() !== '') {
         headers = {
             ...headers,
-            Authorization: token
+            Authorization: 'Bearer ' + token
         }
     }
     let res;

@@ -47,10 +47,8 @@ public class SpringSecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
-                                "/task/*",
                                 "/category/*",
                                 "/car/plate/photo/*",
-                                "/asset/record/*",
                                 "/asset/type/*",
                                 "/time/now",
                                 "/user/client/register"
@@ -58,10 +56,8 @@ public class SpringSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers(
-                        "/task/*",
                         "/category/*",
                         "/car/plate/photo/*",
-                        "/asset/record/*",
                         "/asset/type/*",
                         "/time/now",
                         "/user/client/register",
