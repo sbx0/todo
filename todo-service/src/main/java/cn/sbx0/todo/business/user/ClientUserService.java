@@ -56,9 +56,9 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         return entity;
     }
 
-    public Result<Long> register(RegisterParam param) {
+    public Result<ClientUser> register(RegisterParam param) {
         UserDetails user = User.builder()
-                .username(param.getEmail())
+                .username(param.getUsername())
                 .password(passwordEncoder.encode(param.getPassword()))
                 .roles("USER")
                 .build();
@@ -68,6 +68,9 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
             log.error(e.getMessage());
             return Result.failure(e.getMessage());
         }
-        return Result.success();
+        ClientUser clientUser = new ClientUser();
+        clientUser.setUsername(param.getUsername());
+        clientUser.setNickname(param.getUsername());
+        return this.save(clientUser);
     }
 }

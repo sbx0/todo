@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterParam {
-    private String email;
+    private String username;
     private String password;
 }

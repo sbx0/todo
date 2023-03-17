@@ -1,22 +1,22 @@
 ### login
-POST win.sbx0.cn:9999/user/client/login
+POST win.sbx0.cn:8888/user/client/login
 Authorization: Basic user password
 
 ### register
-POST win.sbx0.cn:9999/user/client/register
+POST win.sbx0.cn:8888/user/client/register
 Content-Type: application/json
 
 {
-  "email": "admin7@sbx0.cn",
+  "username": "admin12@sbx0.cn",
   "password": "B0QTwPc5ozhu6f30NRKK"
 }
 
 ### login
-POST win.sbx0.cn:9999/user/client/login
+POST win.sbx0.cn:8888/user/client/login
 Authorization: Basic admin7@sbx0.cn B0QTwPc5ozhu6f30NRKK
 
 ### asset type paging
-POST win.sbx0.cn:9999/asset/type/paging
+POST win.sbx0.cn:8888/asset/type/paging
 Content-Type: application/json
 
 {

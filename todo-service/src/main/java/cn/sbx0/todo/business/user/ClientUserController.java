@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.user;
 
+import cn.sbx0.todo.business.user.entity.ClientUser;
 import cn.sbx0.todo.business.user.entity.RegisterParam;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -43,7 +44,7 @@ public class ClientUserController {
     }
 
     @PostMapping("/register")
-    public Result<Long> register(@RequestBody RegisterParam param) {
+    public Result<ClientUser> register(@RequestBody RegisterParam param) {
         return service.register(param);
     }
 

@@ -25,10 +25,10 @@ public class ClientUser {
     private Long id;
     // email
     private String email;
+    // username
+    private String username;
     // nickname
     private String nickname;
-    // password
-    private String pwd;
     // when create
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
