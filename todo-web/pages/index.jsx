@@ -11,9 +11,7 @@ export default function Index({initData, category, statistics}) {
         <TaskList initData={initData}
                   category={category}
                   statistics={statistics}
-                  taskStatus={0}
-                  orderBy={'create_time'}
-                  timeType={'create_time'}/>
+                  taskStatus={0}/>
         <NavigationBar active={0}/>
     </Container>
 }

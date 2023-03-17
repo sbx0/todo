@@ -9,7 +9,7 @@ import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
 import {POST, TaskPaging} from "../apis/apiPath";
 
-export default function TaskList({initData, category, statistics, taskStatus, orderBy, timeType}) {
+export default function TaskList({initData, category, statistics, taskStatus}) {
     const router = useRouter()
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
@@ -29,6 +29,7 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     const [data, setData] = useState(initData);
 
     const changeTask = (task) => {
+        setLoading(true);
         callApi({
             method: POST,
             url: '/api/task/update',
@@ -43,12 +44,15 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                 }
             }
             setData({...data, data: newData});
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
     const getTaskPaging = (page, pageSize, categoryId, taskStatus) => {
         setPage(page);
         setPageSize(pageSize);
+        setLoading(true);
         callApi({
             method: POST,
             url: TaskPaging,
@@ -65,7 +69,9 @@ export default function TaskList({initData, category, statistics, taskStatus, or
             } else {
                 setData(r);
             }
-        });
+        }).finally(() => {
+            setLoading(false);
+        })
     }
 
     const categoryClickEvent = (value) => {
@@ -91,6 +97,7 @@ export default function TaskList({initData, category, statistics, taskStatus, or
                    initData={category}
                    setCategoryId={setCategoryId}
                    saveEvent={saveEvent}
+                   setLoading={setLoading}
                    clickEvent={categoryClickEvent}/>
         <div className={styles.taskItemList}>
             {data?.data?.map((one) =>

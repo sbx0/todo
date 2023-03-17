@@ -5,7 +5,7 @@ import TaskCategory from "./TaskCategory";
 import {useRouter} from "next/router";
 import {POST} from "../../apis/apiPath";
 
-export default function TaskInput({categoryId, initData, setCategoryId, saveEvent, clickEvent}) {
+export default function TaskInput({categoryId, initData, setCategoryId, saveEvent, clickEvent, setLoading}) {
     const router = useRouter()
     const [newTask, setNewTask] = useState('');
     const saveNewTask = () => {
@@ -20,6 +20,7 @@ export default function TaskInput({categoryId, initData, setCategoryId, saveEven
         if (taskName.trim() === '') {
             return;
         }
+        setLoading(true);
         callApi({
             method: POST,
             url: '/api/task/save',
@@ -29,6 +30,8 @@ export default function TaskInput({categoryId, initData, setCategoryId, saveEven
             }
         }).then((r) => {
             saveEvent(r.data)
+        }).finally(() => {
+            setLoading(false);
         })
     }
 

@@ -11,9 +11,7 @@ export default function Done({initData, category, statistics}) {
         <TaskList initData={initData}
                   category={category}
                   statistics={statistics}
-                  taskStatus={1}
-                  timeType={'update_time'}
-                  orderBy={'update_time'}/>
+                  taskStatus={1}/>
         <NavigationBar active={1}/>
     </Container>
 }
