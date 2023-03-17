@@ -1,39 +1,37 @@
 import styles from "./StatisticsPanel.module.css";
 import {useEffect, useState} from "react";
 
-export default function StatisticsPanel({categoryId, initData}) {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(initData);
+export default function StatisticsPanel({initData}) {
     const [completed, setCompleted] = useState(0);
     const [uncompleted, setUncompleted] = useState(0);
 
     useEffect(() => {
-        if (data != null) {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].key === 'completed') {
-                    setCompleted(data[i].value);
-                } else if (data[i].key === 'uncompleted') {
-                    setUncompleted(data[i].value);
+        if (initData != null) {
+            for (let i = 0; i < initData.length; i++) {
+                if (initData[i].key === 'completed') {
+                    setCompleted(initData[i].value);
+                } else if (initData[i].key === 'uncompleted') {
+                    setUncompleted(initData[i].value);
                 }
             }
         }
-    }, [data]);
+    }, [initData]);
 
     return <div className={styles.container}>
         <div className={styles.item}>
             <div className={styles.itemTitle}>
-                Completed
+                未完成
             </div>
-            <div className={`${styles.itemValue} ${styles.completed}`}>
-                {completed}
+            <div className={styles.itemValue}>
+                {uncompleted}
             </div>
         </div>
         <div className={styles.item}>
             <div className={styles.itemTitle}>
-                Uncompleted
+                已完成
             </div>
-            <div className={styles.itemValue}>
-                {uncompleted}
+            <div className={`${styles.itemValue} ${styles.completed}`}>
+                {completed}
             </div>
         </div>
     </div>;

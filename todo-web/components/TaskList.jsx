@@ -7,7 +7,7 @@ import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
-import {POST, TaskPaging} from "../apis/apiPath";
+import {GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
 
 export default function TaskList({initData, category, statistics, taskStatus}) {
     const router = useRouter()
@@ -27,6 +27,7 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
+    const [statisticsData, setStatisticsData] = useState(statistics);
 
     const changeTask = (task) => {
         setLoading(true);
@@ -74,10 +75,19 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
         })
     }
 
-    const categoryClickEvent = (value) => {
-        router.replace({query: {...router.query, categoryId: value},}).then(r => r);
+    const categoryClickEvent = (categoryId) => {
+        router.replace({query: {...router.query, categoryId: categoryId},}).then(r => r);
         setPage(1);
-        getTaskPaging(1, pageSize, value, taskStatus);
+        getTaskPaging(1, pageSize, categoryId, taskStatus);
+        callApi({
+            method: GET,
+            url: TaskStatistics,
+            params: {
+                "categoryId": categoryId,
+            }
+        }).then(r => {
+            setStatisticsData(r.data);
+        });
     }
 
     const saveEvent = (task) => {
@@ -91,8 +101,7 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     }
 
     return <>
-        <StatisticsPanel categoryId={categoryId}
-                         initData={statistics}/>
+        <StatisticsPanel initData={statisticsData}/>
         <TaskInput categoryId={categoryId}
                    initData={category}
                    setCategoryId={setCategoryId}
