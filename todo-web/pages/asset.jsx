@@ -8,6 +8,7 @@ import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
 import ReactEcharts from "echarts-for-react";
+import {readRecordValue} from "next/dist/client/components/router-reducer/read-record-value";
 
 
 export default function Asset({assetType}) {
@@ -86,6 +87,9 @@ export default function Asset({assetType}) {
 
     function getChartData() {
         callApi({method: GET, url: "/api/asset/record/getRecentRecordTimeList"}).then(r => {
+            if (r.data == null) {
+                return;
+            }
             let data = r.data;
             for (let i = 0; i < data.length; i++) {
                 data[i] = data[i].substring(0, 10);

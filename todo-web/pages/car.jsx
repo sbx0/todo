@@ -20,7 +20,7 @@ export default function Car() {
 
     return <Container>
         {
-            infos.map(one => {
+            infos?.map(one => {
                 return <CarPhotoInfo key={one.id}
                                      carPlateNum={one.carPlateNum}
                                      lotName={one.lotName}
