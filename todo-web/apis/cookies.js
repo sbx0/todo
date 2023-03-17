@@ -11,6 +11,9 @@ export function getCookie(key) {
 }
 
 export function getSourceCookie(source, key) {
+    if (source === null || source === undefined) {
+        return null;
+    }
     const name = key + "=";
     const ca = source.split(';');
     for (let i = 0; i < ca.length; i++) {
