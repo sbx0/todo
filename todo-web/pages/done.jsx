@@ -1,7 +1,7 @@
 import NavigationBar from "../components/NavigationBar";
 import TaskList from "../components/TaskList";
 import Container from "../components/Container";
-import {callApi} from "../apis/taskApi";
+import {callApi} from "../apis/request";
 import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
 import {getSourceCookie} from "../apis/cookies";
 

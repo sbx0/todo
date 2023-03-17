@@ -1,6 +1,6 @@
 import CarPhotoInfo from "../components/car/CarPhotoInfo";
 import {useEffect, useState} from "react";
-import {callApi} from "../apis/taskApi";
+import {callApi} from "../apis/request";
 import {POST} from "../apis/apiPath";
 import NavigationBar from "../components/NavigationBar";
 import Container from "../components/Container";

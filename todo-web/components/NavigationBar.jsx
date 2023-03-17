@@ -1,6 +1,6 @@
 import styles from "./NavigationBar.module.css";
 import {useRouter} from "next/router";
-import {buildPath} from "../apis/taskApi";
+import {buildPath} from "../apis/request";
 import {FileMediaIcon, GraphIcon, ListUnorderedIcon, PersonIcon, TasklistIcon} from "@primer/octicons-react";
 
 export default function NavigationBar({active}) {

@@ -1,8 +1,9 @@
 import styles from "./TaskInput.module.css";
-import {saveApi} from "../../apis/taskApi";
+import {callApi} from "../../apis/request";
 import {useState} from "react";
 import TaskCategory from "./TaskCategory";
 import {useRouter} from "next/router";
+import {POST} from "../../apis/apiPath";
 
 export default function TaskInput({categoryId, initData, setCategoryId, saveEvent, clickEvent}) {
     const router = useRouter()
@@ -19,9 +20,13 @@ export default function TaskInput({categoryId, initData, setCategoryId, saveEven
         if (taskName.trim() === '') {
             return;
         }
-        saveApi({
-            taskName: taskName,
-            categoryId: categoryId
+        callApi({
+            method: POST,
+            url: '/api/task/save',
+            params: {
+                taskName: taskName,
+                categoryId: categoryId
+            }
         }).then(() => {
             saveEvent()
         })

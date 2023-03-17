@@ -1,7 +1,7 @@
 import styles from "./TaskList.module.css";
 import {useState} from "react";
 import TaskItem from "./task/TaskItem";
-import {buildPath, callApi, updateApi} from "../apis/taskApi";
+import {buildPath, callApi} from "../apis/request";
 import Loading from "./Loading";
 import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
@@ -28,38 +28,12 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
 
-    const setTaskStatusCompleted = (task) => {
-        updateApi({
-            ...task,
-            taskStatus: 1
-        }).then(() => {
-            let newData = [];
-            for (let i = 0; i < data.data.length; i++) {
-                if (data.data[i].id !== task.id) {
-                    newData.push(data.data[i]);
-                }
-            }
-            setData({...data, data: newData});
-        })
-    }
-
-    const setTaskStatusUndo = (task) => {
-        updateApi({
-            ...task,
-            taskStatus: 0
-        }).then(() => {
-            let newData = [];
-            for (let i = 0; i < data.data.length; i++) {
-                if (data.data[i].id !== task.id) {
-                    newData.push(data.data[i]);
-                }
-            }
-            setData({...data, data: newData});
-        })
-    }
-
     const changeTask = (task) => {
-        updateApi(task).then(() => {
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: task
+        }).then(() => {
             let newData = [];
             for (let i = 0; i < data.data.length; i++) {
                 if (data.data[i].id !== task.id) {

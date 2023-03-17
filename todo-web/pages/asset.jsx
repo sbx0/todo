@@ -1,6 +1,6 @@
 import NavigationBar from "../components/NavigationBar";
 import Container from "../components/Container";
-import {callApi} from "../apis/taskApi";
+import {callApi} from "../apis/request";
 import {API, ApiPrefix, AssetTypePaging, GET, POST} from "../apis/apiPath";
 import AssetType from "../components/asset/AssetType";
 import {useEffect, useState} from "react";
