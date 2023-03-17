@@ -27,8 +27,8 @@ export default function TaskInput({categoryId, initData, setCategoryId, saveEven
                 taskName: taskName,
                 categoryId: categoryId
             }
-        }).then(() => {
-            saveEvent()
+        }).then((r) => {
+            saveEvent(r.data)
         })
     }
 

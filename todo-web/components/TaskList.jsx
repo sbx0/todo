@@ -69,15 +69,19 @@ export default function TaskList({initData, category, statistics, taskStatus, or
     }
 
     const categoryClickEvent = (value) => {
-        router.replace({query: {...router.query, categoryId: value},});
+        router.replace({query: {...router.query, categoryId: value},}).then(r => r);
         setPage(1);
         getTaskPaging(1, pageSize, value, taskStatus);
     }
 
-    const saveEvent = () => {
+    const saveEvent = (task) => {
         router.push(buildPath("/", router.query)).then(r => r);
         setPage(1);
-        getTaskPaging(1, pageSize, categoryId, taskStatus);
+        let newData = data.data.slice(0);
+        newData.reverse();
+        newData.push(task);
+        newData.reverse();
+        setData({...data, data: newData});
     }
 
     return <>
