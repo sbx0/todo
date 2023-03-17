@@ -1,3 +1,5 @@
+import {getCookie} from "./cookies";
+
 function hash(str) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
@@ -31,8 +33,18 @@ export async function callApi({
                                   params,
                                   headers = {
                                       'Content-Type': 'application/json',
-                                  }
+                                  },
+                                  token
                               }) {
+    if (typeof document !== 'undefined') {
+        token = 'Bearer ' + getCookie('token');
+    }
+    if (token != null && token.trim() !== '') {
+        headers = {
+            ...headers,
+            Authorization: token
+        }
+    }
     let res;
     if (method === 'POST') {
         res = await fetch(url, {

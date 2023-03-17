@@ -6,6 +6,7 @@ import NavigationBar from "../components/NavigationBar";
 import Button from "../components/basic/Button";
 import {callApi} from "../apis/taskApi";
 import {POST} from "../apis/apiPath";
+import {setCookie} from "../apis/cookies";
 
 export default function Login() {
     const [account, setAccount] = useState(null);
@@ -26,7 +27,7 @@ export default function Login() {
             if (!r.success) {
                 console.log(r.message)
             } else {
-                console.log(r.data)
+                setCookie('token', r.data);
             }
         });
     }

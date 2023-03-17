@@ -32,7 +32,8 @@ export async function getServerSideProps({req, query}) {
             "taskStatus": 0,
             "categoryId": categoryId,
             "orders": [{"name": "create_time", "direction": "desc"}]
-        }
+        },
+        token: req.headers.Authorization
     });
 
     if (taskPaging == null) {
