@@ -2,7 +2,7 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
-import cn.sbx0.todo.entity.DefaultPagingRequest;
+import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.common.Code;
@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.given;
  * @author sbx0
  * @since 2022/12/1
  */
-@MockBean(classes = {TaskRepository.class})
+@MockBean(classes = {TaskRepository.class, ClientUserService.class})
 @SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = {TaskService.class})
 class TaskServiceTest {
 
