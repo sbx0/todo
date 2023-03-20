@@ -16,6 +16,11 @@ public class TaskPagingRequest extends PagingRequest {
     private Long categoryId;
     // task status
     private Integer taskStatus;
+    private Long userId;
+
+    public TaskPagingRequest(Integer page, Integer pageSize) {
+        super(page, pageSize);
+    }
 
     public Long getCategoryId() {
         return Objects.requireNonNullElse(this.categoryId, 0L);
@@ -25,10 +30,7 @@ public class TaskPagingRequest extends PagingRequest {
         return Objects.requireNonNullElse(this.taskStatus, -1);
     }
 
-    public TaskPagingRequest() {
-    }
-
-    public TaskPagingRequest(Integer page, Integer pageSize) {
-        super(page, pageSize);
+    public Long getUserId() {
+        return Objects.requireNonNullElse(this.userId, 0L);
     }
 }

@@ -39,7 +39,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                            create_time,
                            update_time
                     FROM tasks
-                    WHERE ((:#{#pagingRequest.categoryId} = 0)
+                    WHERE user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
                         OR (:#{#pagingRequest.taskStatus} >= 0 AND task_status = :#{#pagingRequest.taskStatus}))
@@ -47,7 +48,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
             countQuery = """
                     SELECT COUNT(*)
                     FROM tasks
-                    WHERE ((:#{#pagingRequest.categoryId} = 0)
+                    WHERE user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
                         OR (:#{#pagingRequest.taskStatus} >= 0 AND task_status = :#{#pagingRequest.taskStatus}))""",
@@ -67,7 +69,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                            create_time,
                            update_time
                     FROM tasks
-                    WHERE ((:#{#pagingRequest.categoryId} = 0)
+                    WHERE user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
                         OR (:#{#pagingRequest.taskStatus} >= 0 AND task_status = :#{#pagingRequest.taskStatus}))
@@ -75,7 +78,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
             countQuery = """
                     SELECT COUNT(*)
                     FROM tasks
-                    WHERE ((:#{#pagingRequest.categoryId} = 0)
+                    WHERE user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
                         OR (:#{#pagingRequest.taskStatus} >= 0 AND task_status = :#{#pagingRequest.taskStatus}))""",

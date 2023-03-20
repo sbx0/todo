@@ -2,10 +2,14 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.user.ClientUserService;
+import cn.sbx0.todo.business.user.entity.CustomUser;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +18,15 @@ import java.util.List;
  * @author sbx0
  * @since 2022/12/2
  */
+@Slf4j
 @RestController
 @RequestMapping(("/task"))
 public class TaskController {
 
     @Resource
     private TaskService service;
+    @Resource
+    private ClientUserService userService;
 
     /**
      * <p>Statistical</p>
@@ -40,7 +47,8 @@ public class TaskController {
      * @return Task list
      */
     @PostMapping("/paging")
-    public Paging<TaskEntity> paging(@RequestBody TaskPagingRequest pagingRequest) {
+    public Paging<TaskEntity> paging(@RequestBody TaskPagingRequest pagingRequest, Authentication authentication) {
+        pagingRequest.setUserId(userService.getUserId(authentication));
         return service.paging(pagingRequest);
     }
 

@@ -1,13 +1,17 @@
 package cn.sbx0.todo.business.user;
 
 import cn.sbx0.todo.business.user.entity.ClientUser;
+import cn.sbx0.todo.business.user.entity.CustomUser;
+import cn.sbx0.todo.business.user.entity.DefaultUser;
 import cn.sbx0.todo.business.user.entity.RegisterParam;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.repositories.ClientUserRepository;
+import cn.sbx0.todo.repositories.DefaultUserRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +31,8 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
     @Resource
     private ClientUserRepository repository;
+    @Resource
+    private DefaultUserRepository defaultUserRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
 
@@ -72,5 +78,29 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         clientUser.setUsername(param.getUsername());
         clientUser.setNickname(param.getUsername());
         return this.save(clientUser);
+    }
+
+    public CustomUser findByUsername(String username) {
+        DefaultUser defaultUser = defaultUserRepository.findByUsername(username);
+        if (defaultUser == null) {
+            return null;
+        }
+        Long id = repository.findIdByUsername(username);
+        if (id == null) {
+            return null;
+        }
+        return new CustomUser(defaultUser, id);
+    }
+
+    public Long getUserId(Authentication authentication) {
+        if (authentication == null) {
+            return 0L;
+        }
+        CustomUser customUser = this.findByUsername(authentication.getName());
+        if (customUser == null) {
+            return 0L;
+        } else {
+            return customUser.getId();
+        }
     }
 }

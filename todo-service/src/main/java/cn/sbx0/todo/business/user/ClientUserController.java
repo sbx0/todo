@@ -4,6 +4,8 @@ import cn.sbx0.todo.business.user.entity.ClientUser;
 import cn.sbx0.todo.business.user.entity.RegisterParam;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * @author sbx0
  * @since 2023/3/14
  */
+@Slf4j
 @RestController
 @RequestMapping(("/user/client"))
 public class ClientUserController {

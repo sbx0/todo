@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
@@ -49,14 +50,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/2
  */
 @Slf4j
-@MockBean(classes = {TaskService.class, DataSource.class})
+@MockBean(classes = {TaskService.class, ClientUserService.class, DataSource.class})
 @WebMvcTest({TaskController.class})
 @ExtendWith({RestDocumentationExtension.class})
 @Import(SpringSecurityConfig.class)
 class TaskControllerTest {
 
+    protected MockMvc mockMvc;
     @Resource
     private TaskService service;
+    @Resource
+    private ClientUserService userService;
 
     /**
      * Test for {@link TaskController#statistics}
@@ -144,6 +148,7 @@ class TaskControllerTest {
         );
 
         given(service.paging(any())).willReturn(pagingData);
+        given(userService.getUserId(any())).willReturn(1L);
 
         String response = mockMvc.perform(post("/task/paging")
                         .accept(MediaType.APPLICATION_JSON)
@@ -156,6 +161,7 @@ class TaskControllerTest {
                                 requestFields(
                                         fieldWithPath("categoryId").description("Category Id"),
                                         fieldWithPath("taskStatus").description("Task Status"),
+                                        fieldWithPath("userId").description("User Id"),
                                         fieldWithPath("page").description("Page Number"),
                                         fieldWithPath("pageSize").description("Page Size"),
                                         fieldWithPath("orders").description("Orders"),
@@ -303,8 +309,6 @@ class TaskControllerTest {
 
         log.info(response);
     }
-
-    protected MockMvc mockMvc;
 
     @BeforeEach
     public void setUp(
