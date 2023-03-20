@@ -12,6 +12,7 @@ import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -92,7 +93,8 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         return new CustomUser(defaultUser, id);
     }
 
-    public Long getUserId(Authentication authentication) {
+    public Long getLoginUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return 0L;
         }

@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.JpaService;
@@ -25,6 +26,8 @@ import java.util.List;
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
     @Resource
     private TaskRepository repository;
+    @Resource
+    private ClientUserService userService;
 
     @Override
     protected TaskRepository repository() {
@@ -37,14 +40,16 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
     }
 
     @Override
-    protected TaskEntity saveBefore(TaskEntity taskEntity) {
-        taskEntity.setTaskStatus(0);
-        taskEntity.setCreateTime(LocalDateTime.now());
-        return taskEntity;
+    protected TaskEntity saveBefore(TaskEntity entity) {
+        entity.setUserId(userService.getLoginUserId());
+        entity.setTaskStatus(0);
+        entity.setCreateTime(LocalDateTime.now());
+        return entity;
     }
 
     @Override
     protected TaskEntity updateBefore(TaskEntity entity) {
+        entity.setUserId(userService.getLoginUserId());
         entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }

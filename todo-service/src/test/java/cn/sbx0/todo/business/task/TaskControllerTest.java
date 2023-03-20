@@ -148,7 +148,7 @@ class TaskControllerTest {
         );
 
         given(service.paging(any())).willReturn(pagingData);
-        given(userService.getUserId(any())).willReturn(1L);
+        given(userService.getLoginUserId()).willReturn(1L);
 
         String response = mockMvc.perform(post("/task/paging")
                         .accept(MediaType.APPLICATION_JSON)
