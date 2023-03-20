@@ -92,18 +92,20 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE task_status = 1
+                      and user_id = ?2
                       and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""",
             nativeQuery = true
     )
-    Long completedStatistical(Long categoryId);
+    Long completedStatistical(Long categoryId, Long userId);
 
     @Query(
             value = """
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE task_status = 0
+                      and user_id = ?2
                       and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""",
             nativeQuery = true
     )
-    Long uncompletedStatistical(Long categoryId);
+    Long uncompletedStatistical(Long categoryId, Long userId);
 }

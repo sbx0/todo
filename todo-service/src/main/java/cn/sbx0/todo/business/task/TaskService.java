@@ -61,18 +61,19 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
      * @return Statistical Indicators
      */
     public Result<List<StatisticalIndicators>> statistics(Long categoryId) {
+        Long userId = userService.getLoginUserId();
         List<StatisticalIndicators> list = new ArrayList<>();
         // completed
         StatisticalIndicators completed = new StatisticalIndicators();
         completed.setKey("completed");
         completed.setName("Completed");
-        completed.setValue(repository.completedStatistical(categoryId));
+        completed.setValue(repository.completedStatistical(categoryId, userId));
         list.add(completed);
         // uncompleted
         StatisticalIndicators uncompleted = new StatisticalIndicators();
         uncompleted.setKey("uncompleted");
         uncompleted.setName("Uncompleted");
-        uncompleted.setValue(repository.uncompletedStatistical(categoryId));
+        uncompleted.setValue(repository.uncompletedStatistical(categoryId, userId));
         list.add(uncompleted);
         return Result.success(list);
     }

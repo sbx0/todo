@@ -46,8 +46,8 @@ class TaskServiceTest {
 
     @Test
     public void statistics() {
-        given(repository.completedStatistical(anyLong())).willReturn(1L);
-        given(repository.uncompletedStatistical(anyLong())).willReturn(2L);
+        given(repository.completedStatistical(anyLong(), anyLong())).willReturn(1L);
+        given(repository.uncompletedStatistical(anyLong(), anyLong())).willReturn(2L);
 
         Result<List<StatisticalIndicators>> result = service.statistics(anyLong());
         assertNotNull(result);
