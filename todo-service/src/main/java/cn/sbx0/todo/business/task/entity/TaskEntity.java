@@ -37,6 +37,8 @@ public class TaskEntity {
   private LocalDateTime planTime;
   // category id
   private Long categoryId;
+  // userId
+  private Long userId;
   // when create
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)

@@ -28,6 +28,8 @@ public class CategoryEntity {
   private String categoryName;
   // category remark
   private String categoryRemark;
+  // userId
+  private Long userId;
   // when create
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)

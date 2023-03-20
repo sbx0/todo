@@ -25,6 +25,8 @@ public class AssetType {
     private Long id;
     private String typeName;
     private String typeRemark;
+    // userId
+    private Long userId;
 
     // when create
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

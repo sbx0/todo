@@ -26,6 +26,8 @@ public class AssetRecord {
     private Long id;
     private Long typeId;
     private BigDecimal recordValue;
+    // userId
+    private Long userId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

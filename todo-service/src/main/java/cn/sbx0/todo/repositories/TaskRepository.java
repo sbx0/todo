@@ -35,6 +35,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                            task_status,
                            plan_time,
                            category_id,
+                           user_id,
                            create_time,
                            update_time
                     FROM tasks
@@ -62,6 +63,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                            task_status,
                            plan_time,
                            category_id,
+                           user_id,
                            create_time,
                            update_time
                     FROM tasks
