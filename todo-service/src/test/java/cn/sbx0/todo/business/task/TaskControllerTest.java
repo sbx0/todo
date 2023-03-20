@@ -164,6 +164,7 @@ class TaskControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("data[].id").description("ID"),
+                                        fieldWithPath("data[].userId").description("User ID"),
                                         fieldWithPath("data[].taskName").description("Task Name"),
                                         fieldWithPath("data[].taskRemark").description("Task Remark"),
                                         fieldWithPath("data[].taskStatus").description("Task Status"),
@@ -215,6 +216,7 @@ class TaskControllerTest {
                         document("TaskSave",
                                 requestFields(
                                         fieldWithPath("id").description("ID"),
+                                        fieldWithPath("userId").description("User ID"),
                                         fieldWithPath("taskName").description("Task Name"),
                                         fieldWithPath("taskRemark").description("Task Remark"),
                                         fieldWithPath("taskStatus").description("Task Status"),
@@ -225,6 +227,7 @@ class TaskControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.userId").description("User ID"),
                                         fieldWithPath("data.taskName").description("Task Name"),
                                         fieldWithPath("data.taskRemark").description("Task Remark"),
                                         fieldWithPath("data.taskStatus").description("Task Status"),
@@ -271,6 +274,7 @@ class TaskControllerTest {
                         document("TaskUpdate",
                                 requestFields(
                                         fieldWithPath("id").description("ID"),
+                                        fieldWithPath("userId").description("User ID"),
                                         fieldWithPath("taskName").description("Task Name"),
                                         fieldWithPath("taskRemark").description("Task Remark"),
                                         fieldWithPath("taskStatus").description("Task Status"),
@@ -281,6 +285,7 @@ class TaskControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.userId").description("User ID"),
                                         fieldWithPath("data.taskName").description("Task Name"),
                                         fieldWithPath("data.taskRemark").description("Task Remark"),
                                         fieldWithPath("data.taskStatus").description("Task Status"),

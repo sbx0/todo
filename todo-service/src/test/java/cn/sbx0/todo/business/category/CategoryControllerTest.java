@@ -106,6 +106,7 @@ class CategoryControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("data[].id").description("ID"),
+                                        fieldWithPath("data[].userId").description("User ID"),
                                         fieldWithPath("data[].categoryName").description("Category Name"),
                                         fieldWithPath("data[].categoryRemark").description("Category Remark"),
                                         fieldWithPath("data[].createTime").description("Create Time"),
@@ -152,6 +153,7 @@ class CategoryControllerTest {
                         document("CategorySave",
                                 requestFields(
                                         fieldWithPath("id").description("ID"),
+                                        fieldWithPath("userId").description("User ID"),
                                         fieldWithPath("categoryName").description("Category Name"),
                                         fieldWithPath("categoryRemark").description("Category Remark"),
                                         fieldWithPath("createTime").description("Create Time"),
@@ -159,6 +161,7 @@ class CategoryControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.userId").description("User ID"),
                                         fieldWithPath("data.categoryName").description("Category Name"),
                                         fieldWithPath("data.categoryRemark").description("Category Remark"),
                                         fieldWithPath("data.createTime").description("Create Time"),
@@ -201,12 +204,14 @@ class CategoryControllerTest {
                                 requestFields(
                                         fieldWithPath("id").description("ID"),
                                         fieldWithPath("categoryName").description("Category Name"),
+                                        fieldWithPath("userId").description("User ID"),
                                         fieldWithPath("categoryRemark").description("Category Remark"),
                                         fieldWithPath("createTime").description("Create Time"),
                                         fieldWithPath("updateTime").description("Update Time")
                                 ),
                                 responseFields(
                                         fieldWithPath("data.id").description("ID"),
+                                        fieldWithPath("data.userId").description("User ID"),
                                         fieldWithPath("data.categoryName").description("Category Name"),
                                         fieldWithPath("data.categoryRemark").description("Category Remark"),
                                         fieldWithPath("data.createTime").description("Create Time"),
