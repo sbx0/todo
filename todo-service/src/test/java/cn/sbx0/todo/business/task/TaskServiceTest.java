@@ -44,12 +44,17 @@ class TaskServiceTest {
     @Resource
     private TaskRepository repository;
 
+    @Resource
+    private ClientUserService userService;
+
     @Test
     public void statistics() {
+        given(userService.getLoginUserId()).willReturn(1L);
+
         given(repository.completedStatistical(anyLong(), anyLong())).willReturn(1L);
         given(repository.uncompletedStatistical(anyLong(), anyLong())).willReturn(2L);
 
-        Result<List<StatisticalIndicators>> result = service.statistics(anyLong());
+        Result<List<StatisticalIndicators>> result = service.statistics(1L);
         assertNotNull(result);
         assertTrue(result.getSuccess());
         assertEquals(Code.SUCCESS, result.getCode());
