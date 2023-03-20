@@ -12,26 +12,28 @@ import java.util.List;
  */
 public interface AssetRecordRepository extends JpaRepository<AssetRecord, Long> {
     @Query(value = """
-            select distinct record_time
-            from asset_records
-            order by record_time
-            limit 1000
-            """, nativeQuery = true)
-    List<String> getRecentRecordTimeList();
+            SELECT DISTINCT record_time
+            FROM asset_records
+            WHERE user_id = ?1
+            ORDER BY record_time
+            LIMIT 1000""", nativeQuery = true)
+    List<String> getRecentRecordTimeList(Long userId);
 
     @Query(value = """
-            select *
-            from asset_records
-            where type_id = ?1
-            order by record_time
+            SELECT *
+            FROM asset_records
+            WHERE user_id = ?2
+            AND type_id = ?1
+            ORDER by record_time
             """, nativeQuery = true)
-    List<AssetRecord> getRecordsByTypeId(Long typeId);
+    List<AssetRecord> getRecordsByTypeId(Long typeId, Long userId);
 
     @Query(value = """
-            select *
-            from asset_records
-            where type_id = :#{#entity.typeId}
-            and record_time = :#{#entity.recordTime}
+            SELECT *
+            FROM asset_records
+            WHERE user_id = ?2
+            AND type_id = :#{#entity.typeId}
+            AND record_time = :#{#entity.recordTime}
             """, nativeQuery = true)
-    AssetRecord findByTypeIdAndRecordTime(AssetRecord entity);
+    AssetRecord findByTypeIdAndRecordTime(AssetRecord entity, Long userId);
 }
