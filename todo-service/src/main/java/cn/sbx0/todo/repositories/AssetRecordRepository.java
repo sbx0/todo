@@ -31,7 +31,7 @@ public interface AssetRecordRepository extends JpaRepository<AssetRecord, Long> 
     @Query(value = """
             SELECT *
             FROM asset_records
-            WHERE user_id = ?2
+            WHERE user_id = :#{#userId}
             AND type_id = :#{#entity.typeId}
             AND record_time = :#{#entity.recordTime}
             """, nativeQuery = true)

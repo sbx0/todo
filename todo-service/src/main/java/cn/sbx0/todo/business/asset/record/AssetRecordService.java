@@ -51,11 +51,14 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
         } else {
             entity.setCreateTime(LocalDateTime.now());
         }
+        entity.setUserId(userId);
         return entity;
     }
 
     @Override
     protected AssetRecord updateBefore(AssetRecord entity) {
+        Long userId = clientUserService.getLoginUserId();
+        entity.setUserId(userId);
         entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }
