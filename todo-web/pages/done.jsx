@@ -45,7 +45,7 @@ export async function getServerSideProps({req, query}) {
         }
     });
 
-    let statistics = await callApi({
+    let statisticsResponse = await callApi({
         method: GET,
         url: ApiPrefix + process.env.API_HOST + TaskStatistics,
         params: {
@@ -54,11 +54,26 @@ export async function getServerSideProps({req, query}) {
         token: getSourceCookie(req.headers.cookie, 'token')
     });
 
+    let statistics = {
+        completed: 0,
+        uncompleted: 0
+    };
+
+    if (statisticsResponse.data) {
+        for (let i = 0; i < statisticsResponse.data.length; i++) {
+            if (statisticsResponse.data[i].key === 'completed') {
+                statistics.completed = statisticsResponse.data[i].value;
+            } else if (statisticsResponse.data[i].key === 'uncompleted') {
+                statistics.uncompleted = statisticsResponse.data[i].value;
+            }
+        }
+    }
+
     return {
         props: {
             initData: taskPaging,
             category: category.data,
-            statistics: statistics.data
+            statistics: statistics
         }
     }
 }

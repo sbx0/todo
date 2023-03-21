@@ -86,7 +86,20 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
                 "categoryId": categoryId,
             }
         }).then(r => {
-            setStatisticsData(r.data);
+            let statistics = {
+                completed: 0,
+                uncompleted: 0
+            }
+            if (r.data) {
+                for (let i = 0; i < r.data.length; i++) {
+                    if (r.data[i].key === 'completed') {
+                        statistics.completed = r.data[i].value;
+                    } else if (r.data[i].key === 'uncompleted') {
+                        statistics.uncompleted = r.data[i].value;
+                    }
+                }
+            }
+            setStatisticsData(statistics);
         });
     }
 
