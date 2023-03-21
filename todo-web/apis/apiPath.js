@@ -5,5 +5,6 @@ export const API = "/api";
 export const TaskPaging = API + "/task/paging";
 export const CategoryPaging = API + "/category/paging";
 export const TaskStatistics = API + "/task/statistics";
-export const AssetRecordPaging = API + "/asset/record/paging";
 export const AssetTypePaging = API + "/asset/type/paging";
+export const RecentRecordTimeList = API + "/asset/record/getRecentRecordTimeList";
+export const AssetRecords = API + "/asset/record/getRecords";

@@ -1,17 +1,52 @@
 import NavigationBar from "../components/NavigationBar";
 import Container from "../components/Container";
 import {callApi} from "../apis/request";
-import {API, ApiPrefix, AssetTypePaging, GET, POST} from "../apis/apiPath";
+import {API, ApiPrefix, AssetRecords, AssetTypePaging, GET, POST, RecentRecordTimeList} from "../apis/apiPath";
 import AssetType from "../components/asset/AssetType";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
 import ReactEcharts from "echarts-for-react";
-import {readRecordValue} from "next/dist/client/components/router-reducer/read-record-value";
+import {getSourceCookie} from "../apis/cookies";
 
 
-export default function Asset({assetType}) {
+export default function Asset({legend, assetType, recordTime, assetRecord}) {
+    const [options, setOptions] = useState({
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: legend
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            bottom: '2%',
+            containLabel: true
+        },
+        toolbox: {
+            orient: 'vertical',
+            feature: {
+                saveAsImage: {},
+                restore: {},
+                dataZoom: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: true,
+            data: recordTime
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                show: true
+            }
+        },
+        series: assetRecord
+    });
+
     const [asset, setAsset] = useState({
         typeId: 1,
         recordValue: 0.00,
@@ -48,43 +83,6 @@ export default function Asset({assetType}) {
         setAsset({...asset, recordTime: value})
     }
 
-    const [category, setCategory] = useState(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-    const [options, setOptions] = useState({
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data: ['Bank', 'Alipay', 'Wechat', 'Total']
-        },
-        grid: {
-            left: '10%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: category
-        },
-        yAxis: {
-            type: 'time',
-            axisLabel: {
-                show: false
-            }
-        },
-        series: []
-    });
-
-    useEffect(() => {
-        getChartData();
-    }, []);
-
     function getChartData() {
         callApi({method: GET, url: "/api/asset/record/getRecentRecordTimeList"}).then(r => {
             if (r.data == null) {
@@ -98,7 +96,7 @@ export default function Asset({assetType}) {
                 ...options,
                 xAxis: {
                     type: 'category',
-                    boundaryGap: false,
+                    boundaryGap: true,
                     data: data
                 }
             });
@@ -107,7 +105,7 @@ export default function Asset({assetType}) {
                     ...options,
                     xAxis: {
                         type: 'category',
-                        boundaryGap: false,
+                        boundaryGap: true,
                         data: data
                     },
                     series: r.data
@@ -125,13 +123,13 @@ export default function Asset({assetType}) {
         <RecordTime value={asset.recordTime}
                     callback={setRecordTime}/>
         <button style={{width: '100%', height: '40px', margin: '5px auto'}} onClick={saveAsset}>Save</button>
-        <ReactEcharts option={options} style={{width: "100%", height: "50vh", margin: '0 auto'}}/>
+        <ReactEcharts theme="dark" option={options} style={{width: "100%", height: "50vh", margin: '10px auto'}}/>
         <NavigationBar active={2}/>
     </Container>
 }
 
 export async function getServerSideProps({req, query}) {
-    const assetType = await callApi({
+    const assetTypeResponse = await callApi({
         method: POST,
         url: ApiPrefix + process.env.API_HOST + AssetTypePaging,
         params: {
@@ -141,9 +139,37 @@ export async function getServerSideProps({req, query}) {
         }
     });
 
+    console.log(assetTypeResponse)
+
+    let legend = [];
+
+    for (let i = 0; i < assetTypeResponse.data.length; i++) {
+        legend[i] = assetTypeResponse.data[i].typeName;
+    }
+
+    legend.push('Total');
+
+    const recentRecordTimeListResponse = await callApi({
+        url: ApiPrefix + process.env.API_HOST + RecentRecordTimeList,
+        token: getSourceCookie(req.headers.cookie, 'token')
+    });
+
+    let recordTimeData = recentRecordTimeListResponse.data;
+    for (let i = 0; i < recordTimeData.length; i++) {
+        recordTimeData[i] = recordTimeData[i].substring(2, 10);
+    }
+
+    const assetRecordResponse = await callApi({
+        url: ApiPrefix + process.env.API_HOST + AssetRecords,
+        token: getSourceCookie(req.headers.cookie, 'token')
+    });
+
     return {
         props: {
-            assetType: assetType.data
+            legend: legend,
+            assetType: assetTypeResponse.data,
+            recordTime: recordTimeData,
+            assetRecord: assetRecordResponse.data,
         }
     }
 }
