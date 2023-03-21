@@ -28,6 +28,9 @@ ext {
 }
 
 dependencies {
+    implementation group: 'com.github.plexpt', name: 'chatgpt', version: '4.0.1'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.flywaydb:flyway-mysql'
