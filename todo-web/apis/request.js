@@ -1,4 +1,4 @@
-import {getCookie} from "./cookies";
+import {getCookie, removeCookie} from "./cookies";
 
 function hash(str) {
     let hash = 0;
@@ -28,7 +28,7 @@ export function buildPath(url, params) {
 }
 
 export async function callApi({
-                                  method,
+                                  method = 'GET',
                                   url,
                                   params,
                                   headers = {
@@ -59,6 +59,12 @@ export async function callApi({
         });
     }
     if (!res.ok) {
+        if (res.status === 401) {
+            if (typeof document !== 'undefined') {
+                removeCookie('token');
+            }
+        }
+
         return {
             "code": 1,
             "success": false,

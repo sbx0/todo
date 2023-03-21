@@ -13,6 +13,10 @@ export default function Login() {
     const [token, setToken] = useState(null);
 
     useEffect(() => {
+        callApi({url: "/api/user/client/hello"}).then(r => r);
+    }, [])
+
+    useEffect(() => {
         setToken(getCookie('token'));
     }, [])
 

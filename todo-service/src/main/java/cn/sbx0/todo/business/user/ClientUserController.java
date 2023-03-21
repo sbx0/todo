@@ -5,7 +5,6 @@ import cn.sbx0.todo.business.user.entity.RegisterParam;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -51,9 +50,9 @@ public class ClientUserController {
         return service.register(param);
     }
 
-    @GetMapping("/")
-    public String hello(Authentication authentication) {
-        return "Hello, " + authentication.getName() + "!";
+    @GetMapping("/hello")
+    public Result<String> hello(Authentication authentication) {
+        return Result.success("Hello, " + authentication.getName() + "!");
     }
 
 }
