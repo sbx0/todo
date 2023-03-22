@@ -5,6 +5,7 @@ import cn.sbx0.todo.business.car.CarPlatePhotoService;
 import cn.sbx0.todo.business.car.entity.CarConfig;
 import cn.sbx0.todo.business.car.entity.CarPlatePhoto;
 import cn.sbx0.todo.business.car.entity.CarPlatePhotoResponse;
+import cn.sbx0.todo.business.chatgpt.ChatGPTService;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.utils.CallApi;
@@ -29,6 +30,18 @@ public class ServerScheduled {
     private CarConfigService carConfigService;
     @Resource
     private CarPlatePhotoService carPlatePhotoService;
+    @Resource
+    private ChatGPTService chatGPTService;
+
+    @Scheduled(fixedRate = 1000)
+    public void handleMessage() {
+        chatGPTService.handleMessage();
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void sendMessage() {
+        chatGPTService.sendMessage();
+    }
 
     // 30min @Scheduled(fixedRate = 1800000)
     // 15min @Scheduled(fixedRate = 900000)

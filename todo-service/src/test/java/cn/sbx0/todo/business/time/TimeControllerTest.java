@@ -44,61 +44,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SpringSecurityConfig.class)
 class TimeControllerTest {
 
-  @Resource
-  private TimeService service;
+    protected MockMvc mockMvc;
+    @Resource
+    private TimeService service;
 
-  /**
-   * Test for {@link TimeController#now}
-   *
-   * @throws Exception exception
-   */
-  @Test
-  void paging() throws Exception {
-    ArrayList<NowTime> list = new ArrayList<>();
-    // system time
-    list.add(new NowTime("system", LocalDateTime.now()));
-    // db time
-    list.add(new NowTime("db", Instant.ofEpochMilli(11111111).atZone(ZoneId.systemDefault()).toLocalDateTime()));
+    /**
+     * Test for {@link TimeController#now}
+     *
+     * @throws Exception exception
+     */
+    @Test
+    void paging() throws Exception {
+        ArrayList<NowTime> list = new ArrayList<>();
+        // system time
+        list.add(new NowTime("system", LocalDateTime.now()));
+        // db time
+        list.add(new NowTime("db", Instant.ofEpochMilli(11111111).atZone(ZoneId.systemDefault()).toLocalDateTime()));
 
-    given(service.now()).willReturn(Result.success(list));
+        given(service.now()).willReturn(Result.success(list));
 
-    String response = mockMvc.perform(get("/time/now")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("code").value("0"))
-            .andDo(
-                    document("TimeNow",
-                            responseFields(
-                                    fieldWithPath("data[].kind").description("Time Kind"),
-                                    fieldWithPath("data[].time").description("Now Time"),
-                                    fieldWithPath("data").description("Data"),
-                                    fieldWithPath("success").description("Is success"),
-                                    fieldWithPath("code").description("Status Code"),
-                                    fieldWithPath("message").description("Message")
-                            )
-                    ))
-            .andReturn().getResponse().getContentAsString();
+        String response = mockMvc.perform(get("/time/now")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("TimeNow",
+                                responseFields(
+                                        fieldWithPath("data[].kind").description("Time Kind"),
+                                        fieldWithPath("data[].time").description("Now Time"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
 
-    log.info(response);
-  }
+        log.info(response);
+    }
 
-  protected MockMvc mockMvc;
-
-  @BeforeEach
-  public void setUp(
-          WebApplicationContext webApplicationContext,
-          RestDocumentationContextProvider restDocumentation
-  ) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .apply(
-                    documentationConfiguration(restDocumentation)
-                            .uris().withScheme("http").withHost("127.0.0.1").withPort(9999)
-                            .and()
-                            .operationPreprocessors()
-                            .withRequestDefaults(prettyPrint())
-                            .withResponseDefaults(prettyPrint())
-            )
-            .build();
-  }
+    @BeforeEach
+    public void setUp(
+            WebApplicationContext webApplicationContext,
+            RestDocumentationContextProvider restDocumentation
+    ) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(
+                        documentationConfiguration(restDocumentation)
+                                .uris().withScheme("http").withHost("127.0.0.1").withPort(9999)
+                                .and()
+                                .operationPreprocessors()
+                                .withRequestDefaults(prettyPrint())
+                                .withResponseDefaults(prettyPrint())
+                )
+                .build();
+    }
 }

@@ -1,3 +1,19 @@
+# curl -X POST 'http://localhost:8080/xml/callback' -H 'content-type:application/xml' -d '<xml><URL><![CDATA[https://hhui.top]]></URL><ToUserName><![CDATA[一灰灰blog]]></ToUserName><FromUserName><![CDATA[123]]></FromUserName><CreateTime>1655700579</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[测试]]></Content><MsgId>11111111</MsgId></xml>' -i
+POST http://win.sbx0.cn:8888/weixin/auth
+Content-Type: application/xml
+
+<xml>
+    <URL><![CDATA[https://hhui.top]]></URL>
+    <ToUserName><![CDATA[一灰灰blog]]></ToUserName>
+    <FromUserName><![CDATA[123]]></FromUserName>
+    <CreateTime>1655700579</CreateTime>
+    <MsgType><![CDATA[text]]></MsgType>
+    <Content><![CDATA[测试]]></Content>
+    <MsgId>11111111</MsgId>
+</xml>
+
+###
+
 ### login
 POST win.sbx0.cn:8888/user/client/login
 Authorization: Basic user password
@@ -23,3 +39,11 @@ Content-Type: application/json
   "page": 1,
   "pageSize": 10
 }
+
+### time now
+GET win.sbx0.cn:8888/time/now
+Accept: application/json
+
+### time now
+GET win.sbx0.cn:8888/time/now
+Accept: application/xml

@@ -39,3 +39,10 @@ logging:
 jwt:
   private.key: classpath:app.key
   public.key: classpath:app.pub
+weixin:
+  app-id: 1
+  app-secret: 2
+  auth:
+    token: 3
+chatgpt:
+  api-key: 4
