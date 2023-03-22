@@ -4,7 +4,6 @@ import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.config.SpringSecurityConfig;
-import cn.sbx0.todo.config.WebMvcConfig;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Code;
@@ -51,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/2
  */
 @Slf4j
-@MockBean(classes = {TaskService.class, ClientUserService.class, DataSource.class, WebMvcConfig.class})
+@MockBean(classes = {TaskService.class, ClientUserService.class, DataSource.class})
 @WebMvcTest({TaskController.class})
 @ExtendWith({RestDocumentationExtension.class})
 @Import(SpringSecurityConfig.class)

@@ -1,17 +1,17 @@
 package cn.sbx0.todo.business.weixin;
 
+import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
+import cn.sbx0.todo.business.chatgpt.ChatGPTService;
 import cn.sbx0.todo.business.weixin.utils.AesException;
 import cn.sbx0.todo.business.weixin.utils.SHA1Utils;
 import cn.sbx0.todo.business.weixin.utils.WinXinMessageType;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
-import com.plexpt.chatgpt.ChatGPT;
-import com.plexpt.chatgpt.util.Proxys;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.net.Proxy;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,14 +23,19 @@ import java.util.Map;
 @Slf4j
 @Service
 public class WeixinService {
+    @Resource
+    private ChatGPTService chatGPTService;
     @Value("${weixin.auth.token}")
     private String token;
     @Value("${weixin.app-id}")
     private String appId;
     @Value("${weixin.app-secret}")
     private String appSecret;
-    @Value("${chatgpt.api-key}")
-    private String apiKey;
+
+    public void sendMessage(WinXinMessage message) {
+        String response = CallApi.post("https://api.weixin.qq.com", "/cgi-bin/message/custom/send?access_token=" + getAccessToken(), JSON.parse(message));
+        log.info(response);
+    }
 
     public WinXinXmlMessageResponse handleMessage(WinXinXmlMessage msg) {
         WinXinXmlMessageResponse responseMessage = new WinXinXmlMessageResponse();
@@ -41,14 +46,12 @@ public class WeixinService {
         String message = "";
         switch (msg.getMsgType()) {
             case WinXinMessageType.TEXT -> {
-                Proxy proxy = Proxys.http("win.sbx0.cn", 11114);
-                ChatGPT chatGPT = ChatGPT.builder()
-                        .apiKey(apiKey)
-                        .proxy(proxy)
-                        .apiHost("https://api.openai.com/")
-                        .build()
-                        .init();
-                message = chatGPT.chat(msg.getContent());
+                Boolean result = chatGPTService.addMessage(new ChatGPTMessage(msg.getFromUserName(), msg.getContent()));
+                if (!result) {
+                    message = "系统超负荷，请稍后重试";
+                } else {
+                    message = "正在思考，请耐心等待...";
+                }
             }
             case WinXinMessageType.IMAGE, WinXinMessageType.LINK, WinXinMessageType.LOCATION, WinXinMessageType.SHORTVIDEO, WinXinMessageType.VIDEO, WinXinMessageType.VOICE ->
                     message = "暂不支持此类消息。";

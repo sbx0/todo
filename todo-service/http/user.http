@@ -39,3 +39,11 @@ Content-Type: application/json
   "page": 1,
   "pageSize": 10
 }
+
+### time now
+GET win.sbx0.cn:8888/time/now
+Accept: application/json
+
+### time now
+GET win.sbx0.cn:8888/time/now
+Accept: application/xml
