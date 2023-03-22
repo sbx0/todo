@@ -32,6 +32,7 @@ export async function callApi({
                                   url,
                                   params,
                                   headers = {
+                                      'Accept': 'application/json',
                                       'Content-Type': 'application/json',
                                   },
                                   token
