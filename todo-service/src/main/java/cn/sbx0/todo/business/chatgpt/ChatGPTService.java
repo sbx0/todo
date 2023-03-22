@@ -76,8 +76,8 @@ public class ChatGPTService {
         WinXinMessage winXinMessage = new WinXinMessage();
         winXinMessage.setMsgtype("text");
         winXinMessage.setTouser(message.getUser());
-        winXinMessage.setText(new WinXinMessage.WinXinMessageContext(message.getMessage()));
-        log.info("send message to user " + message.getUser() + " " + message.getMessage());
+        winXinMessage.setText(new WinXinMessage.WinXinMessageContext(message.getResponse()));
+        log.info("send message to user " + message.getUser() + " " + message.getResponse());
         weixinService.sendMessage(winXinMessage);
     }
 }
