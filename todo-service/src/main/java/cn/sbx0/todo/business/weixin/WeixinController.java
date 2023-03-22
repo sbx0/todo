@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class WeixinController {
     @Resource
     private WeixinService weixinService;
-    @Resource
-    private WechatService wechatService;
 
     @GetMapping("/auth")
     public String auth(
@@ -27,7 +25,7 @@ public class WeixinController {
     }
 
     @PostMapping(value = "/auth", consumes = {"application/xml", "text/xml"}, produces = "application/xml;charset=utf-8")
-    public WinXinXmlMessageResponse handleMessage(@RequestBody WinXinXmlMessage msg) {
-        return wechatService.processRequest(msg);
+    public WinXinXmlMessageResponse handleMessage(@RequestBody WinXinXmlMessage message) {
+        return weixinService.handleMessage(message);
     }
 }
