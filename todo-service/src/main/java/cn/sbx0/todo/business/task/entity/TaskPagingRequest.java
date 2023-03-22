@@ -18,6 +18,9 @@ public class TaskPagingRequest extends PagingRequest {
     private Integer taskStatus;
     private Long userId;
 
+    public TaskPagingRequest() {
+    }
+
     public TaskPagingRequest(Integer page, Integer pageSize) {
         super(page, pageSize);
     }

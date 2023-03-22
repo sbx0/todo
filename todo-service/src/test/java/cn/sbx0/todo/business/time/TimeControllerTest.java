@@ -1,6 +1,7 @@
 package cn.sbx0.todo.business.time;
 
 import cn.sbx0.todo.config.SpringSecurityConfig;
+import cn.sbx0.todo.config.WebMvcConfig;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {TimeService.class, DataSource.class})
+@MockBean(classes = {TimeService.class, DataSource.class, WebMvcConfig.class})
 @WebMvcTest({TimeController.class})
 @ExtendWith({RestDocumentationExtension.class})
 @Import(SpringSecurityConfig.class)

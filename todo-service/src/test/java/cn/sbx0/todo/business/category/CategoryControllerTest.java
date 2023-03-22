@@ -1,6 +1,7 @@
 package cn.sbx0.todo.business.category;
 
 import cn.sbx0.todo.config.SpringSecurityConfig;
+import cn.sbx0.todo.config.WebMvcConfig;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.entity.OrderRequest;
 import cn.sbx0.todo.service.common.Code;
@@ -43,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {CategoryService.class, DataSource.class})
+@MockBean(classes = {CategoryService.class, DataSource.class, WebMvcConfig.class})
 @WebMvcTest({CategoryController.class})
 @ExtendWith({RestDocumentationExtension.class})
 @Import({SpringSecurityConfig.class})
