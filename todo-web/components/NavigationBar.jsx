@@ -1,4 +1,3 @@
-import styles from "./NavigationBar.module.css";
 import {useRouter} from "next/router";
 import {buildPath} from "../apis/request";
 import {FileMediaIcon, GraphIcon, ListUnorderedIcon, PersonIcon, TasklistIcon} from "@primer/octicons-react";
@@ -44,11 +43,11 @@ export default function NavigationBar({active}) {
         }
     ];
 
-    return <div className={styles.container}>
-        <div className={styles.centerContainer}>
-            <div className={styles.itemContainer}>
+    return <div className="container">
+        <div className="centerContainer">
+            <div className="itemContainer">
                 {
-                    bars.map((one) => <div key={one.id} className={styles.item}>
+                    bars.map((one) => <div key={one.id} className="item">
                         <input id={one.id}
                                name={one.name}
                                type="radio"
@@ -61,8 +60,8 @@ export default function NavigationBar({active}) {
                                    event.preventDefault();
                                }}
                                hidden/>
-                        <div className={styles.categoryItemBackgroundColor}>
-                            <label className={styles.categoryLabel}
+                        <div className="categoryItemBackgroundColor">
+                            <label className="categoryLabel"
                                    htmlFor={one.id}>
                                 {one.label}
                             </label>
@@ -71,5 +70,67 @@ export default function NavigationBar({active}) {
                 }
             </div>
         </div>
+        <style jsx>{`
+          .container {
+            width: 100vw;
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+          }
+
+          .centerContainer {
+            height: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+          }
+
+          .itemContainer {
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 9999;
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+          }
+
+          .item {
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            cursor: pointer;
+          }
+
+          .categoryLabel {
+            width: 100%;
+            height: 35px;
+            line-height: 35px;
+            vertical-align: middle;
+            margin: 0 auto;
+            cursor: pointer;
+          }
+
+          .categoryItemBackgroundColor {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-items: center;
+            margin: 0 auto;
+            cursor: pointer;
+            text-align: center;
+            background: #24292f;
+          }
+
+          .categoryItemBackgroundColor:hover {
+            background: #4b5057;
+          }
+
+          input[type='radio']:checked + .categoryItemBackgroundColor {
+            color: #ffffff;
+            background: #373b41;
+          }
+        `}</style>
     </div>;
 }

@@ -1,12 +1,30 @@
-import styles from "./TwoEightLayout.module.css"
-
 export default ({children, two}) => {
-    return <div className={styles.main}>
-        <div className={styles.two}>
+    return <div className="main">
+        <div className="two">
             {two}
         </div>
-        <div className={styles.eight}>
+        <div className="eight">
             {children}
         </div>
+        <style jsx>{`
+          .main {
+            width: 100%;
+            height: calc(100vh - 30px);
+          }
+
+          .two {
+            display: inline-block;
+            width: 20%;
+            height: 100%;
+            text-align: right;
+          }
+
+          .eight {
+            display: inline-block;
+            width: 80%;
+            height: 100%;
+            text-align: left;
+          }
+        `}</style>
     </div>;
 }

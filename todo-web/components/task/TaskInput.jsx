@@ -1,4 +1,3 @@
-import styles from "./TaskInput.module.css";
 import {callApi} from "../../apis/request";
 import {useState} from "react";
 import TaskCategory, {getCurrentCategory} from "./TaskCategory";
@@ -62,7 +61,7 @@ export default function TaskInput({saveEvent, clickEvent, setLoading}) {
         <input type='text'
                id='taskInput'
                placeholder={process.env.NODE_ENV === 'development' ? 'THIS IS DEV ENV!!!' : 'Input New Task'}
-               className={styles.taskInput}
+               className="taskInput"
                value={newTask}
                onChange={(event) => setNewTask(event.target.value)}
                onKeyDown={event => {
@@ -76,5 +75,15 @@ export default function TaskInput({saveEvent, clickEvent, setLoading}) {
             <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                       one={one}
                       change={changeTask}/>)}
+        <style jsx>{`
+          .taskInput {
+            width: 100%;
+            height: 40px;
+            font-size: 20px;
+            display: block;
+            margin: 10px auto;
+            z-index: 9999;
+          }
+        `}</style>
     </>;
 }

@@ -1,4 +1,3 @@
-import styles from "./SelectBox.module.css";
 import FoamBox from "./FoamBox";
 
 export function SelectBox(props) {
@@ -9,10 +8,10 @@ export function SelectBox(props) {
     }
 
     return <div onClick={() => props.show ? null : props.reset(props.index)}
-                className={styles.container}>
+                className="container">
         <FoamBox>
             <div onClick={() => props.reset()}
-                 className={styles.select}>
+                 className="select">
                 {props.title}
             </div>
         </FoamBox>
@@ -22,7 +21,7 @@ export function SelectBox(props) {
                     {props.options.map((option) =>
                         <FoamBox key={option.key}>
                             <button onClick={() => choose(option.key)}
-                                    className={styles.button}>
+                                    className="button">
                                 {option.name}
                             </button>
                         </FoamBox>)}
@@ -31,5 +30,29 @@ export function SelectBox(props) {
                 :
                 <div/>
         }
+        <style jsx>{`
+          .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            text-align: center;
+          }
+
+          .select {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            text-align: center;
+            background-color: #262626;
+          }
+
+          .button {
+            width: 100%;
+            height: 40px;
+            line-height: 34px;
+            font-size: 16px;
+            text-align: center;
+          }
+        `}</style>
     </div>
 }

@@ -1,4 +1,3 @@
-import styles from "./TaskList.module.css";
 import {useState} from "react";
 import {buildPath} from "../apis/request";
 import Loading from "./Loading";
@@ -38,14 +37,31 @@ export default function TaskList({taskStatus}) {
         <TaskInput saveEvent={saveEvent}
                    setLoading={setLoading}
                    clickEvent={categoryClickEvent}/>
-        <div className={styles.taskItemList}>
+        <div className="taskItemList">
             {taskPages}
-            <button className={styles.button} onClick={() => {
+            <button className="button" onClick={() => {
                 setPage(page + 1)
             }}>
                 Load More
             </button>
         </div>
         <Loading active={loading}/>
+        <style jsx>{`
+          .button {
+            height: 40px;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background-color: #004812;
+            color: #f7f7f7;
+            border-radius: 5px;
+            border: 0;
+            cursor: pointer;
+          }
+
+          .taskItemList {
+            margin-bottom: 10px;
+          }
+        `}</style>
     </>;
 }

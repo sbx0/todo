@@ -1,4 +1,3 @@
-import styles from "./Model.module.css";
 import {useEffect, useRef, useState} from "react";
 import FoamBox from "../layout/FoamBox";
 import {SelectBox} from "../layout/SelectBox";
@@ -74,8 +73,8 @@ export default function Model({show, close, change, data}) {
     }
 
     if (show) {
-        return <div className={styles.container}>
-            <div ref={modelRef} className={styles.innerContainer}>
+        return <div className="container">
+            <div ref={modelRef} className="innerContainer">
 
                 <FoamBox>
                     <span>名称</span>
@@ -89,7 +88,7 @@ export default function Model({show, close, change, data}) {
                                       taskName: event.target.value
                                   })
                               }}
-                              className={styles.textarea}/>
+                              className="textarea"/>
                 </FoamBox>
 
                 <SelectBox index={1}
@@ -120,7 +119,7 @@ export default function Model({show, close, change, data}) {
                                                       change(task);
                                                   }
                                               }}
-                                              className={styles.button}/>
+                                              className="button"/>
                                    </FoamBox>
                                </div>
                            }
@@ -137,7 +136,7 @@ export default function Model({show, close, change, data}) {
                            ]}
                            other={
                                <FoamBox>
-                                   <input type="datetime-local" className={styles.button}/>
+                                   <input type="datetime-local" className="button"/>
                                </FoamBox>
                            }
                 />
@@ -155,7 +154,7 @@ export default function Model({show, close, change, data}) {
                            ]}
                            other={
                                <FoamBox>
-                                   <button className={styles.button}>自定义</button>
+                                   <button className="button">自定义</button>
                                </FoamBox>
                            }
                 />
@@ -172,7 +171,7 @@ export default function Model({show, close, change, data}) {
                                       taskRemark: event.target.value
                                   })
                               }}
-                              className={styles.textarea}/>
+                              className="textarea"/>
                 </FoamBox>
 
                 {
@@ -191,11 +190,97 @@ export default function Model({show, close, change, data}) {
                 </FoamBox>
 
                 <FoamBox>
-                    <button className={styles.button} onClick={() => change(task)}>
+                    <button className="button" onClick={() => change(task)}>
                         Save
                     </button>
                 </FoamBox>
             </div>
+            <style jsx>{`
+              .container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                background-color: rgba(19, 19, 19, 0.82);
+                z-index: 10;
+              }
+
+              .container::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                background-color: rgba(245, 245, 245, 0);
+              }
+
+              .container::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+                background-color: rgba(245, 245, 245, 0);
+              }
+
+              .container::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+                background-color: #555;
+              }
+
+              .innerContainer {
+                max-width: 750px;
+                height: max-content;
+                overflow: auto;
+                width: 90vw;
+                margin: 20px auto;
+                padding: 10px;
+                border: 1px solid white;
+                border-radius: 5px;
+                background-color: rgb(19, 19, 19)
+              }
+
+              .operateContainer {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                text-align: center;
+              }
+
+              .fullWidthPadding {
+                width: 100%;
+                padding: 10px 5px 0 5px;
+              }
+
+              .select {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                font-size: 16px;
+                text-align: center;
+                background-color: #262626;
+              }
+
+              .textarea {
+                width: 100%;
+                font-size: 16px;
+                padding: 10px;;
+              }
+
+              .text {
+                width: 100%;
+                font-size: 16px;
+                height: 40px;
+                line-height: 24px;
+                padding-left: 10px;
+                padding-right: 10px;
+              }
+
+              .button {
+                width: 100%;
+                height: 40px;
+                line-height: 34px;
+                font-size: 16px;
+                text-align: center;
+              }
+            `}</style>
         </div>
     } else {
         return <></>;

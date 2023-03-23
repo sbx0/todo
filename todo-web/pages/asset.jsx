@@ -8,7 +8,6 @@ import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
 import ReactEcharts from "echarts-for-react";
-import {getSourceCookie} from "../apis/cookies";
 
 
 export default function Asset() {
