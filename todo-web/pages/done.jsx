@@ -4,6 +4,7 @@ import Container from "../components/Container";
 import {callApi} from "../apis/request";
 import {CategoryPaging, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
 import {useEffect, useState} from "react";
+import {getCurrentCategory} from "../components/task/TaskCategory";
 
 export default function Done() {
     const [initData, setInitData] = useState(null);
@@ -27,7 +28,7 @@ export default function Done() {
                 "page": 1,
                 "pageSize": 20,
                 "taskStatus": 1,
-                "categoryId": 0,
+                "categoryId": getCurrentCategory(),
                 "orders": [{"name": "create_time", "direction": "desc"}]
             }
         }).then(r => {
@@ -53,7 +54,7 @@ export default function Done() {
         callApi({
             url: TaskStatistics,
             params: {
-                "categoryId": 0,
+                "categoryId": getCurrentCategory(),
             }
         }).then(r => {
             let statistics = {

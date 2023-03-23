@@ -85,7 +85,6 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     }
 
     const categoryClickEvent = (categoryId) => {
-        router.replace({query: {...router.query, categoryId: categoryId},}).then(r => r);
         setPage(1);
         getTaskPaging(1, pageSize, categoryId, taskStatus);
         callApi({

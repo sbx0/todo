@@ -1,8 +1,30 @@
-import {useEffect, useState} from "react";
 import styles from "./TaskCategory.module.css";
-import {setCache} from "../Cache";
+import {getCache, setCache} from "../Cache";
+import {useEffect} from "react";
+
+const CURRENT_CATEGORY_CACHE_KEY = 'current-category';
+
+export function getCurrentCategory() {
+    let currentCategory = getCache(CURRENT_CATEGORY_CACHE_KEY);
+    if (currentCategory == null) {
+        setCache(CURRENT_CATEGORY_CACHE_KEY, 0)
+        currentCategory = 0;
+    }
+    return parseInt(currentCategory);
+}
 
 export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
+
+    useEffect(() => {
+        console.log('getCurrentCategory', getCurrentCategory())
+    }, [])
+
+    function clickCategory(value) {
+        clickEvent(value);
+        // cache category
+        setCache(CURRENT_CATEGORY_CACHE_KEY, value);
+        console.log('getCurrentCategory', getCurrentCategory())
+    }
 
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryScrollBar}>
@@ -14,7 +36,7 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                        value={0}
                        onClick={event => {
                            setCache('categoryId', event.target.value);
-                           clickEvent(event.target.value);
+                           clickCategory(event.target.value);
                            setCategoryId(event.target.value)
                        }}
                        hidden/>
@@ -36,7 +58,7 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                                defaultChecked={categoryId === one.id}
                                onClick={event => {
                                    setCache('categoryId', event.target.value);
-                                   clickEvent(event.target.value);
+                                   clickCategory(event.target.value);
                                    setCategoryId(event.target.value);
                                }}
                                hidden/>
