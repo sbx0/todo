@@ -1,12 +1,10 @@
 import {callApi} from "../../apis/request";
 import {useState} from "react";
 import TaskCategory, {getCurrentCategory} from "./TaskCategory";
-import {useRouter} from "next/router";
 import {POST} from "../../apis/apiPath";
 import TaskItem from "./TaskItem";
 
 export default function TaskInput({saveEvent, clickEvent, setLoading}) {
-    const router = useRouter()
     const [newTask, setNewTask] = useState('');
     const [newTaskData, setNewTaskData] = useState([]);
     const saveNewTask = () => {

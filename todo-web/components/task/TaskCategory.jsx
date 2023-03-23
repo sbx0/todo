@@ -74,7 +74,7 @@ export default function TaskCategory({clickEvent}) {
             margin: 0 auto;
             width: 100%;
             height: 60px;
-            overflow-x: overlay;
+            overflow-x: auto;
             overflow-y: hidden;
             padding-bottom: 5px;
             z-index: 9999;
@@ -143,17 +143,6 @@ export default function TaskCategory({clickEvent}) {
           input[type='radio']:checked + .categoryItemBackgroundColor {
             color: #ffffff;
             background: #009924;
-          }
-
-          @keyframes slideFadeDown {
-            0% {
-              transform: translate3d(-100%, 0, 0);
-              opacity: 0
-            }
-            100% {
-              transform: translate3d(0, 0, 0);
-              opacity: 1
-            }
           }
         `}</style>
     </div>;
