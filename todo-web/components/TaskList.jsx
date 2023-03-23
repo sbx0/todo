@@ -7,9 +7,9 @@ import {getCache} from "./Cache";
 import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
-import {GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
+import {POST, TaskPaging} from "../apis/apiPath";
 
-export default function TaskList({initData, category, statistics, taskStatus}) {
+export default function TaskList({initData, category, taskStatus}) {
     const router = useRouter()
     const [categoryId, setCategoryId] = useState(() => {
         // just for next.js
@@ -27,16 +27,10 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
-    const [statisticsData, setStatisticsData] = useState(statistics);
 
     useEffect(() => {
         setData(initData);
     }, [initData])
-
-
-    useEffect(() => {
-        setStatisticsData(statistics);
-    }, [statistics])
 
     const changeTask = (task) => {
         setLoading(true);
@@ -87,28 +81,6 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     const categoryClickEvent = (categoryId) => {
         setPage(1);
         getTaskPaging(1, pageSize, categoryId, taskStatus);
-        callApi({
-            method: GET,
-            url: TaskStatistics,
-            params: {
-                "categoryId": categoryId,
-            }
-        }).then(r => {
-            let statistics = {
-                completed: 0,
-                uncompleted: 0
-            }
-            if (r.data) {
-                for (let i = 0; i < r.data.length; i++) {
-                    if (r.data[i].key === 'completed') {
-                        statistics.completed = r.data[i].value;
-                    } else if (r.data[i].key === 'uncompleted') {
-                        statistics.uncompleted = r.data[i].value;
-                    }
-                }
-            }
-            setStatisticsData(statistics);
-        });
     }
 
     const saveEvent = (task) => {
@@ -122,7 +94,7 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     }
 
     return <>
-        <StatisticsPanel initData={statisticsData}/>
+        <StatisticsPanel/>
         <TaskInput categoryId={categoryId}
                    initData={category}
                    setCategoryId={setCategoryId}

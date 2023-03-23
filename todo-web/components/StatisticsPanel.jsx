@@ -1,7 +1,10 @@
 import styles from "./StatisticsPanel.module.css";
-import {useEffect, useState} from "react";
+import useStatistics from "../hooks/useStatistics";
+import {getCurrentCategory} from "./task/TaskCategory";
 
-export default function StatisticsPanel({initData}) {
+export default function StatisticsPanel() {
+    const statistics = useStatistics(getCurrentCategory());
+    const initData = statistics.response.data;
 
     return <div className={styles.container}>
         <div className={styles.item}>
