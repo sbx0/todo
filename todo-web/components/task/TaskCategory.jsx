@@ -1,5 +1,6 @@
 import styles from "./TaskCategory.module.css";
 import {getCache, setCache} from "../Cache";
+import useCategory from "../../hooks/useCategory";
 
 const CURRENT_CATEGORY_CACHE_KEY = 'current-category';
 
@@ -15,7 +16,9 @@ export function getCurrentCategory() {
     return parseInt(currentCategory);
 }
 
-export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
+export default function TaskCategory({clickEvent}) {
+    const category = useCategory(1, 20);
+    const categoryId = getCurrentCategory();
 
     function clickCategory(value) {
         clickEvent(value);
@@ -34,7 +37,6 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                        onClick={event => {
                            setCache('categoryId', event.target.value);
                            clickCategory(event.target.value);
-                           setCategoryId(event.target.value)
                        }}
                        hidden/>
                 <div className={styles.categoryItemBackgroundColor}>
@@ -45,7 +47,7 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                 </div>
             </div>
             {
-                initData?.map((one, index) => {
+                category?.response?.data?.map((one, index) => {
                     return <div key={one.id + one.categoryName}
                                 className={styles.categoryItem}>
                         <input id={'category_' + one.id}
@@ -56,7 +58,6 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                                onClick={event => {
                                    setCache('categoryId', event.target.value);
                                    clickCategory(event.target.value);
-                                   setCategoryId(event.target.value);
                                }}
                                hidden/>
                         <div className={styles.categoryItemBackgroundColor}>

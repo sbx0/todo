@@ -8,21 +8,36 @@ export default function TaskItem({
                                      one,
                                      change
                                  }) {
-    let isCompleted = 1 === one.taskStatus;
+    const [data, setData] = useState(one);
+    let isCompleted = 1 === data.taskStatus;
     let isCompletedClassName = isCompleted ? styles.taskItemBodyCompleted : '';
     let divClassName = `${styles.taskItemBody} ${isCompletedClassName}`;
     const [modalShow, setModalShow] = useState(false);
+
+    function changTask(task) {
+        setData(task);
+        change(task);
+        setModalShow(false);
+    }
 
     return <div>
         <div className={divClassName}>
             <div className={styles.leftContainer}
                  onClick={() => {
                      if (isCompleted) {
-                         one.taskStatus = 0;
-                         change(one);
+                         data.taskStatus = 0;
+                         change(data);
+                         setData({
+                             ...data,
+                             taskStatus: 0
+                         });
                      } else {
-                         one.taskStatus = 1;
-                         change(one);
+                         data.taskStatus = 1;
+                         change(data);
+                         setData({
+                             ...data,
+                             taskStatus: 1
+                         });
                      }
                  }}>
                 {isCompleted ?
@@ -31,16 +46,16 @@ export default function TaskItem({
                     <CircleIcon/>
                 }
             </div>
-            {one.taskStatus === 0 && one.planTime != null ?
+            {data.taskStatus === 0 && data.planTime != null ?
                 <div onClick={() => setModalShow(true)} className={styles.rightContainerWithCountDown}>
                     <div className={styles.textContainer}>
                         <span className={styles.textCenteredVertically}>
-                            {one.taskName}
+                            {data.taskName}
                         </span>
                     </div>
                     <div className={styles.textContainer}>
                         <div className={`${styles.textCenteredVertically} ${styles.time}`}>
-                            <CountDown time={one.planTime}/>
+                            <CountDown time={data.planTime}/>
                         </div>
                     </div>
                 </div>
@@ -48,7 +63,7 @@ export default function TaskItem({
                 <div onClick={() => setModalShow(true)} className={styles.rightContainer}>
                     <div className={styles.textContainer}>
                         <span className={styles.textCenteredVertically}>
-                            {one.taskName}
+                            {data.taskName}
                         </span>
                     </div>
                 </div>
@@ -57,7 +72,7 @@ export default function TaskItem({
         </div>
         <Model show={modalShow}
                close={() => setModalShow(false)}
-               change={change}
-               data={one}/>
+               change={changTask}
+               data={data}/>
     </div>;
 }
