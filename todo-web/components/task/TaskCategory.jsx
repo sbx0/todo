@@ -1,10 +1,12 @@
 import styles from "./TaskCategory.module.css";
 import {getCache, setCache} from "../Cache";
-import {useEffect} from "react";
 
 const CURRENT_CATEGORY_CACHE_KEY = 'current-category';
 
 export function getCurrentCategory() {
+    if (typeof window === 'undefined') {
+        return 0;
+    }
     let currentCategory = getCache(CURRENT_CATEGORY_CACHE_KEY);
     if (currentCategory == null) {
         setCache(CURRENT_CATEGORY_CACHE_KEY, 0)
@@ -15,15 +17,10 @@ export function getCurrentCategory() {
 
 export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
 
-    useEffect(() => {
-        console.log('getCurrentCategory', getCurrentCategory())
-    }, [])
-
     function clickCategory(value) {
         clickEvent(value);
         // cache category
         setCache(CURRENT_CATEGORY_CACHE_KEY, value);
-        console.log('getCurrentCategory', getCurrentCategory())
     }
 
     return <div className={styles.categoryContainer}>

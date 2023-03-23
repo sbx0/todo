@@ -1,14 +1,6 @@
 import {getCookie, removeCookie} from "./cookies";
 
-function hash(str) {
-    let hash = 0;
-    for (let i = 0, len = str.length; i < len; i++) {
-        let chr = str.charCodeAt(i);
-        hash = (hash << 5) - hash + chr;
-        hash |= 0;
-    }
-    return hash.toString();
-}
+export const fetcher = (...args) => callApi(...args).then((res) => res);
 
 export function buildPath(url, params) {
     if (params) {
