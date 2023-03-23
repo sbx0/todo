@@ -17,7 +17,6 @@ public class WSL2Support {
     public static final String WINDOWS_HOSTS = "/mnt/c/Windows/System32/drivers/etc/hosts";
     public static final String WSL_DOMAIN = "wsl2.sbx0.cn";
     public static final String WINDOWS_DOMAIN = "win.sbx0.cn";
-    public static final String TODO_DOMAIN = "todo.sbx0.cn";
 
     public static void main(String[] args) {
 //        List<String> lines = new ArrayList<>();
@@ -53,7 +52,6 @@ public class WSL2Support {
     private static void handleLines(String wslIp, String winIp, List<String> lines) {
         boolean findWslDomain = false;
         boolean findWindowsDomain = false;
-        boolean findTodoDomain = false;
         for (int i = 0, linesSize = lines.size(); i < linesSize; i++) {
             String line = lines.get(i);
             if (line.contains(WSL_DOMAIN)) {
@@ -68,12 +66,6 @@ public class WSL2Support {
                 System.out.println(line + "\tnew");
                 lines.set(i, line);
                 findWindowsDomain = true;
-            } else if (line.contains(TODO_DOMAIN)) {
-                System.out.println(line + "\told");
-                line = wslIp + "\t" + TODO_DOMAIN;
-                System.out.println(line + "\tnew");
-                lines.set(i, line);
-                findTodoDomain = true;
             }
         }
         if (!findWslDomain) {
@@ -81,9 +73,6 @@ public class WSL2Support {
         }
         if (!findWindowsDomain) {
             lines.add(winIp + "\t" + WINDOWS_DOMAIN);
-        }
-        if (!findTodoDomain) {
-            lines.add(wslIp + "\t" + TODO_DOMAIN);
         }
     }
 
