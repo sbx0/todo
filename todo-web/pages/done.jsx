@@ -2,79 +2,84 @@ import NavigationBar from "../components/NavigationBar";
 import TaskList from "../components/TaskList";
 import Container from "../components/Container";
 import {callApi} from "../apis/request";
-import {ApiPrefix, CategoryPaging, GET, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
-import {getSourceCookie} from "../apis/cookies";
+import {CategoryPaging, POST, TaskPaging, TaskStatistics} from "../apis/apiPath";
+import {useEffect, useState} from "react";
 
-export default function Done({initData, category, statistics}) {
+export default function Done() {
+    const [initData, setInitData] = useState(null);
+    const [categoryData, setCategoryData] = useState([]);
+    const [statisticsData, setStatisticsData] = useState({
+        completed: 0,
+        uncompleted: 0
+    });
+
+    useEffect(() => {
+        getInitData();
+        getCategoryData();
+        getStatisticsData();
+    }, [])
+
+    function getInitData() {
+        callApi({
+            method: POST,
+            url: TaskPaging,
+            params: {
+                "page": 1,
+                "pageSize": 20,
+                "taskStatus": 1,
+                "categoryId": 0,
+                "orders": [{"name": "create_time", "direction": "desc"}]
+            }
+        }).then(r => {
+            setInitData(r)
+        });
+    }
+
+    function getCategoryData() {
+        callApi({
+            method: POST,
+            url: CategoryPaging,
+            params: {
+                "page": 1,
+                "pageSize": 20,
+                "orders": [{"name": "create_time", "direction": "desc"}]
+            }
+        }).then(r => {
+            setCategoryData(r.data);
+        });
+    }
+
+    function getStatisticsData() {
+        callApi({
+            url: TaskStatistics,
+            params: {
+                "categoryId": 0,
+            }
+        }).then(r => {
+            let statistics = {
+                completed: 0,
+                uncompleted: 0
+            };
+
+            if (r.data) {
+                for (let i = 0; i < r.data.length; i++) {
+                    if (r.data[i].key === 'completed') {
+                        statistics.completed = r.data[i].value;
+                    } else if (r.data[i].key === 'uncompleted') {
+                        statistics.uncompleted = r.data[i].value;
+                    }
+                }
+            }
+
+            setStatisticsData(statistics);
+        });
+    }
 
     return <Container>
         <TaskList initData={initData}
-                  category={category}
-                  statistics={statistics}
+                  category={categoryData}
+                  statistics={statisticsData}
                   taskStatus={1}/>
         <NavigationBar active={1}/>
     </Container>
 }
-
-export async function getServerSideProps({req, query}) {
-    let categoryId = 0;
-    if (query.categoryId != null) {
-        categoryId = query.categoryId;
-    }
-
-    let taskPaging = await callApi({
-        method: POST,
-        url: ApiPrefix + process.env.API_HOST + TaskPaging,
-        params: {
-            "page": 1,
-            "pageSize": 20,
-            "taskStatus": 1,
-            "categoryId": categoryId,
-            "orders": [{"name": "update_time", "direction": "desc"}]
-        },
-        token: getSourceCookie(req.headers.cookie, 'token')
-    });
-
-    let category = await callApi({
-        method: POST,
-        url: ApiPrefix + process.env.API_HOST + CategoryPaging,
-        params: {
-            "page": 1,
-            "pageSize": 20,
-            "orders": [{"name": "create_time", "direction": "desc"}]
-        }
-    });
-
-    let statisticsResponse = await callApi({
-        method: GET,
-        url: ApiPrefix + process.env.API_HOST + TaskStatistics,
-        params: {
-            "categoryId": categoryId,
-        },
-        token: getSourceCookie(req.headers.cookie, 'token')
-    });
-
-    let statistics = {
-        completed: 0,
-        uncompleted: 0
-    };
-
-    if (statisticsResponse.data) {
-        for (let i = 0; i < statisticsResponse.data.length; i++) {
-            if (statisticsResponse.data[i].key === 'completed') {
-                statistics.completed = statisticsResponse.data[i].value;
-            } else if (statisticsResponse.data[i].key === 'uncompleted') {
-                statistics.uncompleted = statisticsResponse.data[i].value;
-            }
-        }
-    }
-
-    return {
-        props: {
-            initData: taskPaging,
-            category: category.data,
-            statistics: statistics
-        }
-    }
-}
-

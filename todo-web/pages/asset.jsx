@@ -3,7 +3,7 @@ import Container from "../components/Container";
 import {callApi} from "../apis/request";
 import {API, ApiPrefix, AssetRecords, AssetTypePaging, GET, POST, RecentRecordTimeList} from "../apis/apiPath";
 import AssetType from "../components/asset/AssetType";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
@@ -11,13 +11,15 @@ import ReactEcharts from "echarts-for-react";
 import {getSourceCookie} from "../apis/cookies";
 
 
-export default function Asset({legend, assetType, recordTime, assetRecord}) {
+export default function Asset() {
+    const [recordTimeData, setRecordTimeData] = useState([]);
+    const [assetTypeData, setAssetTypeData] = useState([])
     const [options, setOptions] = useState({
         tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data: legend
+            data: ['Bank', 'Alipay', 'Wechat', 'Total']
         },
         grid: {
             left: '5%',
@@ -36,7 +38,7 @@ export default function Asset({legend, assetType, recordTime, assetRecord}) {
         xAxis: {
             type: 'category',
             boundaryGap: true,
-            data: recordTime
+            data: recordTimeData
         },
         yAxis: {
             type: 'value',
@@ -44,8 +46,14 @@ export default function Asset({legend, assetType, recordTime, assetRecord}) {
                 show: true
             }
         },
-        series: assetRecord
+        series: []
     });
+
+    useEffect(() => {
+        getAssetType();
+        getRecordTimeData();
+        getChartData();
+    }, [])
 
     const [asset, setAsset] = useState({
         typeId: 1,
@@ -114,9 +122,36 @@ export default function Asset({legend, assetType, recordTime, assetRecord}) {
         });
     }
 
+    function getAssetType() {
+        callApi({
+            method: POST,
+            url: AssetTypePaging,
+            params: {
+                "page": 1,
+                "pageSize": 20,
+                "orders": [{"name": "create_time", "direction": "desc"}]
+            }
+        }).then(r => {
+            setAssetTypeData(r.data)
+        })
+    }
+
+    function getRecordTimeData() {
+        callApi({
+            url: RecentRecordTimeList
+        }).then(r => {
+            let recordTimeData = r.data;
+            for (let i = 0; i < recordTimeData.length; i++) {
+                recordTimeData[i] = recordTimeData[i].substring(2, 10);
+            }
+            setRecordTimeData(recordTimeData)
+        })
+    }
+
+
     return <Container>
         <AssetType value={asset.typeId}
-                   initData={assetType}
+                   initData={assetTypeData}
                    callback={setAssetType}/>
         <RecordValue value={asset.recordValue}
                      callback={setRecordValue}/>
@@ -126,50 +161,4 @@ export default function Asset({legend, assetType, recordTime, assetRecord}) {
         <ReactEcharts theme="dark" option={options} style={{width: "100%", height: "50vh", margin: '10px auto'}}/>
         <NavigationBar active={2}/>
     </Container>
-}
-
-export async function getServerSideProps({req, query}) {
-    const assetTypeResponse = await callApi({
-        method: POST,
-        url: ApiPrefix + process.env.API_HOST + AssetTypePaging,
-        params: {
-            "page": 1,
-            "pageSize": 20,
-            "orders": [{"name": "create_time", "direction": "desc"}]
-        }
-    });
-
-    console.log(assetTypeResponse)
-
-    let legend = [];
-
-    for (let i = 0; i < assetTypeResponse.data.length; i++) {
-        legend[i] = assetTypeResponse.data[i].typeName;
-    }
-
-    legend.push('Total');
-
-    const recentRecordTimeListResponse = await callApi({
-        url: ApiPrefix + process.env.API_HOST + RecentRecordTimeList,
-        token: getSourceCookie(req.headers.cookie, 'token')
-    });
-
-    let recordTimeData = recentRecordTimeListResponse.data;
-    for (let i = 0; i < recordTimeData.length; i++) {
-        recordTimeData[i] = recordTimeData[i].substring(2, 10);
-    }
-
-    const assetRecordResponse = await callApi({
-        url: ApiPrefix + process.env.API_HOST + AssetRecords,
-        token: getSourceCookie(req.headers.cookie, 'token')
-    });
-
-    return {
-        props: {
-            legend: legend,
-            assetType: assetTypeResponse.data,
-            recordTime: recordTimeData,
-            assetRecord: assetRecordResponse.data,
-        }
-    }
 }

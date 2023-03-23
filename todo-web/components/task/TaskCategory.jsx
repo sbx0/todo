@@ -1,12 +1,8 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import styles from "./TaskCategory.module.css";
 import {setCache} from "../Cache";
 
 export default function TaskCategory({categoryId, setCategoryId, clickEvent, initData}) {
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(20);
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(initData);
 
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryScrollBar}>
@@ -30,7 +26,7 @@ export default function TaskCategory({categoryId, setCategoryId, clickEvent, ini
                 </div>
             </div>
             {
-                data?.map((one, index) => {
+                initData?.map((one, index) => {
                     return <div key={one.id + one.categoryName}
                                 className={styles.categoryItem}>
                         <input id={'category_' + one.id}

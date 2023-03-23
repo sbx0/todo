@@ -1,5 +1,5 @@
 import styles from "./TaskList.module.css";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import TaskItem from "./task/TaskItem";
 import {buildPath, callApi} from "../apis/request";
 import Loading from "./Loading";
@@ -28,6 +28,15 @@ export default function TaskList({initData, category, statistics, taskStatus}) {
     const [pageSize, setPageSize] = useState(20);
     const [data, setData] = useState(initData);
     const [statisticsData, setStatisticsData] = useState(statistics);
+
+    useEffect(() => {
+        setData(initData);
+    }, [initData])
+
+
+    useEffect(() => {
+        setStatisticsData(statistics);
+    }, [statistics])
 
     const changeTask = (task) => {
         setLoading(true);

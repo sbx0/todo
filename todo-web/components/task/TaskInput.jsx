@@ -1,6 +1,6 @@
 import styles from "./TaskInput.module.css";
 import {callApi} from "../../apis/request";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import TaskCategory from "./TaskCategory";
 import {useRouter} from "next/router";
 import {POST} from "../../apis/apiPath";
