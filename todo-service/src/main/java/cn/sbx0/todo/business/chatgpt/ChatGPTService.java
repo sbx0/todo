@@ -23,7 +23,6 @@ public class ChatGPTService {
     private final Integer MAX_HANDLED = 15;
     private final ArrayBlockingQueue<ChatGPTMessage> RECEIVE_QUEUE = new ArrayBlockingQueue<>(MAX_HANDLED);
     private final ArrayBlockingQueue<ChatGPTMessage> SEND_QUEUE = new ArrayBlockingQueue<>(MAX_HANDLED * 2);
-    private final Proxy PROXY = Proxys.http("win.sbx0.cn", 11114);
     @Lazy
     @Resource
     private WeixinService weixinService;
@@ -52,7 +51,6 @@ public class ChatGPTService {
             if (chatGPT == null) {
                 chatGPT = ChatGPT.builder()
                         .apiKey(apiKey)
-                        .proxy(PROXY)
                         .apiHost("https://api.openai.com/")
                         .build()
                         .init();
