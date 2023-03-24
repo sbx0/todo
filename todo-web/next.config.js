@@ -11,7 +11,7 @@ module.exports = process.env.NODE_ENV === 'development' ?
             return [
                 {
                     source: '/api/:path*',
-                    destination: 'http://' + (process.env.NODE_ENV === 'development' ? 'localhost:8888' : 'todo-service:9999') + '/:path*' // Proxy to Backend
+                    destination: 'http://localhost:8888/:path*' // Proxy to Backend
                 }
             ]
         }

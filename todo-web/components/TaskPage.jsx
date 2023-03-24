@@ -4,6 +4,7 @@ import {callApi, fetcher} from "../apis/request";
 import TaskItem from "./task/TaskItem";
 import {getCache, setCache} from "./Cache";
 import {useEffect} from "react";
+import Loading from "./Loading";
 
 export default function TaskPage({page, pageSize, taskStatus, categoryId}) {
     const cacheKey = `TaskPage-${page}-${pageSize}-${taskStatus}-${categoryId}`;
@@ -51,6 +52,7 @@ export default function TaskPage({page, pageSize, taskStatus, categoryId}) {
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
                           change={changeTask}/>)}
+            <Loading active={true}/>
         </>
         :
         <>
