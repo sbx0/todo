@@ -54,7 +54,7 @@ export default function StatisticsPanel() {
           }
 
           .completed {
-            color: #00ff36;
+            color: #14d03c;
           }
         `}</style>
     </div>;

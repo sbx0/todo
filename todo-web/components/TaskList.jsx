@@ -76,7 +76,7 @@ export default function TaskList({taskStatus}) {
             <button className="button" onClick={() => {
                 setPage(page + 1)
             }}>
-                Load More
+                加载更多...
             </button>
         </div>
         <Loading active={loading}/>
@@ -84,9 +84,9 @@ export default function TaskList({taskStatus}) {
           .button {
             height: 40px;
             width: 100%;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            background-color: #004812;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            background-color: #262a2d;
             color: #f7f7f7;
             border-radius: 5px;
             border: 0;

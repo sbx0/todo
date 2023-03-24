@@ -75,7 +75,7 @@ export default function TaskItem({
                data={data}/>
         <style jsx>{`
           .taskItemBody {
-            background-color: #2c2c2c;
+            background: #262a2d;
             box-shadow: 0 0 1px rgb(0 0 0 / 10%), 0 2px 4px rgb(0 0 0 / 10%);
             margin-bottom: 8px;
             border-radius: 4px;
@@ -98,7 +98,7 @@ export default function TaskItem({
           .leftContainer {
             height: 100%;
             width: 100%;
-            color: #00ff36;
+            color: #14d03c;
             padding: 0;
             cursor: pointer;
             position: relative;

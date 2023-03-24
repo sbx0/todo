@@ -107,10 +107,14 @@ export default function TaskCategory({clickEvent}) {
             display: inline-block;
             width: 100px;
             height: 35px;
-            margin: 10px 5px;
+            margin: 10px 10px 10px 0;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
+          }
+
+          .categoryItem:last-child {
+            margin: 10px 0 10px 0;
           }
 
           .categoryLabel {
@@ -130,19 +134,17 @@ export default function TaskCategory({clickEvent}) {
             align-items: center;
             justify-items: center;
             margin: 0 auto;
-            border-radius: 5px;
             cursor: pointer;
             text-align: center;
-            background: rgba(0, 153, 36, 0.3);
-          }
-
-          .categoryItemBackgroundColor:hover {
-            background: rgba(0, 153, 36, 0.6);
+            background-color: #262a2d;
+            border: 0;
+            border-radius: 5px;
+            transition: background-color 200ms;
           }
 
           input[type='radio']:checked + .categoryItemBackgroundColor {
             color: #ffffff;
-            background: #009924;
+            background-color: #0c8a25;
           }
         `}</style>
     </div>;
