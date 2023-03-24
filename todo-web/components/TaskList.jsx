@@ -1,11 +1,30 @@
 import {useState} from "react";
 import {buildPath} from "../apis/request";
 import Loading from "./Loading";
-import StatisticsPanel from "./StatisticsPanel";
 import {useRouter} from "next/router";
 import TaskInput from "./task/TaskInput";
 import TaskPage from "./TaskPage";
 import {getCurrentCategory} from "./task/TaskCategory";
+
+import dynamic from 'next/dynamic'
+
+const StatisticsPanel = dynamic(() => import("./StatisticsPanel"), {
+    loading: () => {
+        return <>
+            <div className="loading">
+
+            </div>
+            <style jsx>{`
+              .loading {
+                width: 100%;
+                height: 53px;
+              }
+            `}</style>
+        </>
+    },
+    ssr: false,
+})
+
 
 export default function TaskList({taskStatus}) {
     const router = useRouter()

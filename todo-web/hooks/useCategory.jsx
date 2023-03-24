@@ -19,6 +19,12 @@ export default function useCategory(page, pageSize) {
         })
     );
 
+    let cacheData = data;
+    let cacheDataText = getCache(cacheKey);
+    if (cacheDataText != null && cacheDataText !== "undefined" && cacheDataText !== 'null') {
+        cacheData = JSON.parse(cacheDataText);
+    }
+
     useEffect(() => {
         if (!isLoading) {
             setCache(cacheKey, JSON.stringify(data));
@@ -26,7 +32,7 @@ export default function useCategory(page, pageSize) {
     }, [isLoading])
 
     return {
-        response: isLoading ? JSON.parse(getCache(cacheKey)) : data,
+        response: isLoading ? cacheData : data,
         error,
         isLoading
     }
