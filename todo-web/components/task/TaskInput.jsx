@@ -1,8 +1,26 @@
 import {callApi} from "../../apis/request";
 import {useState} from "react";
-import TaskCategory, {getCurrentCategory} from "./TaskCategory";
+import {getCurrentCategory} from "./TaskCategory";
 import {POST} from "../../apis/apiPath";
 import TaskItem from "./TaskItem";
+import dynamic from 'next/dynamic'
+
+const TaskCategory = dynamic(() => import("./TaskCategory"), {
+    loading: () => {
+        return <>
+            <div className="loading">
+
+            </div>
+            <style jsx>{`
+              .loading {
+                width: 100%;
+                height: 60px;
+              }
+            `}</style>
+        </>
+    },
+    ssr: false,
+})
 
 export default function TaskInput({saveEvent, clickEvent, setLoading}) {
     const [newTask, setNewTask] = useState('');
