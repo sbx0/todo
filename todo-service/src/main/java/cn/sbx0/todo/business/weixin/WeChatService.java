@@ -2,14 +2,15 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
-import cn.sbx0.todo.business.weixin.entity.WeChatMsgEventType;
-import cn.sbx0.todo.business.weixin.entity.WeChatMsgType;
+import cn.sbx0.todo.business.weixin.entity.*;
+import cn.sbx0.todo.service.common.Result;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -42,7 +43,11 @@ public class WeChatService {
     }
 
     public void sendMessage(WeChatMessage message) {
-        String response = CallApi.post("https://api.weixin.qq.com", "/cgi-bin/message/custom/send?access_token=" + getAccessToken(), JSON.parse(message));
+        String response = CallApi.post(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.SEND_MESSAGE.getValue() + "?access_token=" + getAccessToken(),
+                JSON.parse(message)
+        );
         log.info(response);
     }
 
@@ -81,7 +86,11 @@ public class WeChatService {
         params.put("grant_type", "client_credential");
         params.put("appid", appId);
         params.put("secret", appSecret);
-        String json = CallApi.get("https://api.weixin.qq.com", "/cgi-bin/token", params);
+        String json = CallApi.get(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.GET_ACCESS_TOKEN.getValue(),
+                params
+        );
         WeChatGetAccessTokenBody tokenBody = JSON.format(json, WeChatGetAccessTokenBody.class);
         if (tokenBody == null) {
             return null;
@@ -109,5 +118,26 @@ public class WeChatService {
             log.error(e.getMessage());
         }
         return null;
+    }
+
+    public Result<String> createQRCode(Long userId) {
+        String json = """
+                {"expire_seconds": 60, "action_name": "QR_SCENE", "action_info": {"scene": {"scene_id":
+                """
+                + userId +
+                """
+                        }}}
+                        """;
+
+        String response = CallApi.post(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.CREATE_QRCODE.getValue(),
+                json
+        );
+        WeChatScanResponse weChatScanResponse = JSON.format(response, WeChatScanResponse.class);
+        if (weChatScanResponse == null || !StringUtils.hasText(weChatScanResponse.getTicket())) {
+            return Result.failure();
+        }
+        return Result.success(WeChatApi.QRCODE_URL.getValue() + weChatScanResponse.getTicket());
     }
 }

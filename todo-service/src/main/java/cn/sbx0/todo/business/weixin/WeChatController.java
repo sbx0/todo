@@ -1,5 +1,9 @@
 package cn.sbx0.todo.business.weixin;
 
+import cn.sbx0.todo.business.user.ClientUserService;
+import cn.sbx0.todo.business.weixin.entity.WeChatXmlMessage;
+import cn.sbx0.todo.business.weixin.entity.WeChatXmlMessageResponse;
+import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class WeChatController {
     @Resource
     private WeChatService weChatService;
+    @Resource
+    private ClientUserService userService;
+
+    @GetMapping("/qrcode")
+    public Result<String> qrcode() {
+        return weChatService.createQRCode(userService.getLoginUserId());
+    }
 
     @GetMapping("/auth")
     public String auth(

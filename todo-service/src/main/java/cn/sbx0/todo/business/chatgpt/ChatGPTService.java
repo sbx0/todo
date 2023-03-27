@@ -1,7 +1,7 @@
 package cn.sbx0.todo.business.chatgpt;
 
 import cn.sbx0.todo.business.weixin.WeChatService;
-import cn.sbx0.todo.business.weixin.WeChatMessage;
+import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
 import com.plexpt.chatgpt.ChatGPT;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

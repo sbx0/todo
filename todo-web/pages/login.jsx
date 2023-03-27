@@ -7,13 +7,16 @@ import Button from "../components/basic/Button";
 import {callApi} from "../apis/request";
 import {POST} from "../apis/apiPath";
 import {getCookie, removeCookie, setCookie} from "../apis/cookies";
+import Image from "next/image";
 
 export default function Login() {
     const [account, setAccount] = useState(null);
     const [token, setToken] = useState(null);
+    const [qrcode, setQrcode] = useState(null);
 
     useEffect(() => {
         callApi({url: "/api/user/client/hello"}).then(r => r);
+        getWeChatQRCode();
     }, [])
 
     useEffect(() => {
@@ -47,12 +50,30 @@ export default function Login() {
         setToken(null);
     }
 
+    function getWeChatQRCode() {
+        callApi({
+            url: "/api/wechat/qrcode"
+        }).then(r => {
+            if (r.success) {
+                setQrcode(r.data);
+            } else {
+                console.error(r.message)
+            }
+        });
+    }
+
     return <Container>
         {token ?
             <div>
                 <FoamBox>
                     <Button name={"退出登录"} onClick={logout}/>
                 </FoamBox>
+                {
+                    qrcode != null ?
+                        <Image src={qrcode} alt={'wechat_qrcode'} onClick={() => getWeChatQRCode()}/>
+                        :
+                        <></>
+                }
             </div>
             :
             <div>
