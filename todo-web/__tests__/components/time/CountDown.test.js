@@ -76,11 +76,11 @@ const wednesday_earlier = '2023-03-15 05:59:59';
 const wednesday = '2023-03-15 14:15:00';
 const wednesday_later = '2023-03-15 19:23:59';
 const wednesday_end = '2023-03-15 23:59:59';
-const wednesday_begin_tomorrow_expect = wednesday_expect + ' ' + wednesday_begin.substring(11, 16);
-const wednesday_earlier_wednesday_expect = wednesday_expect + ' ' + wednesday_earlier.substring(11, 16);
-const wednesday_wednesday_expect = wednesday_expect + ' ' + wednesday.substring(11, 16);
-const wednesday_later_wednesday_expect = wednesday_expect + ' ' + wednesday_later.substring(11, 16);
-const wednesday_end_wednesday_expect = wednesday_expect;
+const wednesday_begin_tomorrow_expect = '2 天 ' + wednesday_expect + ' ' + wednesday_begin.substring(11, 16);
+const wednesday_earlier_wednesday_expect = '2 天 ' + wednesday_expect + ' ' + wednesday_earlier.substring(11, 16);
+const wednesday_wednesday_expect = '2 天 ' + wednesday_expect + ' ' + wednesday.substring(11, 16);
+const wednesday_later_wednesday_expect = '2 天 ' + wednesday_expect + ' ' + wednesday_later.substring(11, 16);
+const wednesday_end_wednesday_expect = '3 天 ' + wednesday_expect;
 
 test(wednesday_expect, () => {
     expect(calculateWeek(wednesday)).toBe(wednesday_expect);
@@ -106,17 +106,17 @@ test(wednesday_end_wednesday_expect, () => {
     expect(calculateTime(moment(monday), moment(wednesday_end))).toBe(wednesday_end_wednesday_expect);
 });
 
-const next_monday_expect = '下周一';
+const next_monday_expect = '周一';
 const next_monday_begin = '2023-03-20 00:00:00';
 const next_monday_earlier = '2023-03-20 07:59:59';
 const next_monday = '2023-03-20 18:15:00';
 const next_monday_later = '2023-03-20 19:23:59';
 const next_monday_end = '2023-03-20 23:59:59';
-const next_monday_begin_expect = next_monday_expect + ' ' + next_monday_begin.substring(11, 16);
-const next_monday_earlier_expect = next_monday_expect + ' ' + next_monday_earlier.substring(11, 16);
-const next_monday_monday_expect = next_monday_expect + ' ' + next_monday.substring(11, 16);
-const next_monday_later_expect = next_monday_expect + ' ' + next_monday_later.substring(11, 16);
-const next_monday_end_expect = next_monday_expect;
+const next_monday_begin_expect = '7 天 ' + next_monday_expect + ' ' + next_monday_begin.substring(11, 16);
+const next_monday_earlier_expect = '7 天 ' + next_monday_expect + ' ' + next_monday_earlier.substring(11, 16);
+const next_monday_monday_expect = '7 天 ' + next_monday_expect + ' ' + next_monday.substring(11, 16);
+const next_monday_later_expect = '7 天 ' + next_monday_expect + ' ' + next_monday_later.substring(11, 16);
+const next_monday_end_expect = '8 天 ' + next_monday_expect;
 
 test('周一', () => {
     expect(calculateWeek(next_monday)).toBe('周一');
@@ -143,14 +143,14 @@ test(next_monday_end_expect, () => {
 });
 
 const very_far_away = '2024-03-20 18:15:00';
-const very_far_away_expect = '373 天';
+const very_far_away_expect = '373 天 周三 18:15';
 
 test(very_far_away_expect, () => {
     expect(calculateTime(moment(monday), moment(very_far_away))).toBe(very_far_away_expect);
 });
 
 const passed_away = '2022-03-20 18:15:00';
-const passed_away_expect = '已过期 358 天';
+const passed_away_expect = '超时 358 天';
 
 test(passed_away_expect, () => {
     expect(calculateTime(moment(monday), moment(passed_away))).toBe(passed_away_expect);

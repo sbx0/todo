@@ -21,15 +21,18 @@ export function calculateTime(from, to) {
     let duration = moment.duration(to - from);
     let number = duration.asDays();
     if (number > 0) {
-        if (number < (7 - moment(from).day())) {
-            result = calculateWeek(to) + result;
-        } else if (number < (14 - moment(from).day())) {
-            result = '下' + calculateWeek(to) + result;
-        } else {
-            result = number.toFixed(0) + ' 天';
+        let days = parseFloat(number.toFixed(1));
+        if (days > parseInt(days.toFixed(0))) {
+            days += 1;
         }
+        days = days.toFixed(0)
+        result = days + ' 天 ' + calculateWeek(to) + result;
     } else {
-        result = '已过期 ' + -number.toFixed(0) + ' 天';
+        let days = -number.toFixed(0);
+        if (days === 0) {
+            days = 1;
+        }
+        result = '超时 ' + days + ' 天';
     }
     return result;
 }
