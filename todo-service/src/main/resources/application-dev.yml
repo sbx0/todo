@@ -15,13 +15,22 @@ spring:
           script:
             append: false
     properties:
-      javax:
+      jakarta:
         persistence:
           schema-generation:
             create-source: metadata
             scripts:
               action: create
               create-target: ./todo-service/src/main/resources/db/auto/generate.sql
+    open-in-view: false
+  data:
+    redis:
+      host: wsl2.sbx0.cn
+      port: 6379
+      database: 0
+      password: justfordev
+      repositories:
+        enabled: false
 logging:
   file:
     name: ./logs/current.log
