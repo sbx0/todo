@@ -12,15 +12,22 @@ import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 /**
  * @author sbx0
@@ -29,7 +36,13 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long, DefaultPagingRequest> {
+    // 12h
+    public static final Long EXPIRY = 43200L;
+    // 1h
+    public static final Long BEFORE = 3600L;
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
+    @Resource
+    private JwtEncoder encoder;
     @Resource
     private ClientUserRepository repository;
     @Resource
@@ -103,6 +116,41 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
             return 0L;
         } else {
             return customUser.getId();
+        }
+    }
+
+    public String createToken(Authentication authentication, Instant now) {
+        String scope = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(Instant.now())
+                .expiresAt(now.plusSeconds(EXPIRY))
+                .subject(authentication.getName())
+                .claim("scope", scope)
+                .build();
+        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public String getToken(Authentication authentication) {
+        if (!authentication.isAuthenticated()) {
+            return null;
+        }
+        Object object = authentication.getCredentials();
+        if (object == null) {
+            return null;
+        }
+        Jwt credentials = (Jwt) (object);
+        Instant expiresAt = credentials.getExpiresAt();
+        if (expiresAt == null) {
+            return null;
+        }
+        Instant now = Instant.now();
+        if (now.isAfter(expiresAt.plusSeconds(BEFORE))) {
+            return this.createToken(authentication, now);
+        } else {
+            return credentials.getTokenValue();
         }
     }
 }

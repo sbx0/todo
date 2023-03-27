@@ -34,7 +34,7 @@ export default function Login() {
             }
         }).then(r => {
             if (!r.success) {
-                console.log(r.message)
+                console.error(r.message)
             } else {
                 setCookie('token', r.data);
                 setToken(r.data);

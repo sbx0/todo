@@ -1,7 +1,24 @@
 import Head from "next/head";
 import Script from "next/script";
+import {useEffect} from "react";
+import {callApi} from "../apis/request";
+import {setCookie} from "../apis/cookies";
+import {useRouter} from "next/router";
 
-export default ({children}) => {
+export default function Container({children}) {
+    const router = useRouter()
+
+    useEffect(() => {
+        callApi({url: "/api/user/client/token"}).then(r => {
+            if (!r.success) {
+                console.error(r.message);
+                router.push('/login').then(r => r);
+            } else {
+                setCookie('token', r.data);
+            }
+        });
+    }, [])
+
     return <div className="main">
         <Head>
             <title>{process.env.NODE_ENV === 'development' ? 'THIS IS DEV ENV' : 'Next Todo'}</title>

@@ -139,11 +139,15 @@ export default function Asset() {
         callApi({
             url: RecentRecordTimeList
         }).then(r => {
-            let recordTimeData = r.data;
-            for (let i = 0; i < recordTimeData.length; i++) {
-                recordTimeData[i] = recordTimeData[i].substring(2, 10);
+            if (r.success) {
+                let recordTimeData = r.data;
+                for (let i = 0; i < recordTimeData.length; i++) {
+                    recordTimeData[i] = recordTimeData[i].substring(2, 10);
+                }
+                setRecordTimeData(recordTimeData)
+            } else {
+                console.error(r.message)
             }
-            setRecordTimeData(recordTimeData)
         })
     }
 
