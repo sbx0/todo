@@ -2,6 +2,8 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
+import cn.sbx0.todo.business.user.ClientUserService;
+import cn.sbx0.todo.business.user.entity.ClientUser;
 import cn.sbx0.todo.business.weixin.entity.*;
 import cn.sbx0.todo.service.common.Result;
 import cn.sbx0.todo.utils.CallApi;
@@ -33,6 +35,8 @@ public class WeChatService {
     private String appId;
     @Value("${weixin.app-secret}")
     private String appSecret;
+    @Resource
+    private ClientUserService userService;
 
     public void sendMessage(WeChatMessage message) {
         String response = CallApi.post(
@@ -63,7 +67,17 @@ public class WeChatService {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
                     case SUBSCRIBE -> message = "欢迎关注，我是ChatGPT。";
                     case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
-                    case SCAN -> log.info("wechat SCAN event key = " + msg.getEventKey());
+                    case SCAN -> {
+                        log.info("wechat SCAN event key = " + msg.getEventKey());
+                        Long userId = Long.parseLong(msg.getEventKey());
+                        Result<ClientUser> userResult = userService.findById(userId);
+                        if (userResult.getSuccess()) {
+                            ClientUser user = userResult.getData();
+                            user.setWeChatOpenId(msg.getFromUserName());
+                            userService.update(user);
+                            log.info("user " + user.getId() + " " + user.getUsername() + " bind wechat open id " + msg.getFromUserName());
+                        }
+                    }
                     case LOCATION -> log.info("wechat LOCATION event");
                     case CLICK -> log.info("wechat CLICK event");
                 }
