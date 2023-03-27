@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @JacksonXmlRootElement(localName = "xml")
-public class WinXinXmlMessageResponse {
+public class WeChatXmlMessageResponse {
     @JacksonXmlProperty(localName = "FromUserName")
     private String fromUserName;
     @JacksonXmlProperty(localName = "ToUserName")

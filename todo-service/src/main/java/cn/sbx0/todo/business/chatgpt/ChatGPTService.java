@@ -1,16 +1,14 @@
 package cn.sbx0.todo.business.chatgpt;
 
-import cn.sbx0.todo.business.weixin.WeixinService;
-import cn.sbx0.todo.business.weixin.WinXinMessage;
+import cn.sbx0.todo.business.weixin.WeChatService;
+import cn.sbx0.todo.business.weixin.WeChatMessage;
 import com.plexpt.chatgpt.ChatGPT;
-import com.plexpt.chatgpt.util.Proxys;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.net.Proxy;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -25,7 +23,7 @@ public class ChatGPTService {
     private final ArrayBlockingQueue<ChatGPTMessage> SEND_QUEUE = new ArrayBlockingQueue<>(MAX_HANDLED * 2);
     @Lazy
     @Resource
-    private WeixinService weixinService;
+    private WeChatService weChatService;
     @Value("${chatgpt.api-key}")
     private String apiKey;
     private ChatGPT chatGPT;
@@ -71,11 +69,11 @@ public class ChatGPTService {
         if (message == null) {
             return;
         }
-        WinXinMessage winXinMessage = new WinXinMessage();
-        winXinMessage.setMsgtype("text");
-        winXinMessage.setTouser(message.getUser());
-        winXinMessage.setText(new WinXinMessage.WinXinMessageContext(message.getResponse()));
+        WeChatMessage weChatMessage = new WeChatMessage();
+        weChatMessage.setMsgtype("text");
+        weChatMessage.setTouser(message.getUser());
+        weChatMessage.setText(new WeChatMessage.WeChatMessageContext(message.getResponse()));
         log.info("send message to user " + message.getUser() + " " + message.getResponse());
-        weixinService.sendMessage(winXinMessage);
+        weChatService.sendMessage(weChatMessage);
     }
 }

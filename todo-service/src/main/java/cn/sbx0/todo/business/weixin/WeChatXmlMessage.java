@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 @JacksonXmlRootElement(localName = "xml")
-public class WinXinXmlMessage {
+public class WeChatXmlMessage {
     @JacksonXmlProperty(localName = "FromUserName")
     private String FromUserName;
     @JacksonXmlProperty(localName = "ToUserName")

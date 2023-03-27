@@ -8,7 +8,7 @@ import lombok.Data;
  * @since 2022/8/24
  */
 @Data
-public class WeixinGetAccessTokenBody {
+public class WeChatGetAccessTokenBody {
     @JsonProperty(value = "access_token")
     private String accessToken;
     @JsonProperty(value = "expires_in")

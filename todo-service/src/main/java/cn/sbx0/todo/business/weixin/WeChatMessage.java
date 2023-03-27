@@ -7,19 +7,19 @@ import lombok.Data;
  * @since 2023/3/22
  */
 @Data
-public class WinXinMessage {
+public class WeChatMessage {
     private String touser;
     private String msgtype;
-    private WinXinMessageContext text;
+    private WeChatMessageContext text;
 
     @Data
-    public static class WinXinMessageContext {
+    public static class WeChatMessageContext {
         private String content;
 
-        public WinXinMessageContext() {
+        public WeChatMessageContext() {
         }
 
-        public WinXinMessageContext(String content) {
+        public WeChatMessageContext(String content) {
             this.content = content;
         }
     }

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
  * @since 2023/3/21
  */
 @RestController
-@RequestMapping("/weixin")
-public class WeixinController {
+@RequestMapping("/wechat")
+public class WeChatController {
     @Resource
-    private WeixinService weixinService;
+    private WeChatService weChatService;
 
     @GetMapping("/auth")
     public String auth(
@@ -20,11 +20,11 @@ public class WeixinController {
             @RequestParam("nonce") String nonce,
             @RequestParam("echostr") String echostr
     ) {
-        return weixinService.auth(signature, timestamp, nonce, echostr);
+        return weChatService.auth(signature, timestamp, nonce, echostr);
     }
 
     @PostMapping(value = "/auth", consumes = {"application/xml", "text/xml"}, produces = "application/xml;charset=utf-8")
-    public WinXinXmlMessageResponse handleMessage(@RequestBody WinXinXmlMessage message) {
-        return weixinService.handleMessage(message);
+    public WeChatXmlMessageResponse handleMessage(@RequestBody WeChatXmlMessage message) {
+        return weChatService.handleMessage(message);
     }
 }

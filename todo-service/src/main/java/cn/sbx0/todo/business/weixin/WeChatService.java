@@ -2,7 +2,8 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
-import cn.sbx0.todo.business.weixin.utils.WinXinMessageType;
+import cn.sbx0.todo.business.weixin.utils.WeChatMsgEventType;
+import cn.sbx0.todo.business.weixin.utils.WeChatMsgType;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
@@ -20,7 +21,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class WeixinService {
+public class WeChatService {
     @Resource
     private ChatGPTService chatGPTService;
     @Value("${weixin.auth.token}")
@@ -40,20 +41,20 @@ public class WeixinService {
         return result;
     }
 
-    public void sendMessage(WinXinMessage message) {
+    public void sendMessage(WeChatMessage message) {
         String response = CallApi.post("https://api.weixin.qq.com", "/cgi-bin/message/custom/send?access_token=" + getAccessToken(), JSON.parse(message));
         log.info(response);
     }
 
-    public WinXinXmlMessageResponse handleMessage(WinXinXmlMessage msg) {
-        WinXinXmlMessageResponse responseMessage = new WinXinXmlMessageResponse();
+    public WeChatXmlMessageResponse handleMessage(WeChatXmlMessage msg) {
+        WeChatXmlMessageResponse responseMessage = new WeChatXmlMessageResponse();
         responseMessage.setToUserName(msg.getFromUserName());
         responseMessage.setFromUserName(msg.getToUserName());
-        responseMessage.setMsgType(WinXinMessageType.TEXT);
+        responseMessage.setMsgType(WeChatMsgType.TEXT.getValue());
         responseMessage.setCreateTime(new Date().getTime());
-        String message = "";
-        switch (msg.getMsgType()) {
-            case WinXinMessageType.TEXT -> {
+        String message = "暂不支持此类消息。";
+        switch (WeChatMsgType.find(msg.getMsgType())) {
+            case TEXT -> {
                 Boolean result = chatGPTService.addMessage(new ChatGPTMessage(msg.getFromUserName(), msg.getContent()));
                 if (!result) {
                     message = "系统超负荷，请稍后重试";
@@ -61,15 +62,13 @@ public class WeixinService {
                     message = "正在思考，请耐心等待...";
                 }
             }
-            case WinXinMessageType.IMAGE, WinXinMessageType.LINK, WinXinMessageType.LOCATION, WinXinMessageType.SHORTVIDEO, WinXinMessageType.VIDEO, WinXinMessageType.VOICE ->
-                    message = "暂不支持此类消息。";
-            case WinXinMessageType.EVENT -> {
-                switch (msg.getEvent()) {
-                    case WinXinMessageType.EVENT_SUBSCRIBE:
-                        message = "欢迎关注，我是ChatGPT。";
-                        break;
-                    case WinXinMessageType.EVENT_UNSUBSCRIBE, WinXinMessageType.EVENT_CLICK, WinXinMessageType.EVENT_LOCATION, WinXinMessageType.EVENT_SCAN:
-                        break;
+            case EVENT -> {
+                switch (WeChatMsgEventType.find(msg.getEvent())) {
+                    case SUBSCRIBE -> message = "欢迎关注，我是ChatGPT。";
+                    case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
+                    case SCAN -> log.info("wechat SCAN event");
+                    case LOCATION -> log.info("wechat LOCATION event");
+                    case CLICK -> log.info("wechat CLICK event");
                 }
             }
         }
@@ -83,7 +82,7 @@ public class WeixinService {
         params.put("appid", appId);
         params.put("secret", appSecret);
         String json = CallApi.get("https://api.weixin.qq.com", "/cgi-bin/token", params);
-        WeixinGetAccessTokenBody tokenBody = JSON.format(json, WeixinGetAccessTokenBody.class);
+        WeChatGetAccessTokenBody tokenBody = JSON.format(json, WeChatGetAccessTokenBody.class);
         if (tokenBody == null) {
             return null;
         }
