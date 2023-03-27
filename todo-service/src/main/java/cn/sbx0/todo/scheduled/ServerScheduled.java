@@ -77,9 +77,11 @@ public class ServerScheduled {
         }
         String latestPhoto = carPlaceInfo.getImgUrl();
         if (!StringUtils.hasText(latestPhoto)) {
+            log.info("cat plate photo not return");
             return;
         }
         if (latestPhoto.equals(lastPhoto)) {
+            log.info("cat plate photo has not changed");
             return;
         }
         CarPlatePhoto newPhoto = new CarPlatePhoto();
