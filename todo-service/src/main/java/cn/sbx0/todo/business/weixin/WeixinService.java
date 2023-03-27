@@ -2,8 +2,6 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
-import cn.sbx0.todo.business.weixin.utils.AesException;
-import cn.sbx0.todo.business.weixin.utils.SHA1Utils;
 import cn.sbx0.todo.business.weixin.utils.WinXinMessageType;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
@@ -12,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.*;
 
 /**
  * @author sbx0
@@ -31,6 +29,16 @@ public class WeixinService {
     private String appId;
     @Value("${weixin.app-secret}")
     private String appSecret;
+
+    private static String byteToHex(final byte[] hash) {
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
+    }
 
     public void sendMessage(WinXinMessage message) {
         String response = CallApi.post("https://api.weixin.qq.com", "/cgi-bin/message/custom/send?access_token=" + getAccessToken(), JSON.parse(message));
@@ -82,8 +90,25 @@ public class WeixinService {
         return tokenBody.getAccessToken();
     }
 
-    public String auth(String signature, String timestamp, String nonce, String echostr) throws AesException {
-        String sha1 = SHA1Utils.getSHA1(token, timestamp, nonce);
-        return signature.equals(sha1) ? echostr : null;
+    public String auth(String signature, String timestamp, String nonce, String echostr) {
+        if (signature == null || timestamp == null || nonce == null) {
+            return null;
+        }
+        String[] arr = new String[]{token, timestamp, nonce};
+        Arrays.sort(arr);
+        StringBuilder content = new StringBuilder();
+        for (String str : arr) {
+            content.append(str);
+        }
+        String tmpStr;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] digest = md.digest(content.toString().getBytes(StandardCharsets.UTF_8));
+            tmpStr = byteToHex(digest);
+            return tmpStr.equals(signature) ? echostr : null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return null;
     }
 }

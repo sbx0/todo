@@ -1,6 +1,5 @@
 package cn.sbx0.todo.business.weixin;
 
-import cn.sbx0.todo.business.weixin.utils.AesException;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ public class WeixinController {
             @RequestParam("timestamp") String timestamp,
             @RequestParam("nonce") String nonce,
             @RequestParam("echostr") String echostr
-    ) throws AesException {
+    ) {
         return weixinService.auth(signature, timestamp, nonce, echostr);
     }
 

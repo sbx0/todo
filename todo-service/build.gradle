@@ -43,8 +43,6 @@ dependencies {
     implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.2.3.RELEASE'
     // https://mvnrepository.com/artifact/com.github.plexpt/chatgpt
     implementation group: 'com.github.plexpt', name: 'chatgpt', version: '4.0.5'
-    // https://mvnrepository.com/artifact/commons-codec/commons-codec
-    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
