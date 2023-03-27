@@ -19,5 +19,8 @@ module.exports = process.env.NODE_ENV === 'development' ?
     :
     withPWA({
         output: 'export',
-        reactStrictMode: true
+        reactStrictMode: true,
+        images: {
+            unoptimized: true
+        }
     });

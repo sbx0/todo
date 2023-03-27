@@ -14,7 +14,7 @@ public enum WeChatMsgType {
     SHORTVIDEO("shortvideo"),
     LOCATION("location"),
     LINK("link"),
-    EVENT("EVENT"),
+    EVENT("event"),
     NONE("none");
 
     private final String value;

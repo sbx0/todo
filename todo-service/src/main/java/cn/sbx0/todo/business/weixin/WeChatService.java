@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sbx0
@@ -31,16 +33,6 @@ public class WeChatService {
     private String appId;
     @Value("${weixin.app-secret}")
     private String appSecret;
-
-    private static String byteToHex(final byte[] hash) {
-        Formatter formatter = new Formatter();
-        for (byte b : hash) {
-            formatter.format("%02x", b);
-        }
-        String result = formatter.toString();
-        formatter.close();
-        return result;
-    }
 
     public void sendMessage(WeChatMessage message) {
         String response = CallApi.post(
@@ -71,7 +63,7 @@ public class WeChatService {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
                     case SUBSCRIBE -> message = "欢迎关注，我是ChatGPT。";
                     case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
-                    case SCAN -> log.info("wechat SCAN event");
+                    case SCAN -> log.info("wechat SCAN event key = " + msg.getEventKey());
                     case LOCATION -> log.info("wechat LOCATION event");
                     case CLICK -> log.info("wechat CLICK event");
                 }
@@ -99,21 +91,27 @@ public class WeChatService {
     }
 
     public String auth(String signature, String timestamp, String nonce, String echostr) {
-        if (signature == null || timestamp == null || nonce == null) {
-            return null;
-        }
         String[] arr = new String[]{token, timestamp, nonce};
         Arrays.sort(arr);
         StringBuilder content = new StringBuilder();
         for (String str : arr) {
             content.append(str);
         }
-        String tmpStr;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] digest = md.digest(content.toString().getBytes(StandardCharsets.UTF_8));
-            tmpStr = byteToHex(digest);
-            return tmpStr.equals(signature) ? echostr : null;
+            md.update(content.toString().getBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexstr = new StringBuilder();
+            String shaHex;
+            for (byte b : digest) {
+                shaHex = Integer.toHexString(b & 0xFF);
+                if (shaHex.length() < 2) {
+                    hexstr.append(0);
+                }
+                hexstr.append(shaHex);
+            }
+            String cal = hexstr.toString();
+            return signature.equals(cal) ? echostr : null;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -131,11 +129,12 @@ public class WeChatService {
 
         String response = CallApi.post(
                 WeChatApi.HOST.getValue(),
-                WeChatApi.CREATE_QRCODE.getValue(),
+                WeChatApi.CREATE_QRCODE.getValue() + "?access_token=" + getAccessToken(),
                 json
         );
         WeChatScanResponse weChatScanResponse = JSON.format(response, WeChatScanResponse.class);
         if (weChatScanResponse == null || !StringUtils.hasText(weChatScanResponse.getTicket())) {
+            log.error(response);
             return Result.failure();
         }
         return Result.success(WeChatApi.QRCODE_URL.getValue() + weChatScanResponse.getTicket());
