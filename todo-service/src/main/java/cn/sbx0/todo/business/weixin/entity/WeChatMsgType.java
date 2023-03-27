@@ -1,4 +1,4 @@
-package cn.sbx0.todo.business.weixin.utils;
+package cn.sbx0.todo.business.weixin.entity;
 
 /**
  * https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html

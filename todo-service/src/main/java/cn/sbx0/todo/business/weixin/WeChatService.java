@@ -2,8 +2,8 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
-import cn.sbx0.todo.business.weixin.utils.WeChatMsgEventType;
-import cn.sbx0.todo.business.weixin.utils.WeChatMsgType;
+import cn.sbx0.todo.business.weixin.entity.WeChatMsgEventType;
+import cn.sbx0.todo.business.weixin.entity.WeChatMsgType;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
