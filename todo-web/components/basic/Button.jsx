@@ -1,16 +1,20 @@
-export default function Button({onClick, name}) {
+export default function Button({onClick, children}) {
     return <>
         <button onClick={onClick}
                 className="button">
-            {name}
+            {children}
         </button>
         <style jsx>{`
           .button {
-            width: 100%;
-            height: 40px;
-            line-height: 34px;
             font-size: 16px;
-            text-align: center;
+            padding: 10px;
+            height: max-content;
+            width: 100%;
+            background-color: #262a2d;
+            color: #f7f7f7;
+            border-radius: 5px;
+            border: 0;
+            cursor: pointer;
           }
         `}</style>
     </>

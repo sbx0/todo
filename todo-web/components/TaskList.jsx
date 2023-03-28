@@ -6,6 +6,7 @@ import TaskInput from "./task/TaskInput";
 import {getCurrentCategory} from "./task/TaskCategory";
 
 import dynamic from 'next/dynamic'
+import Button from "./basic/Button";
 
 const StatisticsPanel = dynamic(() => import("./StatisticsPanel"), {
     loading: () => {
@@ -73,26 +74,14 @@ export default function TaskList({taskStatus}) {
                    clickEvent={categoryClickEvent}/>
         <div className="taskItemList">
             {taskPages}
-            <button className="button" onClick={() => {
+            <Button onClick={() => {
                 setPage(page + 1)
             }}>
                 加载更多...
-            </button>
+            </Button>
         </div>
         <Loading active={loading}/>
         <style jsx>{`
-          .button {
-            height: 40px;
-            width: 100%;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            background-color: #262a2d;
-            color: #f7f7f7;
-            border-radius: 5px;
-            border: 0;
-            cursor: pointer;
-          }
-
           .taskItemList {
             margin-bottom: 10px;
           }

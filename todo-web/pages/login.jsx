@@ -7,16 +7,23 @@ import Button from "../components/basic/Button";
 import {callApi} from "../apis/request";
 import {POST} from "../apis/apiPath";
 import {getCookie, removeCookie, setCookie} from "../apis/cookies";
-import Image from "next/image";
+import {DeviceMobileIcon} from "@primer/octicons-react";
+import {useRouter} from "next/router";
 
 export default function Login() {
+    const router = useRouter();
     const [account, setAccount] = useState(null);
     const [token, setToken] = useState(null);
-    const [qrcode, setQrcode] = useState(null);
+    const [clientInfo, setClientInfo] = useState(null);
 
     useEffect(() => {
-        callApi({url: "/api/user/client/hello"}).then(r => r);
-        getWeChatQRCode();
+        callApi({url: "/api/user/client/info"}).then(r => {
+            if (r.success) {
+                setClientInfo(r.data);
+            } else {
+                console.error(r.message);
+            }
+        });
     }, [])
 
     useEffect(() => {
@@ -50,30 +57,39 @@ export default function Login() {
         setToken(null);
     }
 
-    function getWeChatQRCode() {
-        callApi({
-            url: "/api/wechat/qrcode"
-        }).then(r => {
-            if (r.success) {
-                setQrcode(r.data);
-            } else {
-                console.error(r.message)
-            }
-        });
-    }
-
     return <Container>
         {token ?
             <div>
-                <FoamBox>
-                    <Button name={"退出登录"} onClick={logout}/>
-                </FoamBox>
                 {
-                    qrcode != null ?
-                        <Image src={qrcode} alt={'wechat_qrcode'} onClick={() => getWeChatQRCode()}/>
+                    clientInfo?.weChatOpenId ?
+                        <div>
+                            <FoamBox>
+                                <Button>
+                                    <div className="leftAndRight">
+                                        <div className="left">
+                                            <DeviceMobileIcon/> 微信已绑定
+                                        </div>
+                                        <div className="right">
+                                            {clientInfo.weChatOpenId}
+                                        </div>
+                                    </div>
+                                </Button>
+                            </FoamBox>
+                        </div>
                         :
-                        <></>
+                        <div onClick={() => {
+                            router.push("/bind/wechat").then((r) => r);
+                        }}>
+                            <FoamBox>
+                                <Button>
+                                    <DeviceMobileIcon/> 绑定微信账户
+                                </Button>
+                            </FoamBox>
+                        </div>
                 }
+                <FoamBox>
+                    <Button onClick={logout}>退出登录</Button>
+                </FoamBox>
             </div>
             :
             <div>
@@ -105,10 +121,25 @@ export default function Login() {
                            }}/>
                 </FoamBox>
                 <FoamBox>
-                    <Button name={"登录"} onClick={login}/>
+                    <Button onClick={login}>登录</Button>
                 </FoamBox>
             </div>
         }
         <NavigationBar active={4}/>
+        <style jsx>{`
+          .leftAndRight {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .leftAndRight .left {
+            text-align: left;
+          }
+
+          .leftAndRight .right {
+            text-align: right;
+          }
+        `}</style>
     </Container>
 }

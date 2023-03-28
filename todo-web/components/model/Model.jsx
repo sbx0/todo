@@ -6,6 +6,8 @@ import moment from "moment/moment";
 import 'moment/locale/zh-cn';
 import CountDown from "../time/CountDown";
 import RecordTime from "../asset/RecordTime";
+import Button from "../basic/Button";
+import TextArea from "../basic/TextArea";
 
 export default function Model({show, close, change, data}) {
     const [task, setTask] = useState(data);
@@ -75,20 +77,18 @@ export default function Model({show, close, change, data}) {
     if (show) {
         return <div className="container">
             <div ref={modelRef} className="innerContainer">
-
                 <FoamBox>
                     <span>名称</span>
                 </FoamBox>
                 <FoamBox>
-                    <textarea rows="2"
+                    <TextArea rows="2"
                               defaultValue={task?.taskName}
                               onChange={(event) => {
                                   setTask({
                                       ...task,
                                       taskName: event.target.value
                                   })
-                              }}
-                              className="textarea"/>
+                              }}/>
                 </FoamBox>
 
                 <SelectBox index={1}
@@ -163,15 +163,14 @@ export default function Model({show, close, change, data}) {
                     <span>备注</span>
                 </FoamBox>
                 <FoamBox>
-                    <textarea rows="5"
+                    <TextArea rows="5"
                               defaultValue={task?.taskRemark}
                               onChange={(event) => {
                                   setTask({
                                       ...task,
                                       taskRemark: event.target.value
                                   })
-                              }}
-                              className="textarea"/>
+                              }}/>
                 </FoamBox>
 
                 {
@@ -190,9 +189,9 @@ export default function Model({show, close, change, data}) {
                 </FoamBox>
 
                 <FoamBox>
-                    <button className="button" onClick={() => change(task)}>
-                        Save
-                    </button>
+                    <Button onClick={() => change(task)}>
+                        保存
+                    </Button>
                 </FoamBox>
             </div>
             <style jsx>{`
@@ -233,7 +232,7 @@ export default function Model({show, close, change, data}) {
                 width: 90vw;
                 margin: 20px auto;
                 padding: 10px;
-                border: 1px solid white;
+                border: 1px solid rgba(255, 255, 255, 0.16);
                 border-radius: 5px;
                 background-color: rgb(19, 19, 19)
               }

@@ -1,6 +1,6 @@
-export default function FoamBox({children}) {
+export default function FoamBox({children, onClick, style}) {
     return <>
-        <div className="container">
+        <div className="container" style={style} onClick={onClick}>
             {children}
         </div>
         <style jsx>{`
