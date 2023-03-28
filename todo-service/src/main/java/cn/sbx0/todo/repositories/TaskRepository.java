@@ -29,15 +29,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query(
             value = """
-                    SELECT id,
-                           task_name,
-                           task_remark,
-                           task_status,
-                           plan_time,
-                           category_id,
-                           user_id,
-                           create_time,
-                           update_time
+                    SELECT *
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
                       AND ((:#{#pagingRequest.categoryId} = 0)
@@ -59,15 +51,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query(
             value = """
-                    SELECT id,
-                           task_name,
-                           task_remark,
-                           task_status,
-                           plan_time,
-                           category_id,
-                           user_id,
-                           create_time,
-                           update_time
+                    SELECT *
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
                       AND ((:#{#pagingRequest.categoryId} = 0)
