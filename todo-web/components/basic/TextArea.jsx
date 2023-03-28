@@ -1,18 +1,18 @@
-export default function Input({id, type = 'text', defaultValue, onChange}) {
+export default function TextArea({id, defaultValue, onChange, rows = 3}) {
     return <>
-        <input id={id}
-               className="input"
-               defaultValue={defaultValue}
-               onChange={onChange}
-               type={type}/>
+        <textarea id={id}
+                  rows={rows}
+                  className="input"
+                  defaultValue={defaultValue}
+                  onChange={onChange}/>
         <style jsx>{`
           .input {
             width: 100%;
-            height: 40px;
+            min-height: 40px;
             font-size: 16px;
             display: block;
             margin: 10px auto;
-            padding: 0 10px;
+            padding: 10px 10px;
             z-index: 9999;
             background: #262a2d;
             color: #fff;
@@ -24,8 +24,7 @@ export default function Input({id, type = 'text', defaultValue, onChange}) {
           }
 
           .input:focus {
-            padding: 1px 10px 0 10px;
-            border-bottom: 2px solid rgba(0, 215, 53, 0.51);
+            border-bottom: 1px solid rgba(0, 215, 53, 0.51);
           }
         `}</style>
     </>

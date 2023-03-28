@@ -36,9 +36,9 @@ public class ClientUserController {
         return service.register(param);
     }
 
-    @GetMapping("/hello")
-    public Result<String> hello(Authentication authentication) {
-        return Result.success("Hello, " + authentication.getName() + "!");
+    @GetMapping("/info")
+    public Result<ClientUser> info() {
+        return service.findById(service.getLoginUserId());
     }
 
 }

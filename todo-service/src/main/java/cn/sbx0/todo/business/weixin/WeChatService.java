@@ -2,18 +2,23 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
-import cn.sbx0.todo.business.weixin.entity.WeChatMsgEventType;
-import cn.sbx0.todo.business.weixin.entity.WeChatMsgType;
+import cn.sbx0.todo.business.user.ClientUserService;
+import cn.sbx0.todo.business.user.entity.ClientUser;
+import cn.sbx0.todo.business.weixin.entity.*;
+import cn.sbx0.todo.service.common.Result;
 import cn.sbx0.todo.utils.CallApi;
 import cn.sbx0.todo.utils.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sbx0
@@ -30,19 +35,15 @@ public class WeChatService {
     private String appId;
     @Value("${weixin.app-secret}")
     private String appSecret;
-
-    private static String byteToHex(final byte[] hash) {
-        Formatter formatter = new Formatter();
-        for (byte b : hash) {
-            formatter.format("%02x", b);
-        }
-        String result = formatter.toString();
-        formatter.close();
-        return result;
-    }
+    @Resource
+    private ClientUserService userService;
 
     public void sendMessage(WeChatMessage message) {
-        String response = CallApi.post("https://api.weixin.qq.com", "/cgi-bin/message/custom/send?access_token=" + getAccessToken(), JSON.parse(message));
+        String response = CallApi.post(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.SEND_MESSAGE.getValue() + "?access_token=" + getAccessToken(),
+                JSON.parse(message)
+        );
         log.info(response);
     }
 
@@ -66,7 +67,18 @@ public class WeChatService {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
                     case SUBSCRIBE -> message = "欢迎关注，我是ChatGPT。";
                     case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
-                    case SCAN -> log.info("wechat SCAN event");
+                    case SCAN -> {
+                        log.info("wechat SCAN event key = " + msg.getEventKey());
+                        Long userId = Long.parseLong(msg.getEventKey());
+                        Result<ClientUser> userResult = userService.findById(userId);
+                        if (userResult.getSuccess()) {
+                            ClientUser user = userResult.getData();
+                            user.setWeChatOpenId(msg.getFromUserName());
+                            userService.update(user);
+                            log.info("user " + user.getId() + " " + user.getUsername() + " bind wechat open id " + msg.getFromUserName());
+                            message = "已绑定账户 " + user.getUsername();
+                        }
+                    }
                     case LOCATION -> log.info("wechat LOCATION event");
                     case CLICK -> log.info("wechat CLICK event");
                 }
@@ -81,7 +93,11 @@ public class WeChatService {
         params.put("grant_type", "client_credential");
         params.put("appid", appId);
         params.put("secret", appSecret);
-        String json = CallApi.get("https://api.weixin.qq.com", "/cgi-bin/token", params);
+        String json = CallApi.get(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.GET_ACCESS_TOKEN.getValue(),
+                params
+        );
         WeChatGetAccessTokenBody tokenBody = JSON.format(json, WeChatGetAccessTokenBody.class);
         if (tokenBody == null) {
             return null;
@@ -90,24 +106,52 @@ public class WeChatService {
     }
 
     public String auth(String signature, String timestamp, String nonce, String echostr) {
-        if (signature == null || timestamp == null || nonce == null) {
-            return null;
-        }
         String[] arr = new String[]{token, timestamp, nonce};
         Arrays.sort(arr);
         StringBuilder content = new StringBuilder();
         for (String str : arr) {
             content.append(str);
         }
-        String tmpStr;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] digest = md.digest(content.toString().getBytes(StandardCharsets.UTF_8));
-            tmpStr = byteToHex(digest);
-            return tmpStr.equals(signature) ? echostr : null;
+            md.update(content.toString().getBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexstr = new StringBuilder();
+            String shaHex;
+            for (byte b : digest) {
+                shaHex = Integer.toHexString(b & 0xFF);
+                if (shaHex.length() < 2) {
+                    hexstr.append(0);
+                }
+                hexstr.append(shaHex);
+            }
+            String cal = hexstr.toString();
+            return signature.equals(cal) ? echostr : null;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         return null;
+    }
+
+    public Result<String> createQRCode(Long userId) {
+        String json = """
+                {"expire_seconds": 60, "action_name": "QR_SCENE", "action_info": {"scene": {"scene_id":
+                """
+                + userId +
+                """
+                        }}}
+                        """;
+
+        String response = CallApi.post(
+                WeChatApi.HOST.getValue(),
+                WeChatApi.CREATE_QRCODE.getValue() + "?access_token=" + getAccessToken(),
+                json
+        );
+        WeChatScanResponse weChatScanResponse = JSON.format(response, WeChatScanResponse.class);
+        if (weChatScanResponse == null || !StringUtils.hasText(weChatScanResponse.getTicket())) {
+            log.error(response);
+            return Result.failure();
+        }
+        return Result.success(WeChatApi.QRCODE_URL.getValue() + weChatScanResponse.getTicket());
     }
 }

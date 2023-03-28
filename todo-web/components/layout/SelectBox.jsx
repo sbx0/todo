@@ -1,4 +1,5 @@
 import FoamBox from "./FoamBox";
+import Button from "../basic/Button";
 
 export function SelectBox(props) {
 
@@ -20,10 +21,9 @@ export function SelectBox(props) {
                 <div name='options'>
                     {props.options.map((option) =>
                         <FoamBox key={option.key}>
-                            <button onClick={() => choose(option.key)}
-                                    className="button">
+                            <Button onClick={() => choose(option.key)}>
                                 {option.name}
-                            </button>
+                            </Button>
                         </FoamBox>)}
                     {props.other}
                 </div>

@@ -17,3 +17,7 @@ git remote add -f origin https://github.com/sbx0/todo.git
 git config core.sparseCheckout true  
 echo "todo-web/" >> .git/info/sparse-checkout  
 git pull origin main
+
+# icon
+
+https://primer.style/design/foundations/icons

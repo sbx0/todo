@@ -1,4 +1,4 @@
-package cn.sbx0.todo.business.weixin;
+package cn.sbx0.todo.business.weixin.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -12,17 +12,19 @@ import lombok.Data;
 @JacksonXmlRootElement(localName = "xml")
 public class WeChatXmlMessage {
     @JacksonXmlProperty(localName = "FromUserName")
-    private String FromUserName;
+    private String fromUserName;
     @JacksonXmlProperty(localName = "ToUserName")
-    private String ToUserName;
+    private String toUserName;
     @JacksonXmlProperty(localName = "CreateTime")
-    private Long CreateTime;
+    private Long createTime;
     @JacksonXmlProperty(localName = "MsgType")
-    private String MsgType;
+    private String msgType;
     @JacksonXmlProperty(localName = "MsgId")
-    private Long MsgId;
+    private Long msgId;
     @JacksonXmlProperty(localName = "Content")
-    private String Content;
+    private String content;
     @JacksonXmlProperty(localName = "Event")
-    private String Event;
+    private String event;
+    @JacksonXmlProperty(localName = "EventKey")
+    private String eventKey;
 }

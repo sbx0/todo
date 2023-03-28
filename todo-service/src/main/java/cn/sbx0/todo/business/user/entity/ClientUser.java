@@ -29,6 +29,8 @@ public class ClientUser {
     private String username;
     // nickname
     private String nickname;
+    @Column(name = "wechat_openid")
+    private String weChatOpenId;
     // when create
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

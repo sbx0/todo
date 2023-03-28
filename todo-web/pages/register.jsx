@@ -64,7 +64,7 @@ export default function Register() {
                        }}/>
             </FoamBox>
             <FoamBox>
-                <Button name={"注册"} onClick={register}/>
+                <Button onClick={register}>注册</Button>
             </FoamBox>
         </div>
         <NavigationBar active={4}/>

@@ -56,7 +56,7 @@ public class SpringSecurityConfig {
                 .cors().and()
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
-                                "/weixin/auth",
+                                "/wechat/auth",
                                 "/category/*",
                                 "/asset/type/*",
                                 "/time/now",
@@ -65,7 +65,7 @@ public class SpringSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers(
-                        "/weixin/auth",
+                        "/wechat/auth",
                         "/category/*",
                         "/asset/type/*",
                         "/time/now",

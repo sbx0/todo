@@ -1,4 +1,4 @@
-package cn.sbx0.todo.business.weixin;
+package cn.sbx0.todo.business.weixin.entity;
 
 import lombok.Data;
 
