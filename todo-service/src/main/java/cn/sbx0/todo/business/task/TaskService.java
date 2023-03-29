@@ -124,7 +124,6 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         List<TaskEntity> tasks = repository.getHaveReminderTimeTask();
         tasks = tasks.stream().filter((t) -> t.getReminderTime().isAfter(begin) && t.getReminderTime().isBefore(end)).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(tasks)) {
-            log.info("there are no tasks at reminder time");
             if (!CollectionUtils.isEmpty(REMINDER_DIS)) {
                 REMINDER_DIS.clear();
             }
