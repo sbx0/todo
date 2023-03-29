@@ -6,6 +6,7 @@ import cn.sbx0.todo.business.car.entity.CarConfig;
 import cn.sbx0.todo.business.car.entity.CarPlatePhoto;
 import cn.sbx0.todo.business.car.entity.CarPlatePhotoResponse;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
+import cn.sbx0.todo.business.task.TaskService;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.utils.CallApi;
@@ -32,6 +33,13 @@ public class ServerScheduled {
     private CarPlatePhotoService carPlatePhotoService;
     @Resource
     private ChatGPTService chatGPTService;
+    @Resource
+    private TaskService taskService;
+
+    @Scheduled(fixedRate = 1000)
+    public void handleReminderTime() {
+        taskService.handleReminderTime();
+    }
 
     @Scheduled(fixedRate = 1000)
     public void handleMessage() {

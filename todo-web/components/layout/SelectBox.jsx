@@ -11,10 +11,9 @@ export function SelectBox(props) {
     return <div onClick={() => props.show ? null : props.reset(props.index)}
                 className="container">
         <FoamBox>
-            <div onClick={() => props.reset()}
-                 className="select">
+            <Button onClick={() => props.reset()}>
                 {props.title}
-            </div>
+            </Button>
         </FoamBox>
         {
             props.show ?

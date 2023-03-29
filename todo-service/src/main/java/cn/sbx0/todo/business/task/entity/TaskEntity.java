@@ -35,6 +35,11 @@ public class TaskEntity {
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime planTime;
+  // reminder time
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  private LocalDateTime reminderTime;
   // category id
   private Long categoryId;
   // userId

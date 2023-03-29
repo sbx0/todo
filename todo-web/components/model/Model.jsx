@@ -34,29 +34,67 @@ export default function Model({show, close, change, data}) {
             case 1:
                 // today 23:59:59
                 task.planTime = moment().format('yyyy-MM-DD') + ' 23:59:59';
-                setTask(task);
-                change(task);
-                return;
+                break;
             case 2:
                 // tomorrow 23:59:59
                 task.planTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 23:59:59';
-                setTask(task);
-                change(task);
-                return;
+                break;
             case 3:
                 // next week
                 let monday = moment().startOf('week');
                 let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 23:59:59';
                 task.planTime = nextMonday;
-                setTask(task);
-                change(task);
-                return;
+                break;
             default:
-                return;
+                break;
         }
+        setTask(task);
+        change(task);
     }
 
     const [addRemind, setAddRemind] = useState(false);
+
+    function setReminderTime(key) {
+        switch (key) {
+            case 1:
+                // reminder later
+                task.reminderTime = moment().add(1, 'hours').format('yyyy-MM-DD HH:mm:ss');
+                console.log('reminder later', task.reminderTime);
+                break;
+            case 2:
+                // after go off work
+                task.reminderTime = moment().format('yyyy-MM-DD') + ' 18:35:00';
+                console.log('after go off work', task.reminderTime);
+                break;
+            case 3:
+                // before sleep
+                task.reminderTime = moment().format('yyyy-MM-DD') + ' 22:00:00';
+                console.log('before sleep', task.reminderTime);
+                break;
+            case 4:
+                // after get up
+                task.reminderTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 08:15:00';
+                console.log('after get up', task.reminderTime);
+                break;
+            case 5:
+                // tomorrow
+                task.reminderTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 09:15:00';
+                console.log('tomorrow', task.reminderTime);
+                break;
+            case 6:
+                // next monday
+                let monday = moment().startOf('week');
+                let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 08:15:00';
+                task.reminderTime = nextMonday;
+                console.log('next monday', task.reminderTime);
+                break;
+            default:
+                break;
+        }
+        setTask(task);
+        change(task);
+    }
+
     const [useRepeat, setUseRepeat] = useState(false);
 
     useEffect(() => {
@@ -128,11 +166,15 @@ export default function Model({show, close, change, data}) {
                 <SelectBox index={2}
                            title={'提醒我'}
                            show={addRemind}
+                           click={setReminderTime}
                            reset={reset}
                            options={[
-                               {key: 1, name: '今天晚些时候', value: 'later today'},
-                               {key: 2, name: '明天 9:00', value: 'tomorrow at 9:00'},
-                               {key: 3, name: '下周一 9:00', value: 'next monday at 9:00'},
+                               {key: 1, name: '稍后', value: 'reminder later'},
+                               {key: 2, name: '下班后', value: 'after go off work'},
+                               {key: 3, name: '睡前', value: 'before sleep'},
+                               {key: 4, name: '起床后', value: 'after get up'},
+                               {key: 5, name: '明天', value: 'tomorrow'},
+                               {key: 6, name: '下周', value: 'next monday'},
                            ]}
                            other={
                                <FoamBox>
