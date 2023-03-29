@@ -42,29 +42,29 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
 
     @Override
     protected AssetRecord saveBefore(AssetRecord entity) {
-        Long userId = clientUserService.getLoginUserId();
+        Long loginUserId = clientUserService.getLoginUserId();
         // find one by record time and typeId
-        AssetRecord assetRecord = repository().findByTypeIdAndRecordTime(entity, userId);
+        AssetRecord assetRecord = repository().findByTypeIdAndRecordTime(entity, loginUserId);
         if (assetRecord != null) {
             assetRecord.setRecordValue(entity.getRecordValue());
             entity = assetRecord;
         } else {
             entity.setCreateTime(LocalDateTime.now());
         }
-        entity.setUserId(userId);
+        entity.setUserId(loginUserId);
         return entity;
     }
 
     @Override
     protected AssetRecord updateBefore(AssetRecord entity) {
-        Long userId = clientUserService.getLoginUserId();
-        entity.setUserId(userId);
+        Long loginUserId = clientUserService.getLoginUserId();
+        entity.setUserId(loginUserId);
         entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }
 
     public Result<List<RecordItem>> getRecords() {
-        Long userId = clientUserService.getLoginUserId();
+        Long loginUserId = clientUserService.getLoginUserId();
         List<RecordItem> records = new ArrayList<>();
         List<AssetType> types = assetTypeRepository.getTypes();
         RecordItem totalRecordItem = new RecordItem();
@@ -75,7 +75,7 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
         totalRecordItem.setSmooth(false);
         totalRecordItem.setShowSymbol(false);
         List<BigDecimal> totalData = new ArrayList<>();
-        List<String> recordTimeList = repository().getRecentRecordTimeList(userId);
+        List<String> recordTimeList = repository().getRecentRecordTimeList(loginUserId);
         for (int i = 0; i < recordTimeList.size(); i++) {
             totalData.add(new BigDecimal(0));
         }
@@ -87,7 +87,7 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
             record.setSmooth(false);
             record.setShowSymbol(false);
             record.setYAxisIndex((type.getId().intValue() - 1));
-            List<AssetRecord> assetRecords = repository().getRecordsByTypeId(type.getId(), userId);
+            List<AssetRecord> assetRecords = repository().getRecordsByTypeId(type.getId(), loginUserId);
             List<BigDecimal> data = new ArrayList<>();
             for (int i = 0; i < assetRecords.size(); i++) {
                 AssetRecord assetRecord = assetRecords.get(i);
@@ -105,7 +105,7 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
     }
 
     public Result<List<String>> getRecentRecordTimeList() {
-        Long userId = clientUserService.getLoginUserId();
-        return Result.success(repository().getRecentRecordTimeList(userId));
+        Long loginUserId = clientUserService.getLoginUserId();
+        return Result.success(repository().getRecentRecordTimeList(loginUserId));
     }
 }

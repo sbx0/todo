@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 /**
  * @author sbx0
  * @since 2022/12/1
@@ -76,8 +78,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE task_status = 1
-                      and user_id = ?2
-                      and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""",
+                      AND user_id = ?2
+                      AND ((?1 = 0) or (?1 <> 0 AND category_id = ?1))""",
             nativeQuery = true
     )
     Long completedStatistical(Long categoryId, Long userId);
@@ -87,9 +89,19 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE task_status = 0
-                      and user_id = ?2
-                      and ((?1 = 0) or (?1 <> 0 and category_id = ?1))""",
+                      AND user_id = ?2
+                      AND ((?1 = 0) or (?1 <> 0 AND category_id = ?1))""",
             nativeQuery = true
     )
     Long uncompletedStatistical(Long categoryId, Long userId);
+
+    @Query(
+            value = """
+                    SELECT *
+                    FROM tasks
+                    WHERE task_status = 0
+                      AND reminder_time IS NOT NULL""",
+            nativeQuery = true
+    )
+    List<TaskEntity> getHaveReminderTimeTask();
 }
