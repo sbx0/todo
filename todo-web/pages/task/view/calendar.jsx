@@ -4,34 +4,34 @@ import Container from "../../../components/Container";
 import {useEffect, useState} from "react";
 
 moment.locale('zh-cn');
-export default function TaskCalendarView({}) {
+
+export function calculateWeeks(now, days = 1) {
+    let todayIndex = moment(now).format('E');
+    let monday = moment(now).subtract(todayIndex - 1, 'days');
+    let newWeek = [];
+    for (let i = 0; i < days; i++) {
+        let oneNewWeek = [];
+        for (let j = 0; j < 7; j++) {
+            oneNewWeek[j] = moment(monday).add(i * 7 + j, 'days').format('yyyy-MM-DD');
+        }
+        newWeek[i] = oneNewWeek;
+    }
+    return newWeek;
+}
+
+export default function TaskCalendarView() {
+    const headerWeeks = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     const [weeks, setWeeks] = useState([]);
 
     useEffect(() => {
-        let todayIndex = moment().format('E');
-        let monday = moment().subtract(todayIndex - 1, 'days');
-        let newWeek = []
-        for (let i = 0; i < 14; i++) {
-            let oneNewWeek = []
-            for (let j = 0; j < 7; j++) {
-                oneNewWeek[j] = moment(monday).add(i * 7 + j, 'days').format('MM-DD');
-            }
-            newWeek[i] = oneNewWeek;
-        }
-        setWeeks(newWeek);
+        setWeeks(calculateWeeks(moment(), 14));
     }, [])
 
     return (
         <>
             <Container>
                 <div className="week">
-                    <div className="header">周一</div>
-                    <div className="header">周二</div>
-                    <div className="header">周三</div>
-                    <div className="header">周四</div>
-                    <div className="header">周五</div>
-                    <div className="header">周六</div>
-                    <div className="header">周日</div>
+                    {headerWeeks.map((week, index) => <div key={index} className="header">{week}</div>)}
                 </div>
                 {weeks.map((week, index) => <div key={index} className="week">
                     {week.map((day, index) => <div key={index} className="day">
