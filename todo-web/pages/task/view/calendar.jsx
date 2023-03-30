@@ -65,15 +65,29 @@ export default function TaskCalendarView() {
 }
 
 function DayView({day}) {
+    const format = moment(day).format('MM-DD')
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
 
     return <>
-        <div>
-            {JSON.stringify(isTodayFlag)}
-            {JSON.stringify(isWeekendFlag)}
+        <div className={`normal ${isWeekendFlag ? 'weekend' : ''} ${isTodayFlag ? 'today' : ''}`}>
+            {format}
         </div>
         <style jsx>{`
+          .normal {
+            background: #262a2d;
+            margin: 1px;
+            border: 3px;
+            min-height: max-content;
+          }
+
+          .weekend {
+            background: #064813;
+          }
+
+          .today {
+            background: #0c8a25;
+          }
         `}</style>
     </>
 }
