@@ -1,6 +1,9 @@
+import {useEffect, useState} from "react";
 import Container from "../../../components/Container";
 import moment from "moment";
 import 'moment/locale/zh-cn';
+import useTask from "../../../hooks/useTask";
+import NavigationBar from "../../../components/NavigationBar";
 
 const weekNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
@@ -34,6 +37,32 @@ export function calculateWeeks(now, days = 1) {
 export default function TaskCalendarView() {
     const showDays = 14;
     const weeks = calculateWeeks(moment(), showDays);
+    const {response: taskResponse} = useTask(1, 100, 0, 0);
+    const [dayTasks, setDayTasks] = useState(new Map());
+
+    function calculateDayTask(tasks) {
+        if (tasks == null) {
+            return;
+        }
+        let newDayTask = new Map();
+        for (let i = 0; i < tasks.length; i++) {
+            let task = tasks[i];
+            if (task.planTime != null) {
+                let key = moment(task.planTime).format('yyyy-MM-DD').toString();
+                let cache = newDayTask.get(key);
+                if (cache == null) {
+                    cache = [];
+                }
+                cache.push(task);
+                newDayTask.set(key, cache);
+                setDayTasks(newDayTask);
+            }
+        }
+    }
+
+    useEffect(() => {
+        calculateDayTask(taskResponse?.data);
+    }, [taskResponse]);
 
     return (
         <>
@@ -43,9 +72,10 @@ export default function TaskCalendarView() {
                 </div>
                 {weeks.map((week, index) => <div key={index} className="week">
                     {week.map((day, index) => <div key={index}>
-                        <DayView day={day}/>
+                        <DayView day={day} dayTasks={dayTasks}/>
                     </div>)}
                 </div>)}
+                <NavigationBar active={1}/>
             </Container>
             <style jsx>{`
               .week {
@@ -64,14 +94,24 @@ export default function TaskCalendarView() {
     );
 }
 
-function DayView({day}) {
+function DayView({day, dayTasks}) {
     const format = moment(day).format('MM-DD')
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+        setTasks(dayTasks.get(day))
+    }, [dayTasks]);
 
     return <>
         <div className={`normal ${isWeekendFlag ? 'weekend' : ''} ${isTodayFlag ? 'today' : ''}`}>
-            {format}
+            <div>
+                {format}
+            </div>
+            <div>
+                {tasks?.length}
+            </div>
         </div>
         <style jsx>{`
           .normal {
