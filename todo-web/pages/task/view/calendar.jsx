@@ -1,13 +1,25 @@
+import Container from "../../../components/Container";
 import moment from "moment";
 import 'moment/locale/zh-cn';
-import Container from "../../../components/Container";
-import {useEffect, useState} from "react";
 
-moment.locale('zh-cn');
+const weekNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+
+export function isToday(time) {
+    return moment().format('yyyy-MM-DD') === moment(time).format('yyyy-MM-DD');
+}
+
+export function isWeekend(time) {
+    const week = [5, 6];
+    return week.indexOf(getWeekIndex(time)) !== -1;
+}
+
+export function getWeekIndex(time) {
+    return parseInt(moment(time).format('E')) - 1;
+}
 
 export function calculateWeeks(now, days = 1) {
-    let todayIndex = moment(now).format('E');
-    let monday = moment(now).subtract(todayIndex - 1, 'days');
+    let todayIndex = getWeekIndex(now);
+    let monday = moment(now).subtract(todayIndex, 'days');
     let newWeek = [];
     for (let i = 0; i < days; i++) {
         let oneNewWeek = [];
@@ -20,22 +32,18 @@ export function calculateWeeks(now, days = 1) {
 }
 
 export default function TaskCalendarView() {
-    const headerWeeks = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-    const [weeks, setWeeks] = useState([]);
-
-    useEffect(() => {
-        setWeeks(calculateWeeks(moment(), 14));
-    }, [])
+    const showDays = 14;
+    const weeks = calculateWeeks(moment(), showDays);
 
     return (
         <>
             <Container>
                 <div className="week">
-                    {headerWeeks.map((week, index) => <div key={index} className="header">{week}</div>)}
+                    {weekNames.map((week, index) => <div key={index} className="header">{week}</div>)}
                 </div>
                 {weeks.map((week, index) => <div key={index} className="week">
-                    {week.map((day, index) => <div key={index} className="day">
-                        {day}
+                    {week.map((day, index) => <div key={index}>
+                        <DayView day={day}/>
                     </div>)}
                 </div>)}
             </Container>
@@ -51,13 +59,21 @@ export default function TaskCalendarView() {
                 border: 1px solid #004b0d;
                 margin: 1px;
               }
-
-              .day {
-                height: 100px;
-                border: 1px solid #004b0d;
-                margin: 1px;
-              }
             `}</style>
         </>
     );
+}
+
+function DayView({day}) {
+    const isWeekendFlag = isWeekend(day);
+    const isTodayFlag = isToday(day);
+
+    return <>
+        <div>
+            {JSON.stringify(isTodayFlag)}
+            {JSON.stringify(isWeekendFlag)}
+        </div>
+        <style jsx>{`
+        `}</style>
+    </>
 }
