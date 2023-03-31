@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long, DefaultPagingRequest> {
-    // 12h
-    public static final Long EXPIRY = 43200L;
+    // 24h
+    public static final Long EXPIRY = 86400L;
     // 1h
     public static final Long BEFORE = 3600L;
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
