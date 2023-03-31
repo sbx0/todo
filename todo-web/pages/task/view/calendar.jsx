@@ -64,18 +64,22 @@ export function getWeekIndex(time) {
 }
 
 export function calculateWeeks(now, weeks = 1) {
-    let todayIndex = getWeekIndex(now);
-    let monday = moment(now).subtract(todayIndex, 'days');
+    let firstDay = moment(moment(now).startOf('months')).startOf('weeks');
     let newWeek = new Array(weeks);
     for (let i = 0; i < weeks; i++) {
         newWeek[i] = new Array(7).fill('');
     }
     let addDays = 0;
-    let lastDay = monday;
+    let lastDay = firstDay;
     for (let i = 0; i < weeks; i++) {
         for (let j = 0; j < 7; j++) {
-            let day = moment(monday).add(addDays++, 'days');
-            if (lastDay.format('MM') !== day.format('MM')) {
+            let day = moment(firstDay).add(addDays++, 'days');
+            if (i === 0) {
+                if (now.format('MM') !== day.format('MM')) {
+                    continue;
+                }
+            }
+            if (i > 0 && lastDay.format('MM') !== day.format('MM')) {
                 if (j === 0) {
                     i++;
                 } else {
