@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.time.Instant;
@@ -76,6 +77,7 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         return entity;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Result<ClientUser> register(RegisterParam param) {
         UserDetails user = User.builder()
                 .username(param.getUsername())
