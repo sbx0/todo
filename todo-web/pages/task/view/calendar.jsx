@@ -4,6 +4,9 @@ import moment from "moment";
 import 'moment/locale/zh-cn';
 import useTask from "../../../hooks/useTask";
 import NavigationBar from "../../../components/NavigationBar";
+import Model from "../../../components/model/Model";
+import TaskItem from "../../../components/task/TaskItem";
+import {changeTask} from "../../../components/TaskPage";
 
 const weekNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
@@ -80,14 +83,16 @@ export default function TaskCalendarView() {
             <style jsx>{`
               .week {
                 width: 100%;
-                text-align: center;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
               }
 
               .header {
-                border: 1px solid #004b0d;
-                margin: 1px;
+                height: 25px;
+                background: #00340a;
+                border-radius: 5px;
+                margin: 3px;
+                text-align: center;
               }
             `}</style>
         </>
@@ -99,13 +104,19 @@ function DayView({day, dayTasks}) {
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
     const [tasks, setTasks] = useState([]);
+    const [modalShow, setModalShow] = useState(false);
 
     useEffect(() => {
         setTasks(dayTasks.get(day))
     }, [dayTasks]);
 
     return <>
-        <div className={`normal ${isWeekendFlag ? 'weekend' : ''} ${isTodayFlag ? 'today' : ''}`}>
+        <div onClick={() => {
+            if (tasks?.length > 0) {
+                setModalShow(true)
+            }
+        }}
+             className={`normal ${isWeekendFlag ? 'weekend' : ''} ${isTodayFlag ? 'today' : ''}`}>
             <div>
                 {format}
             </div>
@@ -113,12 +124,19 @@ function DayView({day, dayTasks}) {
                 {tasks?.length}
             </div>
         </div>
+        <Model show={modalShow} close={() => setModalShow(false)}>
+            {tasks?.map((one) =>
+                <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
+                          one={one}
+                          change={changeTask}/>)}
+        </Model>
         <style jsx>{`
           .normal {
             background: #262a2d;
-            margin: 1px;
-            border: 3px;
-            min-height: max-content;
+            margin: 3px;
+            height: 45px;
+            border-radius: 5px;
+            text-align: center;
           }
 
           .weekend {

@@ -1,4 +1,5 @@
 import {useRef} from "react";
+import {XIcon} from "@primer/octicons-react";
 
 export default function Model({show, close, children}) {
     const modelRef = useRef(null);
@@ -16,9 +17,26 @@ export default function Model({show, close, children}) {
     if (show) {
         return <div className="container">
             <div ref={modelRef} className="innerContainer">
+                <div className="header">
+                    <div className="close" onClick={close}>
+                        <XIcon size={24}/>
+                    </div>
+                </div>
                 {children}
             </div>
             <style jsx>{`
+              .header {
+                width: 100%;
+                height: 20px;
+                margin-bottom: 20px;
+              }
+
+              .close {
+                height: 100%;
+                float: right;
+                cursor: pointer;
+              }
+
               .container {
                 position: fixed;
                 top: 0;
