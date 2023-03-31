@@ -75,7 +75,7 @@ export function calculateWeeks(now, weeks = 1) {
         for (let j = 0; j < 7; j++) {
             let day = moment(firstDay).add(addDays++, 'days');
             if (i === 0) {
-                if (now.format('MM') !== day.format('MM')) {
+                if (moment(now).format('MM') !== day.format('MM')) {
                     continue;
                 }
             }

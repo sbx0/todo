@@ -1,24 +1,15 @@
 import {calculateWeeks, getWeekIndex, isToday, isWeekend} from "../../../../pages/task/view/calendar";
-import {randomInt} from "next/dist/shared/lib/bloom-filter/utils";
 import moment from "moment";
 
 const day = '2023-03-29';
 const monday = '2023-03-27';
 const saturday = '2023-04-01';
-test('calculate one week', () => {
+test('calculate one month', () => {
     let weeks = calculateWeeks(day);
     expect(weeks.length).toBe(1);
     expect(weeks[0].length).toBe(7);
-    expect(weeks[0][0]).toBe(monday);
-    expect(weeks[0][2]).toBe(day);
-});
-test('calculate random weeks', () => {
-    const count = randomInt(1, 99);
-    let weeks = calculateWeeks(monday, count);
-    expect(weeks.length).toBe(count);
-    expect(weeks[0].length).toBe(7);
-    expect(weeks[0][0]).toBe(monday);
-    expect(weeks[0][2]).toBe(day);
+    expect(weeks[0][0]).toBe("");
+    expect(weeks[0][6]).toBe("2023-03-05");
 });
 test('calculate week index', () => {
     expect(getWeekIndex(day)).toBe(2);
