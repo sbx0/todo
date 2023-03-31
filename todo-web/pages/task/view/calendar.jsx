@@ -8,7 +8,9 @@ import Model from "../../../components/model/Model";
 import TaskItem from "../../../components/task/TaskItem";
 import {changeTask} from "../../../components/TaskPage";
 
-const weekNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+export function isMonthStart(time) {
+    return moment(time).format('DD') === '01';
+}
 
 export function isToday(time) {
     return moment().format('yyyy-MM-DD') === moment(time).format('yyyy-MM-DD');
@@ -23,25 +25,45 @@ export function getWeekIndex(time) {
     return parseInt(moment(time).format('E')) - 1;
 }
 
-export function calculateWeeks(now, days = 1) {
+export function calculateWeeks(now, weeks = 1) {
     let todayIndex = getWeekIndex(now);
     let monday = moment(now).subtract(todayIndex, 'days');
-    let newWeek = [];
-    for (let i = 0; i < days; i++) {
-        let oneNewWeek = [];
+    let newWeek = new Array(weeks);
+    for (let i = 0; i < weeks; i++) {
+        newWeek[i] = new Array(7).fill('');
+    }
+    let addDays = 0;
+    let lastDay = monday;
+    for (let i = 0; i < weeks; i++) {
         for (let j = 0; j < 7; j++) {
-            oneNewWeek[j] = moment(monday).add(i * 7 + j, 'days').format('yyyy-MM-DD');
+            let day = moment(monday).add(addDays++, 'days');
+            if (lastDay.format('MM') !== day.format('MM')) {
+                i++;
+            }
+            if (i >= weeks) {
+                break;
+            }
+            newWeek[i][j] = day.format('yyyy-MM-DD');
+            lastDay = day;
         }
-        newWeek[i] = oneNewWeek;
     }
     return newWeek;
 }
 
 export default function TaskCalendarView() {
-    const showDays = 14;
-    const weeks = calculateWeeks(moment(), showDays);
-    const {response: taskResponse} = useTask(1, 100, 0, 0);
+    const showWeeks = 60;
+    const weeks = calculateWeeks(moment(), showWeeks);
+    const [pageSize, setPageSize] = useState(100);
+    const {response: taskResponse} = useTask(1, pageSize, 0, 0);
     const [dayTasks, setDayTasks] = useState(new Map());
+
+    function changePageSizeToRefreshData() {
+        if (pageSize === 100) {
+            setPageSize(101);
+        } else {
+            setPageSize(100);
+        }
+    }
 
     function calculateDayTask(tasks) {
         if (tasks == null) {
@@ -70,12 +92,10 @@ export default function TaskCalendarView() {
     return (
         <>
             <Container>
-                <div className="week">
-                    {weekNames.map((week, index) => <div key={index} className="header">{week}</div>)}
-                </div>
                 {weeks.map((week, index) => <div key={index} className="week">
                     {week.map((day, index) => <div key={index}>
-                        <DayView day={day} dayTasks={dayTasks}/>
+                        <DayView day={day} dayTasks={dayTasks}
+                                 changePageSizeToRefreshData={changePageSizeToRefreshData}/>
                     </div>)}
                 </div>)}
                 <NavigationBar active={1}/>
@@ -99,8 +119,20 @@ export default function TaskCalendarView() {
     );
 }
 
-function DayView({day, dayTasks}) {
-    const format = moment(day).format('MM-DD')
+function DayView({day, dayTasks, changePageSizeToRefreshData}) {
+    if (day === '') {
+        return <>
+            <div className="week"></div>
+            <style jsx>{`
+              .week {
+                width: 100%;
+                height: 54px;
+              }
+            `}</style>
+        </>
+    }
+
+    const format = isMonthStart(day) ? moment(day).format('MM-DD') : moment(day).format('DD');
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
     const [tasks, setTasks] = useState([]);
@@ -110,6 +142,11 @@ function DayView({day, dayTasks}) {
         setTasks(dayTasks.get(day))
     }, [dayTasks]);
 
+    function change(value) {
+        changeTask(value)
+        changePageSizeToRefreshData();
+    }
+
     return <>
         <div onClick={() => {
             if (tasks?.length > 0) {
@@ -117,18 +154,27 @@ function DayView({day, dayTasks}) {
             }
         }}
              className={`normal ${isWeekendFlag ? 'weekend' : ''} ${isTodayFlag ? 'today' : ''}`}>
-            <div>
+            <div className="textCenteredVertically">
                 {format}
             </div>
-            <div>
-                {tasks?.length}
-            </div>
+            {
+                tasks?.length > 0 ?
+                    <div className="cornerLabels">
+                        <div className="textCenterParent">
+                            <div className="textCenteredVertically">
+                                {tasks?.length}
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    <></>
+            }
         </div>
         <Model show={modalShow} close={() => setModalShow(false)}>
             {tasks?.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
-                          change={changeTask}/>)}
+                          change={change}/>)}
         </Model>
         <style jsx>{`
           .normal {
@@ -137,6 +183,37 @@ function DayView({day, dayTasks}) {
             height: 45px;
             border-radius: 5px;
             text-align: center;
+            cursor: pointer;
+            position: relative;
+            font-size: 13px;
+            line-height: 13px;
+          }
+
+          .textCenteredVertically {
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+
+          .textCenterParent {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            text-align: center;
+          }
+
+          .cornerLabels {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            background: #f50000;
+            font-size: 10px;
+            line-height: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 5px;
+            font-weight: bold;
           }
 
           .weekend {
