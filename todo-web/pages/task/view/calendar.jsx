@@ -17,7 +17,44 @@ export function isToday(time) {
     return moment().format('yyyy-MM-DD') === moment(time).format('yyyy-MM-DD');
 }
 
+const holidays = {
+    '2023-04-05': '清明节',
+    '2023-05-01': '劳动节',
+    '2023-06-22': '端午节',
+    '2023-09-29': '中秋节',
+    '2023-10-01': '国庆节',
+}
+
+const holidayFlags = {
+    '2023-04-05': true,
+    '2023-04-23': false,
+    '2023-04-29': true,
+    '2023-04-30': true,
+    '2023-05-01': true,
+    '2023-05-02': true,
+    '2023-05-03': true,
+    '2023-05-06': false,
+    '2023-06-22': true,
+    '2023-06-23': true,
+    '2023-06-24': true,
+    '2023-06-25': false,
+    '2023-09-29': true,
+    '2023-09-30': true,
+    '2023-10-01': true,
+    '2023-10-02': true,
+    '2023-10-03': true,
+    '2023-10-04': true,
+    '2023-10-05': true,
+    '2023-10-06': true,
+    '2023-10-07': false,
+    '2023-10-08': false,
+}
+
 export function isWeekend(time) {
+    let day = moment(time).format('yyyy-MM-DD');
+    if (holidayFlags[day] != null) {
+        return holidayFlags[day];
+    }
     const week = [5, 6];
     return week.indexOf(getWeekIndex(time)) !== -1;
 }
@@ -128,8 +165,8 @@ function DayView({day, dayTasks, refreshData}) {
             `}</style>
         </>
     }
-
-    const format = isMonthStart(day) ? parseInt(moment(day).format('MM')) + ' 月' : parseInt(moment(day).format('DD'));
+    const holiday = holidays[moment(day).format("yyyy-MM-DD")];
+    const format = holiday != null ? holiday : (isMonthStart(day) ? parseInt(moment(day).format('MM')) + ' 月' : parseInt(moment(day).format('DD')));
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
     const [tasks, setTasks] = useState([]);
@@ -209,6 +246,7 @@ function DayView({day, dayTasks, refreshData}) {
             height: 15px;
             border-radius: 5px;
             font-weight: bold;
+            z-index: 1;
           }
 
           .weekend {
@@ -216,7 +254,7 @@ function DayView({day, dayTasks, refreshData}) {
           }
 
           .today {
-            background: #0c8a25;
+            border: #c9c9c9 dashed 2px;
           }
         `}</style>
     </>
