@@ -6,6 +6,18 @@ import {getCache, setCache} from "./Cache";
 import {useEffect} from "react";
 import Loading from "./Loading";
 
+export const changeTask = (task) => {
+    callApi({
+        method: POST,
+        url: '/api/task/update',
+        params: task
+    }).then(() => {
+
+    }).finally(() => {
+
+    })
+}
+
 export default function TaskPage({page, pageSize, taskStatus, categoryId}) {
     const cacheKey = `TaskPage-${page}-${pageSize}-${taskStatus}-${categoryId}`;
     const {data, error, isLoading, mutate} = useSWR(
@@ -34,17 +46,7 @@ export default function TaskPage({page, pageSize, taskStatus, categoryId}) {
         }
     }, [isLoading])
 
-    const changeTask = (task) => {
-        callApi({
-            method: POST,
-            url: '/api/task/update',
-            params: task
-        }).then(() => {
 
-        }).finally(() => {
-
-        })
-    }
 
     return isLoading ?
         <>

@@ -2,6 +2,7 @@ import Model from "../model/Model";
 import {useState} from "react";
 import CountDown from "../time/CountDown";
 import {CheckCircleFillIcon, CircleIcon} from "@primer/octicons-react";
+import TaskDetail from "./TaskDetail";
 
 export default function TaskItem({
                                      one,
@@ -70,9 +71,9 @@ export default function TaskItem({
 
         </div>
         <Model show={modalShow}
-               close={() => setModalShow(false)}
-               change={changTask}
-               data={data}/>
+               close={() => setModalShow(false)}>
+            <TaskDetail data={data} change={changTask}/>
+        </Model>
         <style jsx>{`
           .taskItemBody {
             background: #262a2d;
@@ -84,11 +85,6 @@ export default function TaskItem({
             display: grid;
             grid-template-columns: 1fr 18fr;
             cursor: pointer;
-          }
-
-          .taskItemBody:hover {
-            background-color: #484848;
-            color: #f7f7f7;
           }
 
           .taskItemBodyCompleted {

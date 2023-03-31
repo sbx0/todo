@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import {buildPath} from "../apis/request";
-import {FileMediaIcon, GraphIcon, ListUnorderedIcon, PersonIcon, TasklistIcon} from "@primer/octicons-react";
+import {FileMediaIcon, GraphIcon, PersonIcon, TableIcon, TasklistIcon} from "@primer/octicons-react";
 
 export default function NavigationBar({active}) {
     const router = useRouter()
@@ -14,11 +14,11 @@ export default function NavigationBar({active}) {
             label: <TasklistIcon size={24}/>
         },
         {
-            id: 'navigation_bar_done',
+            id: 'navigation_bar_calendar',
             name: 'navigation_bar',
             value: 1,
-            path: '/done',
-            label: <ListUnorderedIcon size={24}/>
+            path: '/task/view/calendar',
+            label: <TableIcon size={24}/>
         },
         {
             id: 'navigation_bar_asset',

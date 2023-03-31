@@ -4,6 +4,7 @@ import {getCurrentCategory} from "./TaskCategory";
 import {POST} from "../../apis/apiPath";
 import TaskItem from "./TaskItem";
 import dynamic from 'next/dynamic'
+import {changeTask} from "../TaskPage";
 
 const TaskCategory = dynamic(() => import("./TaskCategory"), {
     loading: () => {
@@ -52,18 +53,6 @@ export default function TaskInput({saveEvent, clickEvent, setLoading}) {
             setNewTaskData(newData);
         }).finally(() => {
             setLoading(false);
-        })
-    }
-
-    const changeTask = (task) => {
-        callApi({
-            method: POST,
-            url: '/api/task/update',
-            params: task
-        }).then(() => {
-
-        }).finally(() => {
-
         })
     }
 
