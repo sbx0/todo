@@ -7,6 +7,7 @@ import NavigationBar from "../../../components/NavigationBar";
 import Model from "../../../components/model/Model";
 import TaskItem from "../../../components/task/TaskItem";
 import {changeTask} from "../../../components/TaskPage";
+import Loading from "../../../components/Loading";
 
 export function isMonthStart(time) {
     return moment(time).format('DD') === '01';
@@ -38,7 +39,11 @@ export function calculateWeeks(now, weeks = 1) {
         for (let j = 0; j < 7; j++) {
             let day = moment(monday).add(addDays++, 'days');
             if (lastDay.format('MM') !== day.format('MM')) {
-                i++;
+                if (j === 0) {
+                    i++;
+                } else {
+                    i += 2;
+                }
             }
             if (i >= weeks) {
                 break;
@@ -53,17 +58,8 @@ export function calculateWeeks(now, weeks = 1) {
 export default function TaskCalendarView() {
     const showWeeks = 60;
     const weeks = calculateWeeks(moment(), showWeeks);
-    const [pageSize, setPageSize] = useState(100);
-    const {response: taskResponse} = useTask(1, pageSize, 0, 0);
+    const {response: taskResponse, isLoading, mutate} = useTask(1, 100, 0, 0);
     const [dayTasks, setDayTasks] = useState(new Map());
-
-    function changePageSizeToRefreshData() {
-        if (pageSize === 100) {
-            setPageSize(101);
-        } else {
-            setPageSize(100);
-        }
-    }
 
     function calculateDayTask(tasks) {
         if (tasks == null) {
@@ -95,9 +91,10 @@ export default function TaskCalendarView() {
                 {weeks.map((week, index) => <div key={index} className="week">
                     {week.map((day, index) => <div key={index}>
                         <DayView day={day} dayTasks={dayTasks}
-                                 changePageSizeToRefreshData={changePageSizeToRefreshData}/>
+                                 refreshData={mutate}/>
                     </div>)}
                 </div>)}
+                <Loading active={isLoading}/>
                 <NavigationBar active={1}/>
             </Container>
             <style jsx>{`
@@ -119,20 +116,20 @@ export default function TaskCalendarView() {
     );
 }
 
-function DayView({day, dayTasks, changePageSizeToRefreshData}) {
+function DayView({day, dayTasks, refreshData}) {
     if (day === '') {
         return <>
             <div className="week"></div>
             <style jsx>{`
               .week {
                 width: 100%;
-                height: 54px;
+                height: 15px;
               }
             `}</style>
         </>
     }
 
-    const format = isMonthStart(day) ? moment(day).format('MM-DD') : moment(day).format('DD');
+    const format = isMonthStart(day) ? parseInt(moment(day).format('MM')) + ' 月' : parseInt(moment(day).format('DD'));
     const isWeekendFlag = isWeekend(day);
     const isTodayFlag = isToday(day);
     const [tasks, setTasks] = useState([]);
@@ -141,11 +138,6 @@ function DayView({day, dayTasks, changePageSizeToRefreshData}) {
     useEffect(() => {
         setTasks(dayTasks.get(day))
     }, [dayTasks]);
-
-    function change(value) {
-        changeTask(value)
-        changePageSizeToRefreshData();
-    }
 
     return <>
         <div onClick={() => {
@@ -170,11 +162,14 @@ function DayView({day, dayTasks, changePageSizeToRefreshData}) {
                     <></>
             }
         </div>
-        <Model show={modalShow} close={() => setModalShow(false)}>
+        <Model show={modalShow} close={() => {
+            setModalShow(false);
+            refreshData();
+        }}>
             {tasks?.map((one) =>
                 <TaskItem key={'taskInfo_' + one.id + '_' + one.createTime + one.updateTime}
                           one={one}
-                          change={change}/>)}
+                          change={changeTask}/>)}
         </Model>
         <style jsx>{`
           .normal {
