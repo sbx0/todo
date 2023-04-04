@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 public class ClientUserService extends JpaService<ClientUserRepository, ClientUser, Long, DefaultPagingRequest> {
     // 24h
     public static final Long EXPIRY = 86400L;
-    // 1h
-    public static final Long BEFORE = 3600L;
+    // 12h
+    public static final Long BEFORE = 43200L;
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
     @Resource
     private JwtEncoder encoder;
