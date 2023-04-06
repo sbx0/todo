@@ -12,8 +12,7 @@ import org.springframework.data.jpa.repository.Query;
  * @since 2023/3/3
  */
 public interface CarPlatePhotoRepository extends JpaRepository<CarPlatePhoto, Long> {
-    //language=MySQL
-    String CUSTOM_PAGING_SQL = """
+    @Query(value = """
             SELECT id,
                    car_plate_num,
                    lot_name,
@@ -23,13 +22,11 @@ public interface CarPlatePhotoRepository extends JpaRepository<CarPlatePhoto, Lo
                    img_url,
                    create_time,
                    update_time
-            FROM car_plate_photo""";
-    //language=MySQL
-    String CUSTOM_PAGING_COUNT_SQL = """
-            SELECT COUNT(*)
-            FROM car_plate_photo""";
-
-    @Query(value = CUSTOM_PAGING_SQL, countQuery = CUSTOM_PAGING_COUNT_SQL, nativeQuery = true)
+            FROM car_plate_photo""",
+            countQuery = """
+                    SELECT COUNT(*)
+                    FROM car_plate_photo""",
+            nativeQuery = true)
     <T extends PagingRequest> Page<CarPlatePhoto> paging(T pagingRequest, Pageable pageable);
 
     @Query(value = "SELECT imgUrl FROM CarPlatePhoto ORDER BY id DESC LIMIT 1")
