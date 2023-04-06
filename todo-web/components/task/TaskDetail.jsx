@@ -7,18 +7,17 @@ import RecordTime from "../asset/RecordTime";
 import CountDown from "../time/CountDown";
 import FormatTime from "../time/FormatTime";
 import Button from "../basic/Button";
+import {StopwatchIcon, SyncIcon, UnreadIcon} from "@primer/octicons-react";
 
 export default function TaskDetail({data, change}) {
     const [task, setTask] = useState(data);
     const [planTimeShow, setPlanTimeShow] = useState(false);
-    const deadlineOptions = [
-        {key: 1, name: '今天', value: 'today'},
-        {key: 2, name: '明天', value: 'tomorrow'},
-        {key: 3, name: '下周', value: 'next week'},
-    ];
 
     function setDeadline(key) {
         switch (key) {
+            case 0:
+                task.planTime = null;
+                break;
             case 1:
                 // today 23:59:59
                 task.planTime = moment().format('yyyy-MM-DD') + ' 23:59:59';
@@ -33,6 +32,12 @@ export default function TaskDetail({data, change}) {
                 let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 23:59:59';
                 task.planTime = nextMonday;
                 break;
+            case 4:
+                // next month
+                let start = moment().startOf('month');
+                let nextMonthStart = start.add(1, 'months').format('yyyy-MM-DD') + ' 23:59:59';
+                task.planTime = nextMonthStart;
+                break;
             default:
                 break;
         }
@@ -44,37 +49,34 @@ export default function TaskDetail({data, change}) {
 
     function setReminderTime(key) {
         switch (key) {
+            case 0:
+                task.reminderTime = null;
+                break;
             case 1:
                 // reminder later
-                task.reminderTime = moment().add(1, 'hours').format('yyyy-MM-DD HH:mm:ss');
-                console.log('reminder later', task.reminderTime);
+                task.reminderTime = moment().add(30, 'minutes').format('yyyy-MM-DD HH:mm:ss');
                 break;
             case 2:
                 // after go off work
                 task.reminderTime = moment().format('yyyy-MM-DD') + ' 18:35:00';
-                console.log('after go off work', task.reminderTime);
                 break;
             case 3:
                 // before sleep
                 task.reminderTime = moment().format('yyyy-MM-DD') + ' 22:00:00';
-                console.log('before sleep', task.reminderTime);
                 break;
             case 4:
                 // after get up
                 task.reminderTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 08:15:00';
-                console.log('after get up', task.reminderTime);
                 break;
             case 5:
                 // tomorrow
                 task.reminderTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 09:15:00';
-                console.log('tomorrow', task.reminderTime);
                 break;
             case 6:
                 // next monday
                 let monday = moment().startOf('week');
                 let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 08:15:00';
                 task.reminderTime = nextMonday;
-                console.log('next monday', task.reminderTime);
                 break;
             default:
                 break;
@@ -107,11 +109,21 @@ export default function TaskDetail({data, change}) {
         </FoamBox>
 
         <SelectBox index={1}
-                   title={'计划时间'}
+                   title={<>
+                       <StopwatchIcon/>
+                       &nbsp;
+                       计划
+                   </>}
                    show={planTimeShow}
                    click={setDeadline}
                    reset={reset}
-                   options={deadlineOptions}
+                   options={[
+                       {key: 0, name: '清除', value: 'clear'},
+                       {key: 1, name: '今天', value: 'today'},
+                       {key: 2, name: '明天', value: 'tomorrow'},
+                       {key: 3, name: '下周', value: 'next week'},
+                       {key: 4, name: '下个月', value: 'next month'},
+                   ]}
                    other={
                        <div>
                            <FoamBox>
@@ -141,11 +153,16 @@ export default function TaskDetail({data, change}) {
         />
 
         <SelectBox index={2}
-                   title={'提醒我'}
+                   title={<>
+                       <UnreadIcon/>
+                       &nbsp;
+                       提醒
+                   </>}
                    show={addRemind}
                    click={setReminderTime}
                    reset={reset}
                    options={[
+                       {key: 0, name: '清除', value: 'clear'},
                        {key: 1, name: '稍后', value: 'reminder later'},
                        {key: 2, name: '下班后', value: 'after go off work'},
                        {key: 3, name: '睡前', value: 'before sleep'},
@@ -161,15 +178,18 @@ export default function TaskDetail({data, change}) {
         />
 
         <SelectBox index={3}
-                   title={'重复'}
+                   title={<>
+                       <SyncIcon/>
+                       &nbsp;
+                       重复
+                   </>}
                    show={useRepeat}
                    reset={reset}
                    options={[
                        {key: 1, name: '每天', value: 'every day'},
-                       {key: 2, name: '工作日', value: 'weekday'},
-                       {key: 3, name: '每周', value: 'every week'},
-                       {key: 4, name: '每月', value: 'every month'},
-                       {key: 5, name: '每年', value: 'every year'},
+                       {key: 2, name: '每周', value: 'every week'},
+                       {key: 3, name: '每月', value: 'every month'},
+                       {key: 4, name: '每年', value: 'every year'},
                    ]}
                    other={
                        <FoamBox>
@@ -196,7 +216,17 @@ export default function TaskDetail({data, change}) {
             task.planTime != null ?
                 <FoamBox>
                     <span>计划时间</span>
-                    <span>&nbsp;<CountDown time={task?.planTime}/></span>
+                    <span>&nbsp;{task?.planTime}&nbsp;<CountDown time={task?.planTime}/></span>
+                </FoamBox>
+                :
+                <></>
+        }
+
+        {
+            task.reminderTime != null ?
+                <FoamBox>
+                    <span>提醒时间</span>
+                    <span>&nbsp;{task?.reminderTime}</span>
                 </FoamBox>
                 :
                 <></>
@@ -204,7 +234,7 @@ export default function TaskDetail({data, change}) {
 
         <FoamBox>
             <span>创建于</span>
-            <span>&nbsp;<FormatTime time={task?.createTime}/></span>
+            <span>&nbsp;{task?.createTime}&nbsp;<FormatTime time={task?.createTime}/></span>
         </FoamBox>
 
         <FoamBox>
