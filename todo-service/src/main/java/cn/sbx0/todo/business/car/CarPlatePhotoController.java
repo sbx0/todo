@@ -3,6 +3,7 @@ package cn.sbx0.todo.business.car;
 import cn.sbx0.todo.business.car.entity.CarPlatePhoto;
 import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
+import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,5 +23,10 @@ public class CarPlatePhotoController {
     @PostMapping("/paging")
     public Paging<CarPlatePhoto> paging(@RequestBody PagingRequest pagingRequest) {
         return carPlatePhotoService.paging(pagingRequest);
+    }
+
+    @PostMapping("/update")
+    public Result<String> update() {
+        return carPlatePhotoService.update();
     }
 }
