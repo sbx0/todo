@@ -1,0 +1,10 @@
+{
+  "Login": {
+    "username": "用户名",
+    "password": "密码",
+    "logout": "退出登录",
+    "wechat is bound": "微信已绑定",
+    "bind wechat": "绑定微信账户",
+    "login": "登录"
+  }
+}

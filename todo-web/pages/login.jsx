@@ -9,8 +9,10 @@ import {POST} from "../apis/apiPath";
 import {getCookie, removeCookie, setCookie} from "../apis/cookies";
 import {DeviceMobileIcon} from "@primer/octicons-react";
 import {useRouter} from "next/router";
+import {useTranslations} from "next-intl";
 
-export default function Login() {
+export default function Login({locale}) {
+    const t = useTranslations('Login');
     const router = useRouter();
     const [account, setAccount] = useState(null);
     const [token, setToken] = useState(null);
@@ -67,7 +69,7 @@ export default function Login() {
                                 <Button>
                                     <div className="leftAndRight">
                                         <div className="left">
-                                            <DeviceMobileIcon/> 微信已绑定
+                                            <DeviceMobileIcon/> {t('wechat is bound')}
                                         </div>
                                         <div className="right">
                                             {clientInfo.weChatOpenId}
@@ -82,19 +84,19 @@ export default function Login() {
                         }}>
                             <FoamBox>
                                 <Button>
-                                    <DeviceMobileIcon/> 绑定微信账户
+                                    <DeviceMobileIcon/> {t('bind wechat')}
                                 </Button>
                             </FoamBox>
                         </div>
                 }
                 <FoamBox>
-                    <Button onClick={logout}>退出登录</Button>
+                    <Button onClick={logout}>{t('logout')}</Button>
                 </FoamBox>
             </div>
             :
             <div>
                 <FoamBox>
-                    <label htmlFor={"username"}>账户</label>
+                    <label htmlFor={"username"}>{t('username')}</label>
                 </FoamBox>
                 <FoamBox>
                     <Input id="username"
@@ -107,7 +109,7 @@ export default function Login() {
                            }}/>
                 </FoamBox>
                 <FoamBox>
-                    <label htmlFor={"password"}>密码</label>
+                    <label htmlFor={"password"}>{t('password')}</label>
                 </FoamBox>
                 <FoamBox>
                     <Input id="password"
@@ -121,10 +123,18 @@ export default function Login() {
                            }}/>
                 </FoamBox>
                 <FoamBox>
-                    <Button onClick={login}>登录</Button>
+                    <Button onClick={login}>{t('login')}</Button>
                 </FoamBox>
             </div>
         }
+        <FoamBox>
+            <select defaultValue={locale} onChange={(event) => {
+                router.push('/login', '/login', {locale: event.target.value}).then(r => r);
+            }}>
+                <option value={'zh-CN'}>Simplified Chinese</option>
+                <option value={'en-US'}>English</option>
+            </select>
+        </FoamBox>
         <NavigationBar active={4}/>
         <style jsx>{`
           .leftAndRight {
@@ -142,4 +152,20 @@ export default function Login() {
           }
         `}</style>
     </Container>
+}
+
+export async function getStaticProps(context) {
+    let locale = 'zh-CN';
+    const accept = ['zh-CN', 'en-US'];
+    if (accept.indexOf(context.locale) !== -1) {
+        locale = context.locale;
+    }
+    return {
+        props: {
+            // You can get the messages from anywhere you like. The recommended
+            // pattern is to put them in JSON files separated by language.
+            messages: (await import(`../messages/${locale}.json`)).default,
+            locale: context.locale
+        }
+    };
 }

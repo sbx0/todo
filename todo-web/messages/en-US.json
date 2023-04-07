@@ -1,0 +1,10 @@
+{
+  "Login": {
+    "username": "Username",
+    "password": "Password",
+    "logout": "Logout",
+    "wechat is bound": "WeChat is Bound",
+    "bind wechat": "bind WeChat",
+    "login": "Login"
+  }
+}
