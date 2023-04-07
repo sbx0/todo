@@ -3,17 +3,10 @@ const withPWA = require('next-pwa')({
     register: true,
     skipWaiting: true
 })
-const configs = {
-    reactStrictMode: true,
-    i18n: {
-        locales: ['zh-CN', 'en-US'],
-        defaultLocale: 'zh-CN',
-    },
-}
 module.exports = process.env.NODE_ENV === 'development' ?
     {
         output: 'standalone',
-        ...configs,
+        reactStrictMode: true,
         async rewrites() {
             return [
                 {
@@ -26,8 +19,8 @@ module.exports = process.env.NODE_ENV === 'development' ?
     :
     withPWA({
         output: 'export',
-        ...configs,
+        reactStrictMode: true,
         images: {
             unoptimized: true
-        },
+        }
     });
