@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -25,8 +26,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static cn.sbx0.todo.business.user.ClientUserService.BEFORE;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author sbx0
@@ -88,6 +89,26 @@ class ClientUserServiceTest {
     }
 
     @Test
-    void testGetToken() {
+    void testGetTokenAutoRecreate() {
+        Instant now = Instant.now();
+        String tokenValue = userService.createToken("1", "1", now, now.plusSeconds(BEFORE - 60));
+        Jwt jwtToken = userService.getToken(tokenValue);
+        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwtToken);
+        jwtAuthenticationToken.setAuthenticated(true);
+        jwtAuthenticationToken.setDetails(tokenValue);
+        String token = userService.getToken(jwtAuthenticationToken);
+        assertNotEquals(tokenValue, token);
+    }
+
+    @Test
+    void testGetTokenNotChange() {
+        Instant now = Instant.now();
+        String tokenValue = userService.createToken("1", "1", now, now.plusSeconds(BEFORE + 60));
+        Jwt jwtToken = userService.getToken(tokenValue);
+        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwtToken);
+        jwtAuthenticationToken.setAuthenticated(true);
+        jwtAuthenticationToken.setDetails(tokenValue);
+        String token = userService.getToken(jwtAuthenticationToken);
+        assertEquals(tokenValue, token);
     }
 }
