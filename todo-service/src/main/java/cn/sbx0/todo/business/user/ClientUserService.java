@@ -156,7 +156,8 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
             return null;
         }
         Instant now = Instant.now();
-        if (now.isAfter(expiresAt.plusSeconds(BEFORE))) {
+        if (now.isAfter(expiresAt.minusSeconds(BEFORE))) {
+            log.info("recreate token");
             return this.createToken(authentication, now);
         } else {
             return credentials.getTokenValue();
