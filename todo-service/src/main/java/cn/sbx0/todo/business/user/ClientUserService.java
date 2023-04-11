@@ -41,17 +41,17 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
-    @Resource
-    private ClientUserRepository repository;
-    @Resource
-    private DefaultUserRepository defaultUserRepository;
+    private final ClientUserRepository repository;
+    private final DefaultUserRepository defaultUserRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
 
-    public ClientUserService(DataSource dataSource, JwtEncoder encoder, JwtDecoder decoder) {
+    public ClientUserService(DataSource dataSource, JwtEncoder encoder, JwtDecoder decoder, ClientUserRepository clientUserRepository, DefaultUserRepository defaultUserRepository) {
         this.jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         this.encoder = encoder;
         this.decoder = decoder;
+        this.repository = clientUserRepository;
+        this.defaultUserRepository = defaultUserRepository;
     }
 
     @Override
@@ -120,10 +120,10 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         }
     }
 
-    public String createToken(String subject, String scope, Instant now, Instant expiresAt) {
+    public String createToken(String subject, String scope, Instant issuedAt, Instant expiresAt) {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
-                .issuedAt(now)
+                .issuedAt(issuedAt)
                 .expiresAt(expiresAt)
                 .subject(subject)
                 .claim("scope", scope)
@@ -146,12 +146,12 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         if (!authentication.isAuthenticated()) {
             return null;
         }
-        Object object = authentication.getCredentials();
-        if (object == null) {
+        Object credentials = authentication.getCredentials();
+        if (credentials == null) {
             return null;
         }
-        Jwt credentials = (Jwt) (object);
-        Instant expiresAt = credentials.getExpiresAt();
+        Jwt jwt = (Jwt) (credentials);
+        Instant expiresAt = jwt.getExpiresAt();
         if (expiresAt == null) {
             return null;
         }
@@ -160,7 +160,7 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
             log.info("recreate token");
             return this.createToken(authentication, now);
         } else {
-            return credentials.getTokenValue();
+            return jwt.getTokenValue();
         }
     }
 }

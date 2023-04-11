@@ -1,5 +1,8 @@
 package cn.sbx0.todo.business.user;
 
+import cn.sbx0.todo.business.user.entity.DefaultUser;
+import cn.sbx0.todo.repositories.ClientUserRepository;
+import cn.sbx0.todo.repositories.DefaultUserRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -11,6 +14,10 @@ import io.micrometer.core.instrument.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.ResourceUtils;
@@ -28,6 +35,10 @@ import java.util.Base64;
 
 import static cn.sbx0.todo.business.user.ClientUserService.BEFORE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * @author sbx0
@@ -37,6 +48,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClientUserServiceTest {
     public static final String RSA = "RSA";
     public static final String EMPTY_STRING = "";
+    private static final DefaultUserRepository defaultUserRepository = mock(DefaultUserRepository.class);
+    private static final ClientUserRepository clientUserRepository = mock(ClientUserRepository.class);
     private static ClientUserService userService;
 
     @BeforeAll
@@ -50,7 +63,7 @@ class ClientUserServiceTest {
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
         JwtEncoder encoder = new NimbusJwtEncoder(jwkSource);
         JwtDecoder decoder = NimbusJwtDecoder.withPublicKey(publicKey).build();
-        userService = new ClientUserService(new HikariDataSource(), encoder, decoder);
+        userService = new ClientUserService(new HikariDataSource(), encoder, decoder, clientUserRepository, defaultUserRepository);
     }
 
     public static RSAPublicKey getPublicKey(String publicKey) throws Exception {
@@ -76,8 +89,8 @@ class ClientUserServiceTest {
         long expireSecond = 60;
         long recreateSecond = 30;
         Instant now = Instant.now();
-        String tokenValue = userService.createToken("1", "1", now, now.plusSeconds(expireSecond));
-        Jwt jwtToken = userService.getToken(tokenValue);
+        Authentication authentication = createAuthentication("1", "1", now, now.plusSeconds(expireSecond));
+        Jwt jwtToken = userService.getToken(getTokenValueFromAuthentication(authentication));
         Instant expiresAt = jwtToken.getExpiresAt();
         assertNotNull(expiresAt);
         // now 0s is before 60s
@@ -91,24 +104,53 @@ class ClientUserServiceTest {
     @Test
     void testGetTokenAutoRecreate() {
         Instant now = Instant.now();
-        String tokenValue = userService.createToken("1", "1", now, now.plusSeconds(BEFORE - 60));
-        Jwt jwtToken = userService.getToken(tokenValue);
-        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwtToken);
-        jwtAuthenticationToken.setAuthenticated(true);
-        jwtAuthenticationToken.setDetails(tokenValue);
-        String token = userService.getToken(jwtAuthenticationToken);
-        assertNotEquals(tokenValue, token);
+        Authentication authentication = createAuthentication("2", "2", now, now.plusSeconds(BEFORE - 60));
+        String token = userService.getToken(authentication);
+        assertNotEquals(getTokenValueFromAuthentication(authentication), token);
     }
 
     @Test
     void testGetTokenNotChange() {
         Instant now = Instant.now();
-        String tokenValue = userService.createToken("1", "1", now, now.plusSeconds(BEFORE + 60));
+        Authentication authentication = createAuthentication("3", "3", now, now.plusSeconds(BEFORE + 60));
+        String token = userService.getToken(authentication);
+        assertEquals(getTokenValueFromAuthentication(authentication), token);
+    }
+
+    private Authentication createAuthentication(String subject, String scope, Instant issuedAt, Instant expiresAt) {
+        String tokenValue = userService.createToken(subject, scope, issuedAt, expiresAt);
         Jwt jwtToken = userService.getToken(tokenValue);
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwtToken);
         jwtAuthenticationToken.setAuthenticated(true);
         jwtAuthenticationToken.setDetails(tokenValue);
-        String token = userService.getToken(jwtAuthenticationToken);
-        assertEquals(tokenValue, token);
+        return jwtAuthenticationToken;
+    }
+
+    private String getTokenValueFromAuthentication(Authentication authentication) {
+        Jwt jwt = getJwtFromAuthentication(authentication);
+        return jwt.getTokenValue();
+    }
+
+    private Jwt getJwtFromAuthentication(Authentication authentication) {
+        Object credentials = authentication.getCredentials();
+        return (Jwt) credentials;
+    }
+
+    @Test
+    void testGetLoginUserId() {
+        Instant now = Instant.now();
+        MockedStatic<SecurityContextHolder> securityContextHolderMockedStatic = mockStatic(SecurityContextHolder.class);
+        org.springframework.security.core.context.SecurityContext emptyContext = new SecurityContextImpl();
+        emptyContext.setAuthentication(createAuthentication("username", "4", now, now.plusSeconds(BEFORE + 60)));
+        securityContextHolderMockedStatic.when(SecurityContextHolder::getContext).thenReturn(emptyContext);
+        DefaultUser defaultUser = new DefaultUser();
+        defaultUser.setUsername("username");
+        defaultUser.setEnabled(1);
+        defaultUser.setPassword("password");
+        given(defaultUserRepository.findByUsername(anyString())).willReturn(defaultUser);
+        given(clientUserRepository.findIdByUsername(anyString())).willReturn(1L);
+
+        Long loginUserId = userService.getLoginUserId();
+        assertEquals(1L, loginUserId);
     }
 }
