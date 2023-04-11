@@ -2,7 +2,6 @@ package cn.sbx0.todo.business.chatgpt;
 
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
-import com.plexpt.chatgpt.ChatGPT;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,6 @@ public class ChatGPTService {
     private WeChatService weChatService;
     @Value("${chatgpt.api-key}")
     private String apiKey;
-    private ChatGPT chatGPT;
 
     public Boolean addMessage(ChatGPTMessage message) {
         if (RECEIVE_QUEUE.size() == MAX_HANDLED) {
@@ -45,18 +43,8 @@ public class ChatGPTService {
             return;
         }
         if (!message.getHandled()) {
-            log.info("send message to chatgpt:" + message.getMessage());
-            if (chatGPT == null) {
-                chatGPT = ChatGPT.builder()
-                        .apiKey(apiKey)
-                        .apiHost("https://api.openai.com/")
-                        .build()
-                        .init();
-            }
-            String response = chatGPT.chat(message.getMessage());
-            log.info("receive message from chatgpt:" + response);
             message.setHandled(true);
-            message.setResponse(response);
+            message.setResponse("余额不足");
             SEND_QUEUE.add(message);
         }
     }
@@ -73,7 +61,6 @@ public class ChatGPTService {
         weChatMessage.setMsgtype("text");
         weChatMessage.setTouser(message.getUser());
         weChatMessage.setText(new WeChatMessage.WeChatMessageContext(message.getResponse()));
-        log.info("send message to user " + message.getUser() + " " + message.getResponse());
         weChatService.sendMessage(weChatMessage);
     }
 }

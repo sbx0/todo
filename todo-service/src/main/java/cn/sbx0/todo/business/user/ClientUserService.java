@@ -17,10 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +39,8 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     // 12h
     public static final Long BEFORE = 43200L;
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
-    @Resource
-    private JwtEncoder encoder;
+    private final JwtEncoder encoder;
+    private final JwtDecoder decoder;
     @Resource
     private ClientUserRepository repository;
     @Resource
@@ -51,8 +48,10 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     @Resource
     private PasswordEncoder passwordEncoder;
 
-    public ClientUserService(DataSource dataSource) {
+    public ClientUserService(DataSource dataSource, JwtEncoder encoder, JwtDecoder decoder) {
         this.jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        this.encoder = encoder;
+        this.decoder = decoder;
     }
 
     @Override
@@ -121,18 +120,26 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         }
     }
 
+    public String createToken(String subject, String scope, Instant now, Instant expiresAt) {
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(expiresAt)
+                .subject(subject)
+                .claim("scope", scope)
+                .build();
+        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public Jwt getToken(String token) {
+        return this.decoder.decode(token);
+    }
+
     public String createToken(Authentication authentication, Instant now) {
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(Instant.now())
-                .expiresAt(now.plusSeconds(EXPIRY))
-                .subject(authentication.getName())
-                .claim("scope", scope)
-                .build();
-        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return this.createToken(authentication.getName(), scope, now, now.plusSeconds(EXPIRY));
     }
 
     public String getToken(Authentication authentication) {
