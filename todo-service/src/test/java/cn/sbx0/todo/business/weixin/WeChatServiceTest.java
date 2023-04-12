@@ -2,7 +2,7 @@ package cn.sbx0.todo.business.weixin;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
 import cn.sbx0.todo.business.user.ClientUserService;
-import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
+import cn.sbx0.todo.business.weixin.entity.*;
 import cn.sbx0.todo.utils.CallApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
+import static cn.sbx0.todo.business.weixin.WeChatService.WELCOME_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
@@ -29,7 +32,7 @@ import static org.mockito.Mockito.mockStatic;
 @SpringBootTest(classes = {WeChatService.class}, webEnvironment = WebEnvironment.NONE)
 class WeChatServiceTest {
     @Autowired
-    private WeChatService weChatService;
+    private WeChatService service;
 
     @Test
     void sendMessage(CapturedOutput output) {
@@ -49,7 +52,29 @@ class WeChatServiceTest {
                 }
                 """);
 
-        weChatService.sendMessage(new WeChatMessage());
+        service.sendMessage(new WeChatMessage());
         assertThat(output).contains(postResponse);
+    }
+
+    @Test
+    void handleMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.EVENT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event(WeChatMsgEventType.SUBSCRIBE.getValue())
+                .eventKey("eventKey")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(fromUserName, response.getToUserName());
+        assertEquals(toUserName, response.getFromUserName());
+        assertEquals(WELCOME_MESSAGE, response.getContent());
+        assertEquals(WeChatMsgType.TEXT.getValue(), response.getMsgType());
     }
 }

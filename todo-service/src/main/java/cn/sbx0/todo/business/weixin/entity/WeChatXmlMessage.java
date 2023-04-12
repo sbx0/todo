@@ -27,4 +27,73 @@ public class WeChatXmlMessage {
     private String event;
     @JacksonXmlProperty(localName = "EventKey")
     private String eventKey;
+
+    public WeChatXmlMessage() {
+    }
+
+    public WeChatXmlMessage(Builder builder) {
+        this.fromUserName = builder.fromUserName;
+        this.toUserName = builder.toUserName;
+        this.createTime = builder.createTime;
+        this.msgType = builder.msgType;
+        this.msgId = builder.msgId;
+        this.content = builder.content;
+        this.event = builder.event;
+        this.eventKey = builder.eventKey;
+    }
+
+    public static class Builder {
+        private String fromUserName;
+        private String toUserName;
+        private Long createTime;
+        private String msgType;
+        private Long msgId;
+        private String content;
+        private String event;
+        private String eventKey;
+
+        public Builder fromUserName(String fromUserName) {
+            this.fromUserName = fromUserName;
+            return this;
+        }
+
+        public Builder toUserName(String toUserName) {
+            this.toUserName = toUserName;
+            return this;
+        }
+
+        public Builder createTime(Long createTime) {
+            this.createTime = createTime;
+            return this;
+        }
+
+        public Builder msgType(String msgType) {
+            this.msgType = msgType;
+            return this;
+        }
+
+        public Builder msgId(Long msgId) {
+            this.msgId = msgId;
+            return this;
+        }
+
+        public Builder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder event(String event) {
+            this.event = event;
+            return this;
+        }
+
+        public Builder eventKey(String eventKey) {
+            this.eventKey = eventKey;
+            return this;
+        }
+
+        public WeChatXmlMessage build() {
+            return new WeChatXmlMessage(this);
+        }
+    }
 }

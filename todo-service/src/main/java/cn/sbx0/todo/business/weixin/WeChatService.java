@@ -27,6 +27,7 @@ import java.util.Map;
 @Slf4j
 @Service
 public class WeChatService {
+    public static final String WELCOME_MESSAGE = "欢迎关注。";
     @Value("${weixin.auth.token}")
     private String token;
     @Value("${weixin.app-id}")
@@ -65,7 +66,7 @@ public class WeChatService {
             }
             case EVENT -> {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
-                    case SUBSCRIBE -> message = "欢迎关注，我是ChatGPT。";
+                    case SUBSCRIBE -> message = WELCOME_MESSAGE;
                     case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
                     case SCAN -> {
                         log.info("wechat SCAN event key = " + msg.getEventKey());
