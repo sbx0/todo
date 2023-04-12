@@ -27,8 +27,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class WeChatService {
-    @Resource
-    private ChatGPTService chatGPTService;
     @Value("${weixin.auth.token}")
     private String token;
     @Value("${weixin.app-id}")
@@ -37,6 +35,8 @@ public class WeChatService {
     private String appSecret;
     @Resource
     private ClientUserService userService;
+    @Resource
+    private ChatGPTService chatGPTService;
 
     public void sendMessage(WeChatMessage message) {
         String response = CallApi.post(
@@ -138,9 +138,7 @@ public class WeChatService {
                 {"expire_seconds": 60, "action_name": "QR_SCENE", "action_info": {"scene": {"scene_id":
                 """
                 + userId +
-                """
-                        }}}
-                        """;
+                "}}}";
 
         String response = CallApi.post(
                 WeChatApi.HOST.getValue(),
