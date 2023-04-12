@@ -103,4 +103,28 @@ class WeChatServiceTest {
         assertEquals(WeChatReplyMessage.WAITING_MESSAGE, response.getContent());
         assertEquals(WeChatMsgType.TEXT.getValue(), response.getMsgType());
     }
+
+    @Test
+    void handleWeChatOverloadTextMessage() {
+        when(chatGPTService.addMessage(any())).thenReturn(false);
+
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.TEXT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event("event")
+                .eventKey("eventKey")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(fromUserName, response.getToUserName());
+        assertEquals(toUserName, response.getFromUserName());
+        assertEquals(WeChatReplyMessage.OVERLOAD_MESSAGE, response.getContent());
+        assertEquals(WeChatMsgType.TEXT.getValue(), response.getMsgType());
+    }
 }

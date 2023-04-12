@@ -26,6 +26,7 @@ public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
         String last = newContent.substring(0, endIndex);
         String replace = last.replace("</td><td class=\"ctr2\">", "-");
         String[] split = replace.split("-");
+        System.out.println("test coverage is " + split[1]);
         String url = "https://img.shields.io/badge/coverage-" + split[1] + "25-red.svg";
         path = Paths.get("D:\\Workspace\\IdeaProjects\\todo\\README.md");
         String readme = Files.readString(path);
