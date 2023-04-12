@@ -68,10 +68,13 @@ test {
 }
 
 jacocoTestReport {
+    reports {
+        csv.required = true
+    }
     dependsOn test // tests are required to run before generating the report
 }
 
-tasks.named('asciidoctor') {
+asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
     dependsOn test
