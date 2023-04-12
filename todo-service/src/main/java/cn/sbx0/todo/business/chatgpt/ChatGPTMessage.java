@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.chatgpt;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,18 +10,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
 public class ChatGPTMessage {
     private Boolean handled;
     private String user;
     private String message;
     private String response;
-
-    public ChatGPTMessage() {
-    }
-
-    public ChatGPTMessage(String user, String message) {
-        this.user = user;
-        this.message = message;
-        this.handled = false;
-    }
 }

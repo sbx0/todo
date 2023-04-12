@@ -27,7 +27,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class WeChatService {
-    public static final String WELCOME_MESSAGE = "欢迎关注。";
     @Value("${weixin.auth.token}")
     private String token;
     @Value("${weixin.app-id}")
@@ -54,19 +53,24 @@ public class WeChatService {
         responseMessage.setFromUserName(msg.getToUserName());
         responseMessage.setMsgType(WeChatMsgType.TEXT.getValue());
         responseMessage.setCreateTime(new Date().getTime());
-        String message = "暂不支持此类消息。";
+        String message = WeChatReplyMessage.UNSUPPORTED_MESSAGE;
         switch (WeChatMsgType.find(msg.getMsgType())) {
             case TEXT -> {
-                Boolean result = chatGPTService.addMessage(new ChatGPTMessage(msg.getFromUserName(), msg.getContent()));
-                if (!result) {
-                    message = "系统超负荷，请稍后重试";
+                Boolean result = chatGPTService.addMessage(
+                        ChatGPTMessage.builder()
+                                .user(msg.getFromUserName())
+                                .message(msg.getContent())
+                                .build()
+                );
+                if (result) {
+                    message = WeChatReplyMessage.WAITING_MESSAGE;
                 } else {
-                    message = "正在思考，请耐心等待...";
+                    message = WeChatReplyMessage.OVERLOAD_MESSAGE;
                 }
             }
             case EVENT -> {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
-                    case SUBSCRIBE -> message = WELCOME_MESSAGE;
+                    case SUBSCRIBE -> message = WeChatReplyMessage.WELCOME_MESSAGE;
                     case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
                     case SCAN -> {
                         log.info("wechat SCAN event key = " + msg.getEventKey());
