@@ -2,13 +2,22 @@ package cn.sbx0.todo.business.chatgpt;
 
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
+import com.theokanning.openai.completion.chat.ChatCompletionChoice;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatMessage;
+import com.theokanning.openai.completion.chat.ChatMessageRole;
+import com.theokanning.openai.service.OpenAiService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author sbx0
@@ -25,6 +34,7 @@ public class ChatGPTService {
     private WeChatService weChatService;
     @Value("${chatgpt.api-key}")
     private String apiKey;
+    private OpenAiService openAiService;
 
     public Boolean addMessage(ChatGPTMessage message) {
         if (RECEIVE_QUEUE.size() == MAX_HANDLED) {
@@ -43,8 +53,38 @@ public class ChatGPTService {
             return;
         }
         if (!message.getHandled()) {
+            final List<ChatMessage> messages = new ArrayList<>();
+            log.info("ChatGPT receive = " + message.getMessage());
+            final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.USER.value(), message.getMessage().trim());
+            messages.add(systemMessage);
+            if (openAiService == null) {
+                openAiService = new OpenAiService(apiKey);
+            }
+            ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
+                    .builder()
+                    .model("gpt-3.5-turbo")
+                    .messages(messages)
+                    .n(1)
+                    .logitBias(new HashMap<>())
+                    .stream(true)
+                    .build();
+            AtomicReference<String> response = new AtomicReference<>("");
+            openAiService.streamChatCompletion(chatCompletionRequest).blockingForEach((one -> response.updateAndGet(v -> {
+                AtomicReference<String> result = new AtomicReference<>("");
+                List<ChatCompletionChoice> choices = one.getChoices();
+                choices.forEach(choice -> result.updateAndGet(v1 -> {
+                    String content = choice.getMessage().getContent();
+                    if (content != null) {
+                        return v1 + content;
+                    } else {
+                        return v1;
+                    }
+                }));
+                return v + result;
+            })));
+            log.info("ChatGPT response = " + response);
+            message.setResponse(response.toString().trim());
             message.setHandled(true);
-            message.setResponse("余额不足");
             SEND_QUEUE.add(message);
         }
     }
