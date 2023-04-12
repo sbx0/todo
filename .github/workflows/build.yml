@@ -30,7 +30,7 @@ jobs:
         working-directory: ./todo-service
         run: ./gradlew build
       - name: Upload Test Report to Server
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: 'ubuntu'
