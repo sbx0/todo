@@ -40,6 +40,7 @@ jobs:
           remote_path: '/home/ubuntu/todo/code-coverage'
           args: '-o ConnectTimeout=5'
       - name: Generate Test Coverage Badge
+        if: github.ref == 'refs/heads/main'
         id: coverage
         uses: cicirello/jacoco-badge-generator@v2
         with:
