@@ -15,8 +15,7 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
@@ -78,6 +77,24 @@ class WeChatServiceTest {
         assertEquals(toUserName, response.getFromUserName());
         assertEquals(WeChatReplyMessage.WELCOME_MESSAGE, response.getContent());
         assertEquals(WeChatMsgType.TEXT.getValue(), response.getMsgType());
+    }
+
+    @Test
+    void handleWeChatUnsubscribeMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.EVENT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event(WeChatMsgEventType.UNSUBSCRIBE.getValue())
+                .eventKey("eventKey")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNull(response);
     }
 
     @Test

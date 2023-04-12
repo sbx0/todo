@@ -71,7 +71,10 @@ public class WeChatService {
             case EVENT -> {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
                     case SUBSCRIBE -> message = WeChatReplyMessage.WELCOME_MESSAGE;
-                    case UNSUBSCRIBE -> log.info("wechat UNSUBSCRIBE event");
+                    case UNSUBSCRIBE -> {
+                        log.info("wechat UNSUBSCRIBE event");
+                        return null;
+                    }
                     case SCAN -> {
                         log.info("wechat SCAN event key = " + msg.getEventKey());
                         Long userId = Long.parseLong(msg.getEventKey());
