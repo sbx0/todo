@@ -5,6 +5,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
     // https://mvnrepository.com/artifact/org.asciidoctor.jvm.convert/org.asciidoctor.jvm.convert.gradle.plugin
     id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'jacoco'
     id 'java'
 }
 
@@ -60,9 +61,14 @@ dependencies {
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
-tasks.named('test') {
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
     outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
 }
 
 tasks.named('asciidoctor') {
