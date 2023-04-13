@@ -9,4 +9,6 @@ public class WeChatReplyMessage {
     public static final String WAITING_MESSAGE = "正在思考，请耐心等待...";
     public static final String OVERLOAD_MESSAGE = "系统超负荷，请稍后重试...";
     public static final String UNSUPPORTED_MESSAGE = "暂不支持此类消息。";
+    public static final String BINDING_WECHAT_ACCOUNT_MESSAGE = "已绑定账户 ";
+    public static final String BINDING_WECHAT_ACCOUNT_ERROR_MESSAGE = "绑定失败，账户不存在";
 }

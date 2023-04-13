@@ -84,7 +84,9 @@ public class WeChatService {
                             user.setWeChatOpenId(msg.getFromUserName());
                             userService.update(user);
                             log.info("user " + user.getId() + " " + user.getUsername() + " bind wechat open id " + msg.getFromUserName());
-                            message = "已绑定账户 " + user.getUsername();
+                            message = WeChatReplyMessage.BINDING_WECHAT_ACCOUNT_MESSAGE + user.getUsername();
+                        } else {
+                            message = WeChatReplyMessage.BINDING_WECHAT_ACCOUNT_ERROR_MESSAGE;
                         }
                     }
                     case LOCATION -> log.info("wechat LOCATION event");
