@@ -60,6 +60,8 @@ class WeChatServiceTest {
 
         service.sendMessage(new WeChatMessage());
         assertThat(output).contains(postResponse);
+
+        callApiMockedStatic.close();
     }
 
     @Test
@@ -276,5 +278,98 @@ class WeChatServiceTest {
         WeChatXmlMessageResponse response = service.handleMessage(msg);
         assertNotNull(response);
         assertEquals(WeChatReplyMessage.UNSUPPORTED_MESSAGE, response.getContent());
+    }
+
+    @Test
+    void testAuth() {
+        String echostr = "12312312312312313";
+        String auth = service.auth("25e313dc755e2a9c21a81a9f42a8e7c85e970c18", "123123123123", "123123213123131", echostr);
+        assertNotNull(auth);
+        assertEquals(echostr, auth);
+    }
+
+    @Test
+    void testAuthError() {
+        String echostr = "12312312312312313";
+        String auth = service.auth("12312312321313123", "123123123123", "123123213123131", echostr);
+        assertNull(auth);
+    }
+
+    @Test
+    void createQRCode() {
+        String ticket = "aa89ds7f9a8sd7987fa9sd87f98a7sf98";
+        MockedStatic<CallApi> callApiMockedStatic = mockStatic(CallApi.class);
+        String postResponse = """
+                {
+                  "ticket": "aa89ds7f9a8sd7987fa9sd87f98a7sf98",
+                  "expire_seconds": 60,
+                  "url": "https://todo-code-coverage.sbx0.cn/"
+                }
+                """;
+        callApiMockedStatic.when(() -> CallApi.post(anyString(), anyString(), anyString())).thenReturn(postResponse);
+
+        callApiMockedStatic.when(() -> CallApi.get(anyString(), anyString(), any())).thenReturn("""
+                {
+                  "access_token": "asfasdfasdfasdfasfasdf",
+                  "expires_in": 1000
+                }
+                """);
+
+        Result<String> qrCode = service.createQRCode(1L);
+        assertNotNull(qrCode);
+        assertTrue(qrCode.getSuccess());
+        assertNotNull(qrCode.getData());
+        assertEquals(WeChatApi.QRCODE_URL.getValue() + ticket, qrCode.getData());
+
+        callApiMockedStatic.close();
+    }
+
+    @Test
+    void createQRCodeTicketError() {
+        MockedStatic<CallApi> callApiMockedStatic = mockStatic(CallApi.class);
+        String postResponse = """
+                {
+                  "ticket": "",
+                  "expire_seconds": 60,
+                  "url": "https://todo-code-coverage.sbx0.cn/"
+                }
+                """;
+        callApiMockedStatic.when(() -> CallApi.post(anyString(), anyString(), anyString())).thenReturn(postResponse);
+
+        callApiMockedStatic.when(() -> CallApi.get(anyString(), anyString(), any())).thenReturn("""
+                {
+                  "access_token": "asfasdfasdfasdfasfasdf",
+                  "expires_in": 1000
+                }
+                """);
+
+        Result<String> qrCode = service.createQRCode(1L);
+        assertNotNull(qrCode);
+        assertFalse(qrCode.getSuccess());
+
+        callApiMockedStatic.close();
+    }
+
+
+    @Test
+    void createQRCodeResponseError() {
+        MockedStatic<CallApi> callApiMockedStatic = mockStatic(CallApi.class);
+        String postResponse = """
+                ""
+                """;
+        callApiMockedStatic.when(() -> CallApi.post(anyString(), anyString(), anyString())).thenReturn(postResponse);
+
+        callApiMockedStatic.when(() -> CallApi.get(anyString(), anyString(), any())).thenReturn("""
+                {
+                  "access_token": "asfasdfasdfasdfasfasdf",
+                  "expires_in": 1000
+                }
+                """);
+
+        Result<String> qrCode = service.createQRCode(1L);
+        assertNotNull(qrCode);
+        assertFalse(qrCode.getSuccess());
+
+        callApiMockedStatic.close();
     }
 }

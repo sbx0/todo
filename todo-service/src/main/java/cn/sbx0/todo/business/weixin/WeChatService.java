@@ -128,16 +128,16 @@ public class WeChatService {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(content.toString().getBytes());
             byte[] digest = md.digest();
-            StringBuilder hexstr = new StringBuilder();
+            StringBuilder hexStr = new StringBuilder();
             String shaHex;
             for (byte b : digest) {
                 shaHex = Integer.toHexString(b & 0xFF);
                 if (shaHex.length() < 2) {
-                    hexstr.append(0);
+                    hexStr.append(0);
                 }
-                hexstr.append(shaHex);
+                hexStr.append(shaHex);
             }
-            String cal = hexstr.toString();
+            String cal = hexStr.toString();
             return signature.equals(cal) ? echostr : null;
         } catch (Exception e) {
             log.error(e.getMessage());
