@@ -91,8 +91,10 @@ public class WeChatService {
                     }
                     case LOCATION -> log.info("wechat LOCATION event");
                     case CLICK -> log.info("wechat CLICK event");
+                    default -> log.info("wechat msg event type unsupported " + msg.getEvent());
                 }
             }
+            default -> log.info("wechat msg type unsupported " + msg.getMsgType());
         }
         responseMessage.setContent(message);
         return responseMessage;

@@ -199,4 +199,82 @@ class WeChatServiceTest {
         assertNotNull(response);
         assertEquals(WeChatReplyMessage.BINDING_WECHAT_ACCOUNT_ERROR_MESSAGE, response.getContent());
     }
+
+
+    @Test
+    void handleWeChatLocationMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.EVENT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event(WeChatMsgEventType.LOCATION.getValue())
+                .eventKey("1")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(WeChatReplyMessage.UNSUPPORTED_MESSAGE, response.getContent());
+    }
+
+
+    @Test
+    void handleWeChatClickMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.EVENT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event(WeChatMsgEventType.CLICK.getValue())
+                .eventKey("1")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(WeChatReplyMessage.UNSUPPORTED_MESSAGE, response.getContent());
+    }
+
+    @Test
+    void handleWeChatMsgTypeUnsupportedMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType("UNSUPPORTED")
+                .msgId(1L)
+                .content("content")
+                .event("UNSUPPORTED")
+                .eventKey("1")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(WeChatReplyMessage.UNSUPPORTED_MESSAGE, response.getContent());
+    }
+
+    @Test
+    void handleWeChatMsgEventTypeUnsupportedMessage() {
+        String fromUserName = "fromUserName";
+        String toUserName = "toUserName";
+        WeChatXmlMessage msg = new WeChatXmlMessage.Builder()
+                .fromUserName(fromUserName)
+                .toUserName(toUserName)
+                .createTime(100000L)
+                .msgType(WeChatMsgType.EVENT.getValue())
+                .msgId(1L)
+                .content("content")
+                .event("UNSUPPORTED")
+                .eventKey("1")
+                .build();
+        WeChatXmlMessageResponse response = service.handleMessage(msg);
+        assertNotNull(response);
+        assertEquals(WeChatReplyMessage.UNSUPPORTED_MESSAGE, response.getContent());
+    }
 }
