@@ -21,7 +21,8 @@
     "nprogress": "0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "swr": "2.1.2"
+    "swr": "2.1.2",
+    "sse.js": "0.6.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.5",

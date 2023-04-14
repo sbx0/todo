@@ -1,6 +1,7 @@
 package cn.sbx0.todo.scheduled;
 
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
+import cn.sbx0.todo.business.sse.SSEService;
 import cn.sbx0.todo.business.task.TaskService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ public class ServerScheduled {
     private ChatGPTService chatGPTService;
     @Resource
     private TaskService taskService;
+    @Resource
+    private SSEService sseService;
 
     @Scheduled(fixedRate = 1000)
     public void handleReminderTime() {
@@ -32,5 +35,10 @@ public class ServerScheduled {
     @Scheduled(fixedRate = 1000)
     public void sendMessage() {
         chatGPTService.sendMessage();
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void heartbeat() {
+        sseService.heartbeat();
     }
 }

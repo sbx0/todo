@@ -43,8 +43,8 @@ logging:
       max-history: 30
   level:
     root: info
-    org.hibernate.orm.jdbc.bind: trace
-    org.springframework.security: debug
+    org.hibernate.orm.jdbc.bind: info
+    org.springframework.security: info
 jwt:
   private.key: classpath:app.key
   public.key: classpath:app.pub
