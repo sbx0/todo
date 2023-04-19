@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -50,10 +49,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/2
  */
 @Slf4j
-@MockBean(classes = {TaskService.class, ClientUserService.class, DataSource.class})
+@MockBean(classes = {TaskService.class, ClientUserService.class, DataSource.class, SpringSecurityConfig.class})
 @WebMvcTest({TaskController.class})
 @ExtendWith({RestDocumentationExtension.class})
-@Import(SpringSecurityConfig.class)
 class TaskControllerTest {
 
     protected MockMvc mockMvc;
@@ -85,9 +83,9 @@ class TaskControllerTest {
         given(service.statistics(anyLong())).willReturn(Result.success(list));
 
         String response = mockMvc.perform(get("/task/statistics")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .queryParam("categoryId", "0")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam("categoryId", "0")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("0"))
                 .andDo(
@@ -151,9 +149,9 @@ class TaskControllerTest {
         given(userService.getLoginUserId()).willReturn(1L);
 
         String response = mockMvc.perform(post("/task/paging")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSON.parse(pagingRequest)))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JSON.parse(pagingRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("0"))
                 .andDo(
@@ -214,9 +212,9 @@ class TaskControllerTest {
         given(service.save(any())).willReturn(Result.success(test));
 
         String response = mockMvc.perform(post("/task/save")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(JSON.parse(test))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .content(JSON.parse(test))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("0"))
                 .andDo(
@@ -274,9 +272,9 @@ class TaskControllerTest {
         given(service.update(any())).willReturn(Result.success(test));
 
         String response = mockMvc.perform(post("/task/update")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(JSON.parse(test))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .content(JSON.parse(test))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("0"))
                 .andDo(

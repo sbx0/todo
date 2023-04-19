@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -43,10 +42,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 2022/12/8
  */
 @Slf4j
-@MockBean(classes = {CategoryService.class, DataSource.class})
+@MockBean(classes = {CategoryService.class, DataSource.class, SpringSecurityConfig.class})
 @WebMvcTest({CategoryController.class})
 @ExtendWith({RestDocumentationExtension.class})
-@Import({SpringSecurityConfig.class})
 class CategoryControllerTest {
 
     protected MockMvc mockMvc;
