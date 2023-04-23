@@ -22,7 +22,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,69 @@ class TaskServiceTest {
 
     @Resource
     private ClientUserService userService;
+
+    @Test
+    public void handleReminderTimeWithNullTasks() {
+        given(repository.getHaveReminderTimeTask()).willReturn(null);
+
+        service.handleReminderTime();
+    }
+
+    @Test
+    public void handleReminderTimeWithEmptyTasks() {
+        TaskService.REMINDER_IDS.add(1L);
+        assertNotNull(TaskService.REMINDER_IDS);
+        assertFalse(CollectionUtils.isEmpty(TaskService.REMINDER_IDS));
+        assertEquals(1, TaskService.REMINDER_IDS.size());
+
+        given(repository.getHaveReminderTimeTask()).willReturn(Collections.EMPTY_LIST);
+
+        service.handleReminderTime();
+        assertNotNull(TaskService.REMINDER_IDS);
+        assertTrue(CollectionUtils.isEmpty(TaskService.REMINDER_IDS));
+        assertEquals(0, TaskService.REMINDER_IDS.size());
+
+        TaskService.REMINDER_IDS.clear();
+    }
+
+    @Test
+    public void handleReminderTimeWithTasks() {
+        TaskService.REMINDER_IDS.add(1L);
+        assertNotNull(TaskService.REMINDER_IDS);
+        assertFalse(CollectionUtils.isEmpty(TaskService.REMINDER_IDS));
+        assertEquals(1, TaskService.REMINDER_IDS.size());
+
+        List<TaskEntity> tasks = new ArrayList<>();
+        tasks.add(TaskEntity.builder()
+                .id(1L)
+                .reminderTime(LocalDateTime.now())
+                .build());
+
+        given(userService.findWeChatOpenIdById(2L)).willReturn("2toUser");
+
+        tasks.add(TaskEntity.builder()
+                .id(2L)
+                .userId(2L)
+                .taskName("taskName")
+                .reminderTime(LocalDateTime.now())
+                .planTime(LocalDateTime.now())
+                .build());
+
+        tasks.add(TaskEntity.builder()
+                .id(3L)
+                .userId(3L)
+                .reminderTime(LocalDateTime.now())
+                .build());
+
+        given(repository.getHaveReminderTimeTask()).willReturn(tasks);
+
+        service.handleReminderTime();
+        assertNotNull(TaskService.REMINDER_IDS);
+        assertFalse(CollectionUtils.isEmpty(TaskService.REMINDER_IDS));
+        assertEquals(2, TaskService.REMINDER_IDS.size());
+
+        TaskService.REMINDER_IDS.clear();
+    }
 
     @Test
     public void statistics() {

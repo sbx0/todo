@@ -3,7 +3,6 @@ package cn.sbx0.todo.business.task;
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.business.user.ClientUserService;
-import cn.sbx0.todo.business.user.entity.ClientUser;
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
 import cn.sbx0.todo.entity.StatisticalIndicators;
@@ -19,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
-    public static final Set<Long> REMINDER_DIS = new CopyOnWriteArraySet<>();
+    public static final Set<Long> REMINDER_IDS = new CopyOnWriteArraySet<>();
     @Resource
     private TaskRepository repository;
     @Resource
@@ -122,51 +123,36 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         LocalDateTime begin = now.minusMinutes(2);
         LocalDateTime end = now.plusMinutes(2);
         List<TaskEntity> tasks = repository.getHaveReminderTimeTask();
+        if (tasks == null) {
+            log.error("task have reminder time list is null");
+            return;
+        }
         tasks = tasks.stream().filter((t) -> t.getReminderTime().isAfter(begin) && t.getReminderTime().isBefore(end)).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(tasks)) {
-            if (!CollectionUtils.isEmpty(REMINDER_DIS)) {
-                REMINDER_DIS.clear();
+            if (!CollectionUtils.isEmpty(REMINDER_IDS)) {
+                REMINDER_IDS.clear();
             }
             return;
         }
-        Map<Long, String> userWeChatOpenIdCache = new HashMap<>();
         for (TaskEntity task : tasks) {
-            if (REMINDER_DIS.contains(task.getId())) {
+            if (REMINDER_IDS.contains(task.getId())) {
                 continue;
             }
-            String weChatOpenId = userWeChatOpenIdCache.get(task.getUserId());
-            String toUser = null;
-            if (StringUtils.hasText(weChatOpenId)) {
-                toUser = weChatOpenId;
-            } else {
-                Result<ClientUser> clientUserResult = userService.findById(task.getUserId());
-                if (clientUserResult.getSuccess()) {
-                    ClientUser data = clientUserResult.getData();
-                    if (data == null) {
-                        log.error("client user not found");
-                        continue;
-                    }
-                    if (StringUtils.hasText(data.getWeChatOpenId())) {
-                        userWeChatOpenIdCache.put(data.getId(), data.getWeChatOpenId());
-                        toUser = data.getWeChatOpenId();
-                    }
-                } else {
-                    log.error("task id " + task.getId() + " can't find it user");
-                }
+            String toUser = userService.findWeChatOpenIdById(task.getUserId());
+            if (!StringUtils.hasText(toUser)) {
+                continue;
             }
-            if (StringUtils.hasText(toUser)) {
-                String message = task.getTaskName() + " 尚未完成！";
-                if (task.getPlanTime() != null) {
-                    message += "截至时间：" + task.getPlanTime();
-                }
-                WeChatMessage weChatMessage = new WeChatMessage();
-                weChatMessage.setMsgtype("text");
-                weChatMessage.setTouser(toUser);
-                weChatMessage.setText(new WeChatMessage.WeChatMessageContext(message));
-                log.info("send message to user " + weChatMessage.getTouser() + " " + weChatMessage.getText());
-                weChatService.sendMessage(weChatMessage);
-                REMINDER_DIS.add(task.getId());
+            String message = task.getTaskName() + " 尚未完成！";
+            if (task.getPlanTime() != null) {
+                message += "截至时间：" + task.getPlanTime();
             }
+            WeChatMessage weChatMessage = new WeChatMessage();
+            weChatMessage.setMsgtype("text");
+            weChatMessage.setTouser(toUser);
+            weChatMessage.setText(new WeChatMessage.WeChatMessageContext(message));
+            log.info("send message to user " + weChatMessage.getTouser() + " " + weChatMessage.getText());
+            weChatService.sendMessage(weChatMessage);
+            REMINDER_IDS.add(task.getId());
         }
     }
 }

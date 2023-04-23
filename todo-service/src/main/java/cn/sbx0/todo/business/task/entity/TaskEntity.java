@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "tasks")
+@AllArgsConstructor
+@Builder
 public class TaskEntity {
 
   @Id

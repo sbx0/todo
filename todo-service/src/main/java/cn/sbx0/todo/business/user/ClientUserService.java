@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -162,5 +163,10 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
         } else {
             return jwt.getTokenValue();
         }
+    }
+
+    public String findWeChatOpenIdById(Long userId) {
+        Optional<ClientUser> optional = repository.findById(userId);
+        return optional.map(ClientUser::getWeChatOpenId).orElse(null);
     }
 }
