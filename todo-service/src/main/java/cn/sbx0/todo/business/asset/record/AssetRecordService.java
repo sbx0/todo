@@ -3,6 +3,7 @@ package cn.sbx0.todo.business.asset.record;
 import cn.sbx0.todo.business.asset.type.AssetType;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
+import cn.sbx0.todo.exception.NoPermissionException;
 import cn.sbx0.todo.repositories.AssetRecordRepository;
 import cn.sbx0.todo.repositories.AssetTypeRepository;
 import cn.sbx0.todo.service.JpaService;
@@ -58,7 +59,9 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
     @Override
     protected AssetRecord updateBefore(AssetRecord entity) {
         Long loginUserId = clientUserService.getLoginUserId();
-        entity.setUserId(loginUserId);
+        if (!loginUserId.equals(entity.getUserId())) {
+            throw new NoPermissionException();
+        }
         entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }

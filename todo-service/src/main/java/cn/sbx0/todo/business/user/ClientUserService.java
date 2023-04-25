@@ -5,6 +5,8 @@ import cn.sbx0.todo.business.user.entity.CustomUser;
 import cn.sbx0.todo.business.user.entity.DefaultUser;
 import cn.sbx0.todo.business.user.entity.RegisterParam;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
+import cn.sbx0.todo.exception.NotLoginException;
+import cn.sbx0.todo.exception.UserNotExistException;
 import cn.sbx0.todo.repositories.ClientUserRepository;
 import cn.sbx0.todo.repositories.DefaultUserRepository;
 import cn.sbx0.todo.service.JpaService;
@@ -111,11 +113,11 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     public Long getLoginUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            return 0L;
+            throw new NotLoginException("Authentication is null");
         }
         CustomUser customUser = this.findByUsername(authentication.getName());
         if (customUser == null) {
-            return 0L;
+            throw new UserNotExistException("User " + authentication.getName() + " Not Exist");
         } else {
             return customUser.getId();
         }
