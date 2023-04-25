@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +19,9 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "asset_records")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AssetRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
