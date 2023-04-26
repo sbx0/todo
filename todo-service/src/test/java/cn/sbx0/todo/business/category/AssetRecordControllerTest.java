@@ -88,6 +88,37 @@ class AssetRecordControllerTest {
         assertNotNull(response);
     }
 
+    @Test
+    public void getRecentRecordTimeList() throws Exception {
+        List<String> list = new ArrayList<>();
+        list.add("2023-04-26");
+        list.add("2023-04-27");
+        list.add("2023-04-28");
+        list.add("2023-04-29");
+        list.add("2023-04-30");
+
+        given(service.getRecentRecordTimeList()).willReturn(Result.success(list));
+
+        String response = mockMvc.perform(get("/asset/record/getRecentRecordTimeList")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value("0"))
+                .andDo(
+                        document("AssetRecordList",
+                                responseFields(
+                                        fieldWithPath("data[]").description("Time"),
+                                        fieldWithPath("data").description("Data"),
+                                        fieldWithPath("success").description("Is success"),
+                                        fieldWithPath("code").description("Status Code"),
+                                        fieldWithPath("message").description("Message")
+                                )
+                        ))
+                .andReturn().getResponse().getContentAsString();
+
+        assertNotNull(response);
+    }
+
     @BeforeEach
     public void setUp(
             WebApplicationContext webApplicationContext,
