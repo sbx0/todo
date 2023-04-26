@@ -1,7 +1,6 @@
 package cn.sbx0.todo.business.asset.record;
 
 import cn.sbx0.todo.entity.DefaultPagingRequest;
-import cn.sbx0.todo.entity.PagingRequest;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -21,8 +20,8 @@ public class AssetRecordController {
     private AssetRecordService service;
 
     @GetMapping("/getRecords")
-    public Result<List<RecordItem>> getRecords() {
-        return service.getRecords();
+    public Result<List<RecordItem>> buildDataForEChart() {
+        return service.buildDataForEChart();
     }
 
     @GetMapping("/getRecentRecordTimeList")

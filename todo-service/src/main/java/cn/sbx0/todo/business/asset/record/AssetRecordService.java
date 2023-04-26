@@ -66,30 +66,16 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
         return entity;
     }
 
-    public Result<List<RecordItem>> getRecords() {
+    public Result<List<RecordItem>> buildDataForEChart() {
         Long loginUserId = clientUserService.getLoginUserId();
         List<RecordItem> records = new ArrayList<>();
         List<AssetType> types = assetTypeRepository.getTypes();
-        RecordItem totalRecordItem = new RecordItem();
-        totalRecordItem.setName("Total");
-        totalRecordItem.setType("line");
-        totalRecordItem.setStack("Total");
-        totalRecordItem.setYAxisIndex(0);
-        totalRecordItem.setSmooth(false);
-        totalRecordItem.setShowSymbol(false);
         List<BigDecimal> totalData = new ArrayList<>();
         List<String> recordTimeList = repository().getRecentRecordTimeList(loginUserId);
         for (int i = 0; i < recordTimeList.size(); i++) {
             totalData.add(new BigDecimal(0));
         }
         for (AssetType type : types) {
-            RecordItem record = new RecordItem();
-            record.setName(type.getTypeName());
-            record.setType("line");
-            record.setStack("Total");
-            record.setSmooth(false);
-            record.setShowSymbol(false);
-            record.setYAxisIndex((type.getId().intValue() - 1));
             List<AssetRecord> assetRecords = repository().getRecordsByTypeId(type.getId(), loginUserId);
             List<BigDecimal> data = new ArrayList<>();
             for (int i = 0; i < assetRecords.size(); i++) {
@@ -99,11 +85,25 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
                 bigDecimal = bigDecimal.add(assetRecord.getRecordValue());
                 totalData.set(i, bigDecimal);
             }
-            record.setData(data);
-            records.add(record);
+            records.add(RecordItem.builder()
+                    .name(type.getTypeName())
+                    .type("line")
+                    .stack("Total")
+                    .smooth(false)
+                    .showSymbol(false)
+                    .yAxisIndex((type.getId().intValue() - 1))
+                    .data(data)
+                    .build());
         }
-        totalRecordItem.setData(totalData);
-        records.add(totalRecordItem);
+        records.add(RecordItem.builder()
+                .name("Total")
+                .type("line")
+                .stack("Total")
+                .yAxisIndex(0)
+                .smooth(false)
+                .showSymbol(false)
+                .data(totalData)
+                .build());
         return Result.success(records);
     }
 
