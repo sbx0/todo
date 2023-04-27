@@ -5,12 +5,7 @@
 
 Target: Planning your time
 
-## Preview
+## Screenshot
 
-### Index
-
-![Index](https://s2.loli.net/2023/04/27/N8OtDfQFzdc4Hnm.png)
-
-### Calendar
-
-![Calendar](https://s2.loli.net/2023/04/27/C7GOzAodx5fkBgV.png)
+<img src="https://s2.loli.net/2023/04/27/N8OtDfQFzdc4Hnm.png" width="250" alt="Index"/>
+<img src="https://s2.loli.net/2023/04/27/C7GOzAodx5fkBgV.png" width="250" alt="Calendar"/>
