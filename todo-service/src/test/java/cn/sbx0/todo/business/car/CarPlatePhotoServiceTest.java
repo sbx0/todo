@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -35,6 +34,33 @@ class CarPlatePhotoServiceTest {
     private CarPlatePhotoService service;
     @Resource
     private CarPlatePhotoRepository repository;
+
+    @Test
+    public void save() {
+        given(repository.save(any())).willReturn(
+                CarPlatePhoto.builder()
+                        .id(1L)
+                        .carPlateNum("carPlateNum")
+                        .areaName("areaName")
+                        .createTime(LocalDateTime.now())
+                        .floorName("floorName")
+                        .imgUrl("imgUrl")
+                        .lotName("lotName")
+                        .parkNo("parkNo")
+                        .updateTime(LocalDateTime.now())
+                        .build()
+        );
+        Boolean result = service.save(CarPlatePhoto.builder()
+                .carPlateNum("carPlateNum")
+                .build());
+        assertTrue(result);
+    }
+
+    @Test
+    public void saveNull() {
+        Boolean result = service.save(null);
+        assertFalse(result);
+    }
 
     @Test
     public void getLastPhoto() {
