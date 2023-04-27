@@ -31,9 +31,20 @@ public interface AssetRecordRepository extends JpaRepository<AssetRecord, Long> 
     @Query(value = """
             SELECT *
             FROM asset_records
+            WHERE user_id = ?1
+            ORDER by record_time
+            limit 1000
+            """, nativeQuery = true)
+    List<AssetRecord> getRecordsByUser(Long userId);
+
+    @Query(value = """
+            SELECT *
+            FROM asset_records
             WHERE user_id = :#{#userId}
             AND type_id = :#{#entity.typeId}
             AND record_time = :#{#entity.recordTime}
             """, nativeQuery = true)
     AssetRecord findByTypeIdAndRecordTime(AssetRecord entity, Long userId);
+
+
 }

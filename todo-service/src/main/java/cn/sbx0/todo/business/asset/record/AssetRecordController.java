@@ -19,6 +19,11 @@ public class AssetRecordController {
     @Resource
     private AssetRecordService service;
 
+    @GetMapping("/flow")
+    public Result<List<AssetFlowRecord>> flow() {
+        return service.flow();
+    }
+
     @GetMapping("/getRecords")
     public Result<List<RecordItem>> buildDataForEChart() {
         return service.buildDataForEChart();

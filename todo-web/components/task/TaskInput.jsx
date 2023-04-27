@@ -65,7 +65,7 @@ export default function TaskInput({saveEvent, clickEvent, setLoading}) {
         <TaskCategory clickEvent={categoryClickEvent}/>
         <input type='text'
                id='taskInput'
-               placeholder={process.env.NODE_ENV === 'development' ? 'DEV VERSION WARNING' : '添加任务'}
+               placeholder={"添加任务"}
                className="input"
                value={newTask}
                onChange={(event) => setNewTask(event.target.value)}

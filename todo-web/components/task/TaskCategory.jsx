@@ -41,7 +41,7 @@ export default function TaskCategory({clickEvent}) {
                 <div className="categoryItemBackgroundColor">
                     <label className="categoryLabel"
                            htmlFor={'category_default'}>
-                        Default
+                        全部
                     </label>
                 </div>
             </div>
