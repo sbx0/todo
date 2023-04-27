@@ -37,6 +37,16 @@ class CarPlatePhotoServiceTest {
     private CarPlatePhotoRepository repository;
 
     @Test
+    public void getLastPhoto() {
+        String test = "test";
+        given(repository.getLastPhoto()).willReturn(test);
+
+        String lastPhoto = service.getLastPhoto();
+
+        assertEquals(test, lastPhoto);
+    }
+
+    @Test
     public void pagingWithDefault() {
         List<CarPlatePhoto> carPlatePhotos = new ArrayList<>();
         carPlatePhotos.add(CarPlatePhoto.builder()
