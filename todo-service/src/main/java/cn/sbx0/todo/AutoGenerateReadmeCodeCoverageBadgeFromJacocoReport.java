@@ -29,7 +29,21 @@ public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
         String replace = last.replace("</td><td class=\"ctr2\">", "-");
         String[] split = replace.split("-");
         System.out.println("increase test coverage to " + split[1]);
-        String url = "https://img.shields.io/badge/coverage-" + split[1] + "25-red.svg";
+        String percentString = split[1].replace("%", "");
+        int percent = Integer.parseInt(percentString);
+        String color;
+        if (percent < 60) {
+            color = "red";
+        } else if (percent < 70) {
+            color = "yellow";
+        } else if (percent < 80) {
+            color = "yellowgreen";
+        } else if (percent < 90) {
+            color = "green";
+        } else {
+            color = "brightgreen";
+        }
+        String url = "https://img.shields.io/badge/coverage-" + split[1] + "25-" + color + ".svg";
         path = Paths.get(currentPath + "\\README.md");
         String readme = Files.readString(path);
         String str = "[![coverage](";
