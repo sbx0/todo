@@ -21,7 +21,7 @@ public class ClientUserController {
     @Resource
     private ClientUserService service;
 
-    @PostMapping("/login")
+    @PostMapping("/handleLogin")
     public Result<String> login(Authentication authentication) {
         return Result.success(service.createToken(authentication, Instant.now()));
     }

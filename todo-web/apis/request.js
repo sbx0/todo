@@ -23,6 +23,7 @@ export async function callApi({
                                   method = 'GET',
                                   url,
                                   params,
+                                  body = null,
                                   headers = {
                                       'Accept': 'application/json',
                                       'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ export async function callApi({
         res = await fetch(url, {
             method: method,
             headers: headers,
-            body: JSON.stringify(params)
+            body: body == null ? JSON.stringify(params) : body
         });
     } else {
         res = await fetch(buildPath(url, params), {

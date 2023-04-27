@@ -42,7 +42,7 @@ public class SpringSecurityConfig {
     private RSAPrivateKey privateKey;
 
     @Resource
-    private RestAuthenticationFailureHandler restAuthenticationFailureHandler;
+    private RestAuthenticationFailureHandler failureHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +69,8 @@ public class SpringSecurityConfig {
                 ))
                 .formLogin()
                 .loginProcessingUrl("/user/client/login")
-                .failureHandler(restAuthenticationFailureHandler)
+                .successForwardUrl("/user/client/handleLogin")
+                .failureHandler(failureHandler)
                 .and()
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

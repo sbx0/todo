@@ -34,7 +34,7 @@ export default function Register() {
         });
     }
 
-    return <Container>
+    return <Container needLogin={false}>
         <div>
             <FoamBox>
                 <label htmlFor={"username"}>账户</label>
