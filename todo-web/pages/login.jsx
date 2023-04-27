@@ -37,13 +37,15 @@ export default function Login() {
         if (account == null || account.username == null || account.password == null) {
             return;
         }
-        const token = btoa(`${account.username}:${account.password}`);
+        const formData = new URLSearchParams();
+        formData.append("username", account.username);
+        formData.append("password", account.password);
         callApi({
             method: POST,
             url: "/api/user/client/login",
+            body: formData,
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + token,
+                'Content-Type': 'application/x-www-form-urlencoded',
             }
         }).then(r => {
             if (!r.success) {

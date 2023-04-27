@@ -5,18 +5,20 @@ import {callApi} from "../apis/request";
 import {setCookie} from "../apis/cookies";
 import {useRouter} from "next/router";
 
-export default function Container({children}) {
+export default function Container({children, needLogin = true}) {
     const router = useRouter()
 
     useEffect(() => {
-        callApi({url: "/api/user/client/token"}).then(r => {
-            if (!r.success) {
-                console.error(r.message);
-                router.push('/login').then(r => r);
-            } else {
-                setCookie('token', r.data);
-            }
-        });
+        if (needLogin) {
+            callApi({url: "/api/user/client/token"}).then(r => {
+                if (!r.success) {
+                    console.error(r.message);
+                    router.push('/login').then(r => r);
+                } else {
+                    setCookie('token', r.data);
+                }
+            });
+        }
     }, [])
 
     return <div className="main">
