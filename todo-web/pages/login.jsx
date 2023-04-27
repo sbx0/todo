@@ -9,12 +9,15 @@ import {POST} from "../apis/apiPath";
 import {getCookie, removeCookie, setCookie} from "../apis/cookies";
 import {DeviceMobileIcon} from "@primer/octicons-react";
 import {useRouter} from "next/router";
+import Model from "../components/model/Model";
 
 export default function Login() {
     const router = useRouter();
     const [account, setAccount] = useState(null);
     const [token, setToken] = useState(null);
     const [clientInfo, setClientInfo] = useState(null);
+    const [modelShow, setModelShow] = useState(false);
+    const [modelMessage, setModelMessage] = useState("");
 
     useEffect(() => {
         callApi({url: "/api/user/client/info"}).then(r => {
@@ -44,7 +47,8 @@ export default function Login() {
             }
         }).then(r => {
             if (!r.success) {
-                console.error(r.message)
+                setModelMessage(r.message);
+                setModelShow(true);
             } else {
                 setCookie('token', r.data);
                 setToken(r.data);
@@ -125,6 +129,9 @@ export default function Login() {
                 </FoamBox>
             </div>
         }
+        <Model show={modelShow} close={() => setModelShow(false)}>
+            <p className={"textCentered"}>{modelMessage}</p>
+        </Model>
         <NavigationBar active={4}/>
         <style jsx>{`
           .leftAndRight {
@@ -139,6 +146,10 @@ export default function Login() {
 
           .leftAndRight .right {
             text-align: right;
+          }
+
+          .textCentered {
+            text-align: center;
           }
         `}</style>
     </Container>
