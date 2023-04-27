@@ -1,21 +1,25 @@
 package cn.sbx0.todo.business.car.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author sbx0
  * @since 2023/3/3
  */
-@Data
+@Setter
+@Getter
 public class CarPlatePhotoResponse {
     private ResponseData data;
 
-    @Data
+    @Setter
+    @Getter
     public static class ResponseData {
 
         private CarPlaceInfo carPlaceInfo;
 
-        @Data
+        @Setter
+        @Getter
         public static class CarPlaceInfo {
 
             private String carPlateNum;
@@ -25,7 +29,8 @@ public class CarPlatePhotoResponse {
             private String areaName;
             private String imgUrl;
 
-            @Data
+            @Setter
+            @Getter
             public static class FloorInfo {
                 private String floorName;
             }

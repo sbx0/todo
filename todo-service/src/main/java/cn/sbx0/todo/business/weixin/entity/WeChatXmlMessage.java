@@ -2,13 +2,13 @@ package cn.sbx0.todo.business.weixin.entity;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * @author sbx0
  * @since 2023/3/22
  */
-@Data
+@Getter
 @JacksonXmlRootElement(localName = "xml")
 public class WeChatXmlMessage {
     @JacksonXmlProperty(localName = "FromUserName")
@@ -27,9 +27,6 @@ public class WeChatXmlMessage {
     private String event;
     @JacksonXmlProperty(localName = "EventKey")
     private String eventKey;
-
-    public WeChatXmlMessage() {
-    }
 
     public WeChatXmlMessage(Builder builder) {
         this.fromUserName = builder.fromUserName;
