@@ -1,7 +1,6 @@
 package cn.sbx0.todo.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,15 +10,15 @@ import java.util.List;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PagingRequest {
 
     protected Integer page;
     protected Integer pageSize;
 
     List<OrderRequest> orders;
-
-    public PagingRequest() {
-    }
 
     public PagingRequest(Integer page, Integer pageSize) {
         this.page = page;

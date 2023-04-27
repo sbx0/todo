@@ -15,8 +15,10 @@ import java.nio.file.Paths;
  * @since 2023/4/12
  */
 public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
+
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("D:\\Workspace\\IdeaProjects\\todo\\todo-service\\build\\reports\\jacoco\\test\\html\\index.html");
+        String currentPath = System.getProperty("user.dir");
+        Path path = Paths.get(currentPath + "\\todo-service\\build\\reports\\jacoco\\test\\html\\index.html");
         String content = Files.readString(path);
         String head = "</thead><tfoot><tr><td>Total</td><td class=\"bar\">";
         int beginIndex = content.indexOf(head);
@@ -27,8 +29,22 @@ public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
         String replace = last.replace("</td><td class=\"ctr2\">", "-");
         String[] split = replace.split("-");
         System.out.println("increase test coverage to " + split[1]);
-        String url = "https://img.shields.io/badge/coverage-" + split[1] + "25-red.svg";
-        path = Paths.get("D:\\Workspace\\IdeaProjects\\todo\\README.md");
+        String percentString = split[1].replace("%", "");
+        int percent = Integer.parseInt(percentString);
+        String color;
+        if (percent < 60) {
+            color = "red";
+        } else if (percent < 70) {
+            color = "yellow";
+        } else if (percent < 80) {
+            color = "yellowgreen";
+        } else if (percent < 90) {
+            color = "green";
+        } else {
+            color = "brightgreen";
+        }
+        String url = "https://img.shields.io/badge/coverage-" + split[1] + "25-" + color + ".svg";
+        path = Paths.get(currentPath + "\\README.md");
         String readme = Files.readString(path);
         String str = "[![coverage](";
         beginIndex = readme.indexOf(str);
@@ -36,7 +52,8 @@ public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
         endIndex = readme.indexOf(")](https://todo-code-coverage.sbx0.cn/)");
         newReadme += url;
         newReadme += readme.substring(endIndex);
-        write("D:\\Workspace\\IdeaProjects\\todo\\README.md", newReadme);
+        newReadme = newReadme.trim();
+        write(currentPath + "\\README.md", newReadme);
     }
 
     public static void write(String file, String content) throws IOException {
