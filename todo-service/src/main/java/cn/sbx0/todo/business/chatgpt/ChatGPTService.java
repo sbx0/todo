@@ -36,6 +36,10 @@ public class ChatGPTService {
     private String apiKey;
     private OpenAiService openAiService;
 
+    public void setOpenAiService(OpenAiService openAiService) {
+        this.openAiService = openAiService;
+    }
+
     public Boolean addMessage(ChatGPTMessage message) {
         if (RECEIVE_QUEUE.size() == MAX_HANDLED) {
             return false;
@@ -103,4 +107,5 @@ public class ChatGPTService {
         weChatMessage.setText(new WeChatMessage.WeChatMessageContext(message.getResponse()));
         weChatService.sendMessage(weChatMessage);
     }
+
 }

@@ -2,7 +2,6 @@ package cn.sbx0.todo.business.category;
 
 import cn.sbx0.todo.business.asset.record.AssetRecordController;
 import cn.sbx0.todo.business.asset.record.AssetRecordService;
-import cn.sbx0.todo.business.asset.record.RecordItem;
 import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
@@ -47,46 +46,6 @@ class AssetRecordControllerTest {
     protected MockMvc mockMvc;
     @Resource
     private AssetRecordService service;
-
-    @Test
-    public void buildDataForEChart() throws Exception {
-        List<RecordItem> list = new ArrayList<>();
-        list.add(RecordItem.builder()
-                .name("Total")
-                .type("line")
-                .stack("Total")
-                .yAxisIndex(0)
-                .smooth(false)
-                .showSymbol(false)
-                .build());
-
-        given(service.buildDataForEChart()).willReturn(Result.success(list));
-
-        String response = mockMvc.perform(get("/asset/record/getRecords")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("code").value("0"))
-                .andDo(
-                        document("AssetRecordList",
-                                responseFields(
-                                        fieldWithPath("data[].name").description("Name"),
-                                        fieldWithPath("data[].type").description("Type"),
-                                        fieldWithPath("data[].stack").description("Stack"),
-                                        fieldWithPath("data[].yAxisIndex").description("YAxisIndex"),
-                                        fieldWithPath("data[].smooth").description("Smooth"),
-                                        fieldWithPath("data[].showSymbol").description("ShowSymbol"),
-                                        fieldWithPath("data[].data").description("Real Data"),
-                                        fieldWithPath("data").description("Data"),
-                                        fieldWithPath("success").description("Is success"),
-                                        fieldWithPath("code").description("Status Code"),
-                                        fieldWithPath("message").description("Message")
-                                )
-                        ))
-                .andReturn().getResponse().getContentAsString();
-
-        assertNotNull(response);
-    }
 
     @Test
     public void getRecentRecordTimeList() throws Exception {

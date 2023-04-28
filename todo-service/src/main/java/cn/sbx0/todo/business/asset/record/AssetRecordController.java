@@ -24,11 +24,6 @@ public class AssetRecordController {
         return service.flow();
     }
 
-    @GetMapping("/getRecords")
-    public Result<List<RecordItem>> buildDataForEChart() {
-        return service.buildDataForEChart();
-    }
-
     @GetMapping("/getRecentRecordTimeList")
     public Result<List<String>> getRecentRecordTimeList() {
         return service.getRecentRecordTimeList();

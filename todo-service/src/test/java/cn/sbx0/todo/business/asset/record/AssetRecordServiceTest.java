@@ -4,13 +4,18 @@ import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.exception.NoPermissionException;
 import cn.sbx0.todo.repositories.AssetRecordRepository;
 import cn.sbx0.todo.repositories.AssetTypeRepository;
+import cn.sbx0.todo.service.common.Code;
+import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +37,42 @@ class AssetRecordServiceTest {
     private AssetTypeRepository assetTypeRepository;
     @Resource
     private ClientUserService clientUserService;
+
+
+    @Test
+    public void flow() {
+        long userId = 1L;
+        given(clientUserService.getLoginUserId()).willReturn(userId);
+        List<AssetRecord> assetRecords = new ArrayList<>();
+        assetRecords.add(AssetRecord.builder()
+                .recordTime(LocalDateTime.now())
+                .recordValue(new BigDecimal("10000"))
+                .build());
+        assetRecords.add(AssetRecord.builder()
+                .recordTime(LocalDateTime.now())
+                .recordValue(new BigDecimal("20000"))
+                .build());
+        assetRecords.add(AssetRecord.builder()
+                .recordTime(LocalDateTime.now().minusDays(1))
+                .recordValue(new BigDecimal("30000"))
+                .build());
+        given(repository.getRecordsByUser(userId)).willReturn(assetRecords);
+
+        Result<List<AssetFlowRecord>> result = service.flow();
+        assertNotNull(result);
+        assertTrue(result.getSuccess());
+        assertEquals(Code.SUCCESS, result.getCode());
+        assertNotNull(result.getData());
+        assertFalse(CollectionUtils.isEmpty(result.getData()));
+        List<AssetFlowRecord> data = result.getData();
+        assertEquals(2, data.size());
+        AssetFlowRecord one = data.get(0);
+        assertNotNull(one);
+        assertEquals(new BigDecimal("30000"), one.getTotal());
+        AssetFlowRecord two = data.get(1);
+        assertNotNull(two);
+        assertEquals(new BigDecimal("30000"), two.getTotal());
+    }
 
 
     @Test
