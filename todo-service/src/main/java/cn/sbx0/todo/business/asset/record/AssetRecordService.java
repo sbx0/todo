@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,7 +109,7 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
         for (int i = 0; i < results.size() - 1; i++) {
             AssetFlowRecord a = results.get(i);
             AssetFlowRecord b = results.get(i + 1);
-            long days = Duration.between(b.getTime(), a.getTime()).toDays();
+            long days = DateUtils.between(b.getTime(), a.getTime());
             a.setDays(days);
             a.setGrowth(growthPerDay(a.getTotal(), b.getTotal(), days));
             a.setGrowthRate(growthRate(a.getTotal(), b.getTotal()));
