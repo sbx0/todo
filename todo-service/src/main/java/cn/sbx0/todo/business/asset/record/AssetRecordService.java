@@ -157,9 +157,17 @@ public class AssetRecordService extends JpaService<AssetRecordRepository, AssetR
             AssetFlowRecord b = results.get(i + 1);
             long days = Duration.between(b.getTime(), a.getTime()).toDays();
             a.setDays(days);
-            a.setGrowth(a.getTotal().subtract(b.getTotal()).divide(new BigDecimal(days), 2, RoundingMode.HALF_UP));
-            a.setGrowthRate(a.getTotal().subtract(b.getTotal()).divide(b.getTotal(), 2, RoundingMode.HALF_UP));
+            a.setGrowth(growthPerDay(a.getTotal(), b.getTotal(), days));
+            a.setGrowthRate(growthRate(a.getTotal(), b.getTotal()));
         }
         return Result.success(results);
+    }
+
+    public static BigDecimal growthPerDay(BigDecimal startValue, BigDecimal endValue, long days) {
+        return startValue.subtract(endValue).divide(new BigDecimal(days), 2, RoundingMode.HALF_UP);
+    }
+
+    public static BigDecimal growthRate(BigDecimal startValue, BigDecimal endValue) {
+        return startValue.subtract(endValue).divide(endValue, 2, RoundingMode.HALF_UP);
     }
 }

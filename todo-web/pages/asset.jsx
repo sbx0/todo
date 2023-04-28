@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import RecordValue from "../components/asset/RecordValue";
 import RecordTime from "../components/asset/RecordTime";
 import moment from "moment";
+import Button from "../components/basic/Button";
 
 
 export default function Asset() {
@@ -16,6 +17,7 @@ export default function Asset() {
         recordValue: 0.00,
         recordTime: moment(moment.now()).format('yyyy-MM-DD')
     });
+    const [flows, setFlows] = useState([]);
 
     useEffect(() => {
         getAssetType();
@@ -25,10 +27,11 @@ export default function Asset() {
     function getFlow() {
         callApi({
             method: GET,
-            url: API + "/asset/record/flow",
-            params: asset
+            url: API + "/asset/record/flow"
         }).then(r => {
-
+            if (r.success) {
+                setFlows(r.data);
+            }
         })
     }
 
@@ -41,11 +44,14 @@ export default function Asset() {
             url: API + "/asset/record/save",
             params: asset
         }).then(r => {
-            setAsset({
-                ...asset,
-                recordValue: 0.00,
-                recordTime: moment(moment.now()).format('yyyy-MM-DD')
-            });
+            if (r.success) {
+                setAsset({
+                    ...asset,
+                    recordValue: 0.00,
+                    recordTime: moment(moment.now()).format('yyyy-MM-DD')
+                });
+                getFlow();
+            }
         })
     }
 
@@ -83,8 +89,31 @@ export default function Asset() {
                      callback={setRecordValue}/>
         <RecordTime value={asset.recordTime}
                     callback={setRecordTime}/>
-        <button style={{width: '100%', height: '40px', margin: '5px auto'}} onClick={saveAsset}>Save</button>
+        <Button onClick={saveAsset}>保存</Button>
+
+        {
+            flows.map((one, index) => {
+                return <div key={index} className={"card"}>
+                    <div>{one.date}</div>
+                    <div>{one.growth}</div>
+                    <div>{(one.growthRate * 100).toFixed(0) + '%'}</div>
+                    <div>{one.total}</div>
+                </div>
+            })
+        }
 
         <NavigationBar active={2}/>
+        <style jsx>{`
+          .card {
+            width: 100%;
+            margin: 10px 0 0 0;
+            padding: 10px;
+            background: #262a2d;
+            border-radius: 5px;
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            text-align: center;
+          }
+        `}</style>
     </Container>
 }
