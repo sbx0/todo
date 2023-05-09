@@ -10,18 +10,6 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: none
-      hbm2ddl:
-        schema-generation:
-          script:
-            append: false
-    properties:
-      jakarta:
-        persistence:
-          schema-generation:
-            create-source: metadata
-            scripts:
-              action: create
-              create-target: ./todo-service/src/main/resources/db/auto/generate.sql
     open-in-view: false
   data:
     redis:
