@@ -77,6 +77,7 @@ export default function NavigationBar({active}) {
             position: fixed;
             bottom: 0;
             left: 0;
+            z-index: 9999;
           }
 
           .centerContainer {
@@ -90,7 +91,6 @@ export default function NavigationBar({active}) {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 9999;
             display: inline-grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
           }
