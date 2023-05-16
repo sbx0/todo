@@ -14,6 +14,7 @@ export default function TaskDetail({data, change}) {
     const [planTimeShow, setPlanTimeShow] = useState(false);
 
     function setDeadline(key) {
+        let monday;
         switch (key) {
             case 0:
                 task.planTime = null;
@@ -27,12 +28,18 @@ export default function TaskDetail({data, change}) {
                 task.planTime = moment().add(1, 'days').format('yyyy-MM-DD') + ' 23:59:59';
                 break;
             case 3:
+                // this weekend
+                monday = moment().startOf('week');
+                let thisWeekend = monday.add(5, 'days').format('yyyy-MM-DD') + ' 23:59:59';
+                task.planTime = thisWeekend;
+                break;
+            case 4:
                 // next week
-                let monday = moment().startOf('week');
+                monday = moment().startOf('week');
                 let nextMonday = monday.add(1, 'weeks').format('yyyy-MM-DD') + ' 23:59:59';
                 task.planTime = nextMonday;
                 break;
-            case 4:
+            case 5:
                 // next month
                 let start = moment().startOf('month');
                 let nextMonthStart = start.add(1, 'months').format('yyyy-MM-DD') + ' 23:59:59';
@@ -121,8 +128,9 @@ export default function TaskDetail({data, change}) {
                        {key: 0, name: '清除', value: 'clear'},
                        {key: 1, name: '今天', value: 'today'},
                        {key: 2, name: '明天', value: 'tomorrow'},
-                       {key: 3, name: '下周', value: 'next week'},
-                       {key: 4, name: '下个月', value: 'next month'},
+                       {key: 3, name: '周末', value: 'this weekend'},
+                       {key: 4, name: '下周', value: 'next week'},
+                       {key: 5, name: '下个月', value: 'next month'},
                    ]}
                    other={
                        <div>
