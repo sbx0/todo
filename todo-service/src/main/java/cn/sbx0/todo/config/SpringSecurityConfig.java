@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -28,6 +27,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import javax.sql.DataSource;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * @author sbx0
@@ -48,7 +49,7 @@ public class SpringSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-                .cors().and()
+                .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
                                 "/wechat/auth",
@@ -67,12 +68,12 @@ public class SpringSecurityConfig {
                         "/user/client/register",
                         "/user/client/login"
                 ))
-                .formLogin()
-                .loginProcessingUrl("/user/client/login")
-                .successForwardUrl("/user/client/handleLogin")
-                .failureHandler(failureHandler)
-                .and()
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .formLogin(
+                        formLogin -> formLogin.loginProcessingUrl("/user/client/login")
+                                .successForwardUrl("/user/client/handleLogin")
+                                .failureHandler(failureHandler)
+                )
+                .oauth2ResourceServer(oauth2  -> oauth2.jwt(withDefaults()))
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
