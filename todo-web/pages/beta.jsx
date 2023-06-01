@@ -1,6 +1,9 @@
 import {CircleIcon} from "@primer/octicons-react";
+import {useRef, useState} from "react";
 
 export default function Beta() {
+    const moveRef = useRef(null);
+    const [markCompletedShow, setMarkCompletedShow] = useState(false);
     return <div className="main">
         <div className="leftNavBar">
             <div>
@@ -9,26 +12,50 @@ export default function Beta() {
         </div>
         <div className="rightContainer">
             <div className="taskContainer">
-                <div className="taskItem">
+                <div draggable="true"
+                     onDragStart={(event) => {
+                         event.dataTransfer.dropEffect = "move";
+                         setMarkCompletedShow(true);
+                         moveRef.current = event.target;
+                     }}
+                     className="taskItem">
                     <div className="taskTime"><CircleIcon/></div>
                     <div/>
-                    <div>content</div>
+                    <div>任务1</div>
                     <div/>
                     <div><span className="taskTime">time</span></div>
                 </div>
-                <div className="taskItem">
+                <div draggable="true"
+                     onDragStart={(event) => {
+                         event.dataTransfer.dropEffect = "move";
+                         setMarkCompletedShow(true);
+                         moveRef.current = event.target;
+                     }}
+                     className="taskItem">
                     <div className="taskTime"><CircleIcon/></div>
                     <div/>
-                    <div>content</div>
+                    <div>任务2</div>
                     <div/>
                     <div><span className="taskTime">time</span></div>
                 </div>
-                <div className="taskItem">
-                    <div className="taskTime"><CircleIcon/></div>
-                    <div/>
-                    <div>content</div>
-                    <div/>
-                    <div><span className="taskTime">time</span></div>
+            </div>
+            <div onDrop={(event) => {
+                event.preventDefault();
+                console.log(event.target.className)
+                if (event.target.className.indexOf("dropzone") !== -1) {
+                    moveRef.current.parentNode.removeChild(moveRef.current);
+                    event.target.parentNode.parentNode.parentNode.appendChild(moveRef.current);
+                    setMarkCompletedShow(false);
+                }
+            }}
+                 onDragOver={(event) => event.preventDefault()}
+                 className={`taskContainer ${markCompletedShow ? 'markCompleted' : ''}`}>
+                <div className={`filler`} hidden={!markCompletedShow}>
+                    <div className="textCenteredHorizontally">
+                        <div className={`textCenteredVertically dropzone`}>
+                            放置此处标记已完成
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,6 +75,7 @@ export default function Beta() {
 
           .rightContainer {
             margin: 0 0;
+            padding: 10px;
             height: 100vh;
             background-color: #f3f3f3;
           }
@@ -82,6 +110,29 @@ export default function Beta() {
 
           .taskTime {
             color: #9b9b9b;
+          }
+
+          .markCompleted {
+            margin: 0 auto;
+            box-shadow: 0 1px 4px rgba(20, 255, 0, 0.34), 0 2px 18px rgba(20, 255, 0, 0.34);
+            border-radius: 8px;
+            color: rgba(110, 110, 110, 0.45);
+          }
+
+          .filler {
+            min-height: 50px;
+          }
+
+          .textCenteredHorizontally {
+            height: 100%;
+            text-align: center;
+            width: 100%;
+            display: table;
+          }
+
+          .textCenteredVertically {
+            display: table-cell;
+            vertical-align: middle;
           }
 
         `}</style>
