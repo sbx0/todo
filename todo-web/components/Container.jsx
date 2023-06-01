@@ -36,11 +36,13 @@ export default function Container({children, needLogin = true}) {
         </main>
         <style jsx>{`
           .main {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
             overflow-y: auto;
             overflow-x: hidden;
             padding: 10px 10px 50px 10px;
+            color: white;
+            background: black;
           }
 
           .main::-webkit-scrollbar-track {
