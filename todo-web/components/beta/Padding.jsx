@@ -1,7 +1,7 @@
 import styles from "./Padding.module.css";
 
-export default function Padding({children, hidden}) {
-    return <div className={styles.padding} hidden={hidden}>
+export default function Padding({children, className, hidden}) {
+    return <div className={`${styles.padding} ${className}`} hidden={hidden}>
         {children}
     </div>
 }

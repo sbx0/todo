@@ -26,3 +26,9 @@
 .taskTime {
     color: #9b9b9b;
 }
+
+.something {
+    background-color: #e8e8e8;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}

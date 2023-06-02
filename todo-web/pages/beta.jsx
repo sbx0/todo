@@ -1,24 +1,21 @@
 import styles from "../styles/Beta.module.css"
-import animations from "../styles/animation.module.css";
-import {useState} from "react";
-import TextCentered from "../components/basic/TextCentered";
+import {useEffect, useState} from "react";
 import TaskItem from "../components/beta/TaskItem";
 import Padding from "../components/beta/Padding";
 
 export default function Beta() {
-    const [markCompletedShow, setMarkCompletedShow] = useState(false);
-    const [tasks, setTasks] = useState([
-        {id: 1, name: "任务1", time: "2023-06-02"},
-        {id: 2, name: "任务2", time: "2023-06-01"},
-        {id: 3, name: "任务3", time: "2023-06-05"},
-    ]);
+    const [tasks, setTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
 
-    const taskItemOnDragStart = (event) => {
-        setMarkCompletedShow(true);
-    }
+    useEffect(() => {
+        let newTasks = [];
+        for (let i = 0; i < 9; i++) {
+            newTasks.push({id: i + 1, name: "任务" + (i + 1), time: "2023-06-02 " + i})
+        }
+        setTasks(newTasks);
+    }, [])
 
-    const onDrop = (event) => {
+    const onDropRight = (event) => {
         let id = parseInt(event.dataTransfer.getData('text'));
         let newTasks = [];
         for (let i = 0; i < tasks.length; i++) {
@@ -32,7 +29,24 @@ export default function Beta() {
         }
         setTasks(newTasks);
         setCompletedTasks([...completedTasks]);
-        setMarkCompletedShow(false);
+        event.preventDefault();
+    }
+
+    const onDropCenter = (event) => {
+        let id = parseInt(event.dataTransfer.getData('text'));
+        let newTasks = [];
+        for (let i = 0; i < completedTasks.length; i++) {
+            if (completedTasks[i].id !== id) {
+                newTasks.push(completedTasks[i]);
+            } else {
+                tasks.reverse();
+                tasks.push(completedTasks[i]);
+                tasks.reverse();
+            }
+        }
+        setCompletedTasks(newTasks);
+        setTasks([...tasks]);
+        event.preventDefault();
     }
 
     return <div className={`${styles.main}`}>
@@ -41,34 +55,27 @@ export default function Beta() {
 
             </Padding>
         </div>
-        <div className={`${styles.centerContainer}`}>
+        <div className={`${styles.centerContainer}`}
+             onDrop={onDropCenter}
+             onDragOver={(event) => event.preventDefault()}>
             <Padding>
                 <div className={`${styles.taskContainer}`}>
                     {tasks.map((one) =>
-                        <TaskItem draggable={true}
-                                  onDragStart={taskItemOnDragStart}
+                        <TaskItem draggable
                                   task={one}
                                   key={one.id}/>
                     )}
                 </div>
             </Padding>
         </div>
-        <div className={`${styles.rightContainer}`}>
-            <Padding hidden={!markCompletedShow}>
-                <div onDrop={onDrop}
-                     onDragOver={(event) => event.preventDefault()}
-                     className={`${styles.taskContainer} ${animations.scaleInCenter} ${markCompletedShow ? styles.markCompleted : ''}`}>
-                    <div className={`${styles.filler}`}>
-                        <TextCentered className={`${styles.dropzone}`}>
-                            放置此处标记已完成
-                        </TextCentered>
-                    </div>
-                </div>
-            </Padding>
+        <div className={`${styles.rightContainer}`}
+             onDrop={onDropRight}
+             onDragOver={(event) => event.preventDefault()}>
             <Padding>
                 <div className={`${styles.taskContainer}`}>
                     {completedTasks.map((one) =>
-                        <TaskItem task={one}
+                        <TaskItem draggable
+                                  task={one}
                                   key={one.id}/>
                     )}
                 </div>
