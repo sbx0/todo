@@ -25,10 +25,10 @@
 
 .taskContainer {
     display: grid;
-    gap: 10px;
     grid-template-columns: 1fr;
     max-width: 714px;
     margin: 0 auto;
+    transition: transform 200ms ease 0s;
 }
 
 .markCompleted {

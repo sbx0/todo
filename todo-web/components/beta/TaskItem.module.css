@@ -11,6 +11,12 @@
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.taskItem:last-child {
+    margin-bottom: 0;
 }
 
 .taskItem:hover {

@@ -1,4 +1,5 @@
 import styles from "../styles/Beta.module.css"
+import animations from "../styles/animation.module.css";
 import {useState} from "react";
 import TextCentered from "../components/basic/TextCentered";
 import TaskItem from "../components/beta/TaskItem";
@@ -24,7 +25,9 @@ export default function Beta() {
             if (tasks[i].id !== id) {
                 newTasks.push(tasks[i]);
             } else {
+                completedTasks.reverse();
                 completedTasks.push(tasks[i]);
+                completedTasks.reverse();
             }
         }
         setTasks(newTasks);
@@ -41,11 +44,11 @@ export default function Beta() {
         <div className={`${styles.centerContainer}`}>
             <Padding>
                 <div className={`${styles.taskContainer}`}>
-                    {tasks.map((one, index) =>
+                    {tasks.map((one) =>
                         <TaskItem draggable={true}
                                   onDragStart={taskItemOnDragStart}
                                   task={one}
-                                  key={index}/>
+                                  key={one.id}/>
                     )}
                 </div>
             </Padding>
@@ -54,7 +57,7 @@ export default function Beta() {
             <Padding hidden={!markCompletedShow}>
                 <div onDrop={onDrop}
                      onDragOver={(event) => event.preventDefault()}
-                     className={`${styles.taskContainer} ${markCompletedShow ? styles.markCompleted : ''}`}>
+                     className={`${styles.taskContainer} ${animations.scaleInCenter} ${markCompletedShow ? styles.markCompleted : ''}`}>
                     <div className={`${styles.filler}`}>
                         <TextCentered className={`${styles.dropzone}`}>
                             放置此处标记已完成
@@ -64,9 +67,9 @@ export default function Beta() {
             </Padding>
             <Padding>
                 <div className={`${styles.taskContainer}`}>
-                    {completedTasks.map((one, index) =>
+                    {completedTasks.map((one) =>
                         <TaskItem task={one}
-                                  key={index}/>
+                                  key={one.id}/>
                     )}
                 </div>
             </Padding>
