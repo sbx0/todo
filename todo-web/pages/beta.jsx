@@ -1,3 +1,4 @@
+import styles from "../styles/Beta.module.css"
 import {useRef, useState} from "react";
 import TextCentered from "../components/basic/TextCentered";
 import TaskItem from "../components/beta/TaskItem";
@@ -5,119 +6,48 @@ import TaskItem from "../components/beta/TaskItem";
 export default function Beta() {
     const moveRef = useRef(null);
     const [markCompletedShow, setMarkCompletedShow] = useState(false);
+    const [tasks, setTasks] = useState([
+        {name: "任务1", time: "2023-06-02"},
+        {name: "任务2", time: "2023-06-01"},
+        {name: "任务3", time: "2023-06-05"},
+    ]);
 
     const taskItemOnDragStart = (event) => {
         setMarkCompletedShow(true);
         moveRef.current = event.target;
     }
 
-    return <div className="main">
-        <div className="leftNavBar">
+    return <div className={`${styles.main}`}>
+        <div className={`${styles.leftNavBar}`}>
             <div>
 
             </div>
         </div>
-        <div className="rightContainer">
-            <div className="taskContainer">
-                <TaskItem onDragStart={taskItemOnDragStart}
-                          task={{name: "任务1", time: "2023-06-02"}}/>
-                <TaskItem onDragStart={taskItemOnDragStart}
-                          task={{name: "任务2", time: "2023-06-03"}}/>
+        <div className={`${styles.rightContainer}`}>
+            <div className={`${styles.taskContainer}`}>
+                {tasks.map((one, index) =>
+                    <TaskItem onDragStart={taskItemOnDragStart}
+                              task={one}
+                              key={index}/>
+                )}
             </div>
             <div onDrop={(event) => {
                 event.preventDefault();
                 console.log(event.target.className)
-                if (event.target.className.indexOf("dropzone") !== -1) {
+                if (event.target.className.indexOf(styles.dropzone) !== -1) {
                     moveRef.current.parentNode.removeChild(moveRef.current);
                     event.target.parentNode.parentNode.parentNode.appendChild(moveRef.current);
                     setMarkCompletedShow(false);
                 }
             }}
                  onDragOver={(event) => event.preventDefault()}
-                 className={`taskContainer ${markCompletedShow ? 'markCompleted' : ''}`}>
-                <div className={`filler`} hidden={!markCompletedShow}>
-                    <TextCentered className={`dropzone`}>
+                 className={`${styles.taskContainer} ${markCompletedShow ? styles.markCompleted : ''}`}>
+                <div className={`${styles.filler}`} hidden={!markCompletedShow}>
+                    <TextCentered className={`${styles.dropzone}`}>
                         放置此处标记已完成
                     </TextCentered>
                 </div>
             </div>
         </div>
-        <style jsx>{`
-          .main {
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: 2fr 8fr;
-          }
-
-          .leftNavBar {
-            margin: 0 0;
-            height: 100vh;
-            background-color: #eaeaea;
-          }
-
-          .rightContainer {
-            margin: 0 0;
-            padding: 10px;
-            height: 100vh;
-            background-color: #f3f3f3;
-          }
-
-          .taskContainer {
-            display: grid;
-            gap: 10px;
-            grid-template-columns: 1fr;
-            padding: 10px;
-            max-width: 714px;
-            margin: 0 auto;
-          }
-
-          .taskItem {
-            padding: 12px 16px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            background-color: #fff;
-            display: grid;
-            grid-template-areas: "checkbox . content . time";
-            grid-template-columns: auto 16px 1fr 16px auto;
-            overflow: hidden;
-            transition: color 200ms, background-color 200ms;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-          }
-
-          .taskItem:hover {
-            background-color: #f7f7f7;
-          }
-
-          .taskTime {
-            color: #9b9b9b;
-          }
-
-          .markCompleted {
-            margin: 0 auto;
-            box-shadow: 0 1px 4px rgba(20, 255, 0, 0.34), 0 2px 18px rgba(20, 255, 0, 0.34);
-            border-radius: 8px;
-            color: rgba(110, 110, 110, 0.45);
-          }
-
-          .filler {
-            min-height: 50px;
-          }
-
-          .textCenteredHorizontally {
-            height: 100%;
-            text-align: center;
-            width: 100%;
-            display: table;
-          }
-
-          .textCenteredVertically {
-            display: table-cell;
-            vertical-align: middle;
-          }
-
-        `}</style>
     </div>
 }
