@@ -1,0 +1,11 @@
+.textCenteredHorizontally {
+    height: 100%;
+    text-align: center;
+    width: 100%;
+    display: table;
+}
+
+.textCenteredVertically {
+    display: table-cell;
+    vertical-align: middle;
+}

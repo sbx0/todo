@@ -1,5 +1,6 @@
 import {CircleIcon} from "@primer/octicons-react";
 import {useRef, useState} from "react";
+import TextCentered from "../components/basic/TextCentered";
 
 export default function Beta() {
     const moveRef = useRef(null);
@@ -51,11 +52,9 @@ export default function Beta() {
                  onDragOver={(event) => event.preventDefault()}
                  className={`taskContainer ${markCompletedShow ? 'markCompleted' : ''}`}>
                 <div className={`filler`} hidden={!markCompletedShow}>
-                    <div className="textCenteredHorizontally">
-                        <div className={`textCenteredVertically dropzone`}>
-                            放置此处标记已完成
-                        </div>
-                    </div>
+                    <TextCentered className={`dropzone`}>
+                        放置此处标记已完成
+                    </TextCentered>
                 </div>
             </div>
         </div>
