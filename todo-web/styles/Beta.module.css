@@ -2,7 +2,7 @@
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-columns: 2fr 8fr;
+    grid-template-columns: 2fr 4fr 4fr;
 }
 
 .leftNavBar {
@@ -11,17 +11,22 @@
     background-color: #eaeaea;
 }
 
-.rightContainer {
+.centerContainer {
     margin: 0 0;
     height: 100vh;
     background-color: #f3f3f3;
+}
+
+.rightContainer {
+    margin: 0 0;
+    height: 100vh;
+    background-color: #ffffff;
 }
 
 .taskContainer {
     display: grid;
     gap: 10px;
     grid-template-columns: 1fr;
-    padding: 10px;
     max-width: 714px;
     margin: 0 auto;
 }

@@ -1,53 +1,75 @@
 import styles from "../styles/Beta.module.css"
-import {useRef, useState} from "react";
+import {useState} from "react";
 import TextCentered from "../components/basic/TextCentered";
 import TaskItem from "../components/beta/TaskItem";
+import Padding from "../components/beta/Padding";
 
 export default function Beta() {
-    const moveRef = useRef(null);
     const [markCompletedShow, setMarkCompletedShow] = useState(false);
     const [tasks, setTasks] = useState([
-        {name: "任务1", time: "2023-06-02"},
-        {name: "任务2", time: "2023-06-01"},
-        {name: "任务3", time: "2023-06-05"},
+        {id: 1, name: "任务1", time: "2023-06-02"},
+        {id: 2, name: "任务2", time: "2023-06-01"},
+        {id: 3, name: "任务3", time: "2023-06-05"},
     ]);
+    const [completedTasks, setCompletedTasks] = useState([]);
 
     const taskItemOnDragStart = (event) => {
         setMarkCompletedShow(true);
-        moveRef.current = event.target;
+    }
+
+    const onDrop = (event) => {
+        let id = parseInt(event.dataTransfer.getData('text'));
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id !== id) {
+                newTasks.push(tasks[i]);
+            } else {
+                completedTasks.push(tasks[i]);
+            }
+        }
+        setTasks(newTasks);
+        setCompletedTasks([...completedTasks]);
+        setMarkCompletedShow(false);
     }
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
-            <div>
+            <Padding>
 
-            </div>
+            </Padding>
+        </div>
+        <div className={`${styles.centerContainer}`}>
+            <Padding>
+                <div className={`${styles.taskContainer}`}>
+                    {tasks.map((one, index) =>
+                        <TaskItem draggable={true}
+                                  onDragStart={taskItemOnDragStart}
+                                  task={one}
+                                  key={index}/>
+                    )}
+                </div>
+            </Padding>
         </div>
         <div className={`${styles.rightContainer}`}>
-            <div className={`${styles.taskContainer}`}>
-                {tasks.map((one, index) =>
-                    <TaskItem onDragStart={taskItemOnDragStart}
-                              task={one}
-                              key={index}/>
-                )}
-            </div>
-            <div onDrop={(event) => {
-                event.preventDefault();
-                console.log(event.target.className)
-                if (event.target.className.indexOf(styles.dropzone) !== -1) {
-                    moveRef.current.parentNode.removeChild(moveRef.current);
-                    event.target.parentNode.parentNode.parentNode.appendChild(moveRef.current);
-                    setMarkCompletedShow(false);
-                }
-            }}
-                 onDragOver={(event) => event.preventDefault()}
-                 className={`${styles.taskContainer} ${markCompletedShow ? styles.markCompleted : ''}`}>
-                <div className={`${styles.filler}`} hidden={!markCompletedShow}>
-                    <TextCentered className={`${styles.dropzone}`}>
-                        放置此处标记已完成
-                    </TextCentered>
+            <Padding hidden={!markCompletedShow}>
+                <div onDrop={onDrop}
+                     onDragOver={(event) => event.preventDefault()}
+                     className={`${styles.taskContainer} ${markCompletedShow ? styles.markCompleted : ''}`}>
+                    <div className={`${styles.filler}`}>
+                        <TextCentered className={`${styles.dropzone}`}>
+                            放置此处标记已完成
+                        </TextCentered>
+                    </div>
                 </div>
-            </div>
+            </Padding>
+            <Padding>
+                <div className={`${styles.taskContainer}`}>
+                    {completedTasks.map((one, index) =>
+                        <TaskItem task={one}
+                                  key={index}/>
+                    )}
+                </div>
+            </Padding>
         </div>
     </div>
 }
