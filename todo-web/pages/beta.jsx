@@ -1,10 +1,16 @@
-import {CircleIcon} from "@primer/octicons-react";
 import {useRef, useState} from "react";
 import TextCentered from "../components/basic/TextCentered";
+import TaskItem from "../components/beta/TaskItem";
 
 export default function Beta() {
     const moveRef = useRef(null);
     const [markCompletedShow, setMarkCompletedShow] = useState(false);
+
+    const taskItemOnDragStart = (event) => {
+        setMarkCompletedShow(true);
+        moveRef.current = event.target;
+    }
+
     return <div className="main">
         <div className="leftNavBar">
             <div>
@@ -13,32 +19,10 @@ export default function Beta() {
         </div>
         <div className="rightContainer">
             <div className="taskContainer">
-                <div draggable="true"
-                     onDragStart={(event) => {
-                         event.dataTransfer.dropEffect = "move";
-                         setMarkCompletedShow(true);
-                         moveRef.current = event.target;
-                     }}
-                     className="taskItem">
-                    <div className="taskTime"><CircleIcon/></div>
-                    <div/>
-                    <div>任务1</div>
-                    <div/>
-                    <div><span className="taskTime">time</span></div>
-                </div>
-                <div draggable="true"
-                     onDragStart={(event) => {
-                         event.dataTransfer.dropEffect = "move";
-                         setMarkCompletedShow(true);
-                         moveRef.current = event.target;
-                     }}
-                     className="taskItem">
-                    <div className="taskTime"><CircleIcon/></div>
-                    <div/>
-                    <div>任务2</div>
-                    <div/>
-                    <div><span className="taskTime">time</span></div>
-                </div>
+                <TaskItem onDragStart={taskItemOnDragStart}
+                          task={{name: "任务1", time: "2023-06-02"}}/>
+                <TaskItem onDragStart={taskItemOnDragStart}
+                          task={{name: "任务2", time: "2023-06-03"}}/>
             </div>
             <div onDrop={(event) => {
                 event.preventDefault();
