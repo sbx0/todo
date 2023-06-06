@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.task.entity.TaskView;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.config.SpringSecurityConfig;
 import cn.sbx0.todo.entity.OrderRequest;
@@ -119,12 +120,13 @@ class TaskControllerTest {
         pagingRequest.setCategoryId(1L);
         pagingRequest.setOrders(List.of(new OrderRequest("id", "desc")));
 
-        Paging<TaskEntity> pagingData = new Paging<>();
+        Paging<TaskView> pagingData = new Paging<>();
         pagingData.setSuccess(true);
         pagingData.setMessage(Code.SUCCESS_MESSAGE);
 
-        List<TaskEntity> data = new ArrayList<>();
-        TaskEntity test = new TaskEntity("Task Name");
+        List<TaskView> data = new ArrayList<>();
+        TaskView test = new TaskView();
+        test.setTaskName("Task Name");
         test.setId(1L);
         test.setTaskStatus(0);
         test.setTaskRemark("Task Remark");
@@ -145,7 +147,7 @@ class TaskControllerTest {
                 )
         );
 
-        given(service.paging(any())).willReturn(pagingData);
+        given(service.pagingView(any())).willReturn(pagingData);
         given(userService.getLoginUserId()).willReturn(1L);
 
         String response = mockMvc.perform(post("/task/paging")
@@ -169,12 +171,14 @@ class TaskControllerTest {
                                 responseFields(
                                         fieldWithPath("data[].id").description("ID"),
                                         fieldWithPath("data[].userId").description("User ID"),
+                                        fieldWithPath("data[].userName").description("User Name"),
                                         fieldWithPath("data[].taskName").description("Task Name"),
                                         fieldWithPath("data[].taskRemark").description("Task Remark"),
                                         fieldWithPath("data[].taskStatus").description("Task Status"),
                                         fieldWithPath("data[].planTime").description("Plan Time"),
                                         fieldWithPath("data[].reminderTime").description("Reminder Time"),
                                         fieldWithPath("data[].categoryId").description("Category Id"),
+                                        fieldWithPath("data[].categoryName").description("Category Name"),
                                         fieldWithPath("data[].createTime").description("Create Time"),
                                         fieldWithPath("data[].updateTime").description("Update Time"),
                                         fieldWithPath("data").description("Data"),
