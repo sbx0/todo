@@ -3,8 +3,15 @@ import {callApi} from "../../apis/request";
 import {CategoryPaging, POST} from "../../apis/apiPath";
 import {useEffect, useState} from "react";
 
-export default function NavBar({loadTasks}) {
+export default function NavBar({loadTasks, categoryId, taskTotal}) {
     const [categories, setCategories] = useState([]);
+    const [total, setTotal] = useState([]);
+
+    useEffect(() => {
+        let t = [...total];
+        t[categoryId] = taskTotal;
+        setTotal(t);
+    }, [categoryId]);
 
     useEffect(() => {
         loadCategories();
@@ -22,6 +29,14 @@ export default function NavBar({loadTasks}) {
                 setCategories(r.data);
             }
         });
+    };
+
+    const showNumber = (number) => {
+        if (number > 0) {
+            return number;
+        } else {
+            return '';
+        }
     }
 
     return <div className={`${styles.main}`}>
@@ -31,7 +46,10 @@ export default function NavBar({loadTasks}) {
                                           loadTasks(1, 20, one.id, 0);
                                       }}
                                       className={`${styles.item}`}>
-            {one.categoryName}
+            <div className={`${styles.number}`}>
+                {showNumber(total[one.id])}
+            </div>
+            {`${one.categoryName}`}
         </div>)}
     </div>
 }

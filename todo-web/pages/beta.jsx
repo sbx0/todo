@@ -8,6 +8,8 @@ import NavBar from "../components/beta/NavBar";
 
 export default function Beta() {
     const [tasks, setTasks] = useState([]);
+    const [categoryId, setCategoryId] = useState(0);
+    const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
 
     useEffect(() => {
@@ -36,6 +38,8 @@ export default function Beta() {
                     });
                 }
                 setTasks(newData);
+                setTaskTotal(r.common.total);
+                setCategoryId(categoryId);
             }
         });
     }
@@ -76,7 +80,9 @@ export default function Beta() {
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
-            <NavBar loadTasks={loadTasks}/>
+            <NavBar loadTasks={loadTasks}
+                    categoryId={categoryId}
+                    taskTotal={taskTotal}/>
         </div>
         <div className={`${styles.centerContainer}`}
              onDrop={onDropCenter}
