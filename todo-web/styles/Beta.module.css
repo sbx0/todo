@@ -1,6 +1,6 @@
 .main {
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: 2fr 4fr 4fr;
 }
@@ -15,6 +15,7 @@
     margin: 0 0;
     min-height: 100vh;
     background-color: #f3f3f3;
+    overflow: auto;
 }
 
 .rightContainer {

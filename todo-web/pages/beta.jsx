@@ -7,10 +7,13 @@ import {callApi} from "../apis/request";
 import NavBar from "../components/beta/NavBar";
 
 export default function Beta() {
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(20);
     const [tasks, setTasks] = useState([]);
     const [categoryId, setCategoryId] = useState(0);
     const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
+    const [isMore, setIsMore] = useState(true);
 
     useEffect(() => {
         loadTasks();
@@ -20,6 +23,9 @@ export default function Beta() {
                        pageSize = 20,
                        categoryId = 0,
                        taskStatus = 0) => {
+        if (page > 1 && !isMore) {
+            return;
+        }
         callApi({
             method: POST, url: TaskPaging, params: {
                 page: page,
@@ -30,7 +36,17 @@ export default function Beta() {
         }).then(r => {
             if (r.success) {
                 let key = `${page}-${pageSize}-${categoryId}-${taskStatus}-`
-                let newData = [];
+                let newData;
+                if (r.common.page === 0) {
+                    newData = [];
+                } else {
+                    newData = tasks;
+                }
+                if (r.data.length < r.common.pageSize) {
+                    setIsMore(false);
+                } else {
+                    setIsMore(true);
+                }
                 for (let i = 0; i < r.data.length; i++) {
                     newData.push({
                         key: key + r.data[i].id,
@@ -38,6 +54,8 @@ export default function Beta() {
                     });
                 }
                 setTasks(newData);
+                setPage(r.common.page + 1);
+                setPageSize(r.common.pageSize);
                 setTaskTotal(r.common.total);
                 setCategoryId(categoryId);
             }
@@ -78,6 +96,14 @@ export default function Beta() {
         event.preventDefault();
     }
 
+    const handleScroll = (event, page, pageSize) => {
+        const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
+        if (scrollHeight - scrollTop === clientHeight) {
+            // 到达底部，加载下一页数据
+            loadTasks(page + 1, pageSize);
+        }
+    };
+
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
@@ -85,6 +111,9 @@ export default function Beta() {
                     taskTotal={taskTotal}/>
         </div>
         <div className={`${styles.centerContainer}`}
+             onScroll={(event) => {
+                 handleScroll(event, page, pageSize);
+             }}
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
