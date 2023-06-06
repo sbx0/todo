@@ -55,11 +55,13 @@
 
 .textArea {
     font-size: 17px;
-    margin: 0;
-    padding: 10px;
+    display: block;
+    margin: 0 auto;
+    padding: 15px;
     width: -moz-available;
     width: -webkit-fill-available;
     width: fill-available;
+    max-width: 685px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     background-color: #fff;
