@@ -15,6 +15,7 @@ export default function Beta() {
     const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [isMore, setIsMore] = useState(true);
+    const [newTask, setNewTask] = useState('');
 
     useEffect(() => {
         loadTasks();
@@ -112,6 +113,25 @@ export default function Beta() {
         });
     };
 
+    const addNewTask = (taskName, pageSize, categoryId) => {
+        if (taskName == null || taskName === '' || taskName.trim() === '') {
+            setNewTask('');
+            return;
+        }
+        callApi({
+            method: POST,
+            url: '/api/task/save',
+            params: {
+                taskName: taskName.trim()
+            }
+        }).then((r) => {
+            if (r.success) {
+                loadTasks(1, pageSize, categoryId);
+                setNewTask('');
+            }
+        });
+    }
+
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
@@ -127,6 +147,21 @@ export default function Beta() {
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
+                <div className={`${styles.textAreaDiv}`}>
+                        <textarea
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    addNewTask(newTask, pageSize, categoryId);
+                                    event.preventDefault();
+                                }
+                            }}
+                            value={newTask}
+                            onChange={(event) => {
+                                setNewTask(event.target.value);
+                            }}
+                            placeholder={"添加任务"}
+                            className={`${styles.textArea}`}/>
+                </div>
                 <div className={`${styles.taskContainer}`}>
                     {tasks.map((one) =>
                         <TaskItem draggable
