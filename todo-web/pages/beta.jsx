@@ -118,11 +118,15 @@ export default function Beta() {
             setNewTask('');
             return;
         }
+        if (categoryId === 0) {
+            return;
+        }
         callApi({
             method: POST,
             url: '/api/task/save',
             params: {
-                taskName: taskName.trim()
+                taskName: taskName.trim(),
+                categoryId: categoryId
             }
         }).then((r) => {
             if (r.success) {
@@ -147,7 +151,7 @@ export default function Beta() {
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
-                <div className={`${styles.textAreaDiv}`}>
+                <div className={`${styles.textAreaDiv}`} style={{display: categoryId === 0 ? "none" : "block"}}>
                         <textarea
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
