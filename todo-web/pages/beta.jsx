@@ -2,18 +2,31 @@ import styles from "../styles/Beta.module.css"
 import {useEffect, useState} from "react";
 import TaskItem from "../components/beta/TaskItem";
 import Padding from "../components/beta/Padding";
+import {POST, TaskPaging} from "../apis/apiPath";
+import {callApi} from "../apis/request";
 
 export default function Beta() {
     const [tasks, setTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
 
     useEffect(() => {
-        let newTasks = [];
-        for (let i = 0; i < 9; i++) {
-            newTasks.push({id: i + 1, name: "任务" + (i + 1), time: "2023-06-02 " + i})
-        }
-        setTasks(newTasks);
+        loadTasks();
     }, [])
+
+    const loadTasks = () => {
+        callApi({
+            method: POST, url: TaskPaging, params: {
+                page: 1,
+                pageSize: 20,
+                categoryId: 0,
+                taskStatus: 0
+            }
+        }).then(r => {
+            if (r.success) {
+                setTasks(r.data);
+            }
+        });
+    }
 
     const onDropRight = (event) => {
         let id = parseInt(event.dataTransfer.getData('text'));

@@ -1,25 +1,25 @@
 .main {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: grid;
     grid-template-columns: 2fr 4fr 4fr;
 }
 
 .leftNavBar {
     margin: 0 0;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #eaeaea;
 }
 
 .centerContainer {
     margin: 0 0;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #f3f3f3;
 }
 
 .rightContainer {
     margin: 0 0;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #ffffff;
 }
 

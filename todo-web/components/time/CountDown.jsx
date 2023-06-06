@@ -45,6 +45,10 @@ export function calculateWeek(date) {
 }
 
 export default function CountDown({time}) {
+    if (time === null) {
+        return '';
+    }
+
     const [left, setLeft] = useState(calculateTime(moment.now(), moment(time)));
 
     useEffect(() => {
