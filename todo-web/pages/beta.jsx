@@ -4,6 +4,7 @@ import TaskItem from "../components/beta/TaskItem";
 import Padding from "../components/beta/Padding";
 import {POST, TaskPaging} from "../apis/apiPath";
 import {callApi} from "../apis/request";
+import NavBar from "../components/beta/NavBar";
 
 export default function Beta() {
     const [tasks, setTasks] = useState([]);
@@ -13,17 +14,28 @@ export default function Beta() {
         loadTasks();
     }, [])
 
-    const loadTasks = () => {
+    const loadTasks = (page = 1,
+                       pageSize = 20,
+                       categoryId = 0,
+                       taskStatus = 0) => {
         callApi({
             method: POST, url: TaskPaging, params: {
-                page: 1,
-                pageSize: 20,
-                categoryId: 0,
-                taskStatus: 0
+                page: page,
+                pageSize: pageSize,
+                categoryId: categoryId,
+                taskStatus: taskStatus
             }
         }).then(r => {
             if (r.success) {
-                setTasks(r.data);
+                let key = `${page}-${pageSize}-${categoryId}-${taskStatus}-`
+                let newData = [];
+                for (let i = 0; i < r.data.length; i++) {
+                    newData.push({
+                        key: key + r.data[i].id,
+                        ...r.data[i]
+                    });
+                }
+                setTasks(newData);
             }
         });
     }
@@ -64,9 +76,7 @@ export default function Beta() {
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
-            <Padding>
-
-            </Padding>
+            <NavBar loadTasks={loadTasks}/>
         </div>
         <div className={`${styles.centerContainer}`}
              onDrop={onDropCenter}
@@ -76,7 +86,7 @@ export default function Beta() {
                     {tasks.map((one) =>
                         <TaskItem draggable
                                   task={one}
-                                  key={one.id}/>
+                                  key={one.key}/>
                     )}
                 </div>
             </Padding>
