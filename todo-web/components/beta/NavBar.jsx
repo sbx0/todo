@@ -3,7 +3,7 @@ import {callApi} from "../../apis/request";
 import {CategoryPaging, POST} from "../../apis/apiPath";
 import {useEffect, useState} from "react";
 
-export default function NavBar({loadTasks, categoryId, taskTotal}) {
+export default function NavBar({loadTasks, categoryId, taskTotal, backToTop}) {
     const [categories, setCategories] = useState([]);
     const [total, setTotal] = useState([]);
 
@@ -44,6 +44,7 @@ export default function NavBar({loadTasks, categoryId, taskTotal}) {
         {categories.map((one) => <div key={one.id}
                                       onClick={() => {
                                           loadTasks(1, 20, one.id, 0);
+                                          backToTop();
                                       }}
                                       className={`${styles.item}`}>
             <div className={`${styles.number}`}>

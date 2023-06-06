@@ -1,5 +1,5 @@
 import styles from "../styles/Beta.module.css"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import TaskItem from "../components/beta/TaskItem";
 import Padding from "../components/beta/Padding";
 import {POST, TaskPaging} from "../apis/apiPath";
@@ -7,6 +7,7 @@ import {callApi} from "../apis/request";
 import NavBar from "../components/beta/NavBar";
 
 export default function Beta() {
+    const centerRef = useRef(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [tasks, setTasks] = useState([]);
@@ -37,7 +38,7 @@ export default function Beta() {
             if (r.success) {
                 let key = `${page}-${pageSize}-${categoryId}-${taskStatus}-`
                 let newData;
-                if (r.common.page === 0) {
+                if (r.common.page === 1) {
                     newData = [];
                 } else {
                     newData = tasks;
@@ -54,7 +55,7 @@ export default function Beta() {
                     });
                 }
                 setTasks(newData);
-                setPage(r.common.page + 1);
+                setPage(r.common.page);
                 setPageSize(r.common.pageSize);
                 setTaskTotal(r.common.total);
                 setCategoryId(categoryId);
@@ -96,23 +97,32 @@ export default function Beta() {
         event.preventDefault();
     }
 
-    const handleScroll = (event, page, pageSize) => {
+    const handleScroll = (event, page, pageSize, categoryId) => {
         const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
         if (scrollHeight - scrollTop === clientHeight) {
             // 到达底部，加载下一页数据
-            loadTasks(page + 1, pageSize);
+            loadTasks(page + 1, pageSize, categoryId);
         }
+    };
+
+    const backToTop = () => {
+        centerRef.current.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     };
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
+                    backToTop={backToTop}
                     categoryId={categoryId}
                     taskTotal={taskTotal}/>
         </div>
         <div className={`${styles.centerContainer}`}
+             ref={centerRef}
              onScroll={(event) => {
-                 handleScroll(event, page, pageSize);
+                 handleScroll(event, page, pageSize, categoryId);
              }}
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>

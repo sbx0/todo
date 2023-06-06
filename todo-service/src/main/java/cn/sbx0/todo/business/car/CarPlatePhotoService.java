@@ -62,7 +62,7 @@ public class CarPlatePhotoService {
         ));
         return Paging.success(
                 pagingData.getContent(),
-                pagingData.getPageable().getPageNumber(),
+                pagingData.getPageable().getPageNumber() + 1,
                 pagingData.getPageable().getPageSize(),
                 pagingData.getTotalElements(),
                 pagingData.getTotalPages()
