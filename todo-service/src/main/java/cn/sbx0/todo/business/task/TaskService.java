@@ -1,7 +1,10 @@
 package cn.sbx0.todo.business.task;
 
+import cn.sbx0.todo.business.category.CategoryService;
 import cn.sbx0.todo.business.task.entity.TaskEntity;
+import cn.sbx0.todo.business.task.entity.TaskMapper;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.task.entity.TaskView;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
@@ -18,9 +21,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,18 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
     public static final Set<Long> REMINDER_IDS = new CopyOnWriteArraySet<>();
+    private final CategoryService categoryService;
     @Resource
     private TaskRepository repository;
     @Resource
     private ClientUserService userService;
     @Resource
     private WeChatService weChatService;
+
+    public TaskService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
 
     @Override
     protected TaskRepository repository() {
@@ -118,6 +125,39 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         );
     }
 
+    public Paging<TaskView> pagingView(TaskPagingRequest pagingRequest) {
+        Paging<TaskEntity> paging = this.paging(pagingRequest);
+        List<TaskEntity> tasks = paging.getData();
+        Set<Long> categoryIds = new HashSet<>();
+        Set<Long> userIds = new HashSet<>();
+        for (TaskEntity task : tasks) {
+            if (task.getCategoryId() != null) {
+                categoryIds.add(task.getCategoryId());
+            }
+            if (task.getUserId() != null) {
+                userIds.add(task.getUserId());
+            }
+        }
+        Map<Long, String> categories = categoryService.mapByIds(categoryIds);
+        Map<Long, String> users = userService.mapByIds(userIds);
+        List<TaskView> newTasks = new ArrayList<>();
+        for (TaskEntity task : tasks) {
+            TaskView newTask = TaskMapper.INSTANCE.toView(
+                    task,
+                    users.getOrDefault(task.getUserId(), ""),
+                    categories.getOrDefault(task.getCategoryId(), "")
+            );
+            newTasks.add(newTask);
+        }
+        return Paging.success(
+                newTasks,
+                paging.getCommon().getPage(),
+                paging.getCommon().getPageSize(),
+                paging.getCommon().getTotal(),
+                paging.getCommon().getTotalPage()
+        );
+    }
+
     public void handleReminderTime() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime begin = now.minusMinutes(2);
@@ -155,4 +195,5 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
             REMINDER_IDS.add(task.getId());
         }
     }
+
 }

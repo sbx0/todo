@@ -2,6 +2,7 @@ package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
+import cn.sbx0.todo.business.task.entity.TaskView;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Paging;
@@ -45,9 +46,9 @@ public class TaskController {
      * @return Task list
      */
     @PostMapping("/paging")
-    public Paging<TaskEntity> paging(@RequestBody TaskPagingRequest pagingRequest) {
+    public Paging<TaskView> paging(@RequestBody TaskPagingRequest pagingRequest) {
         pagingRequest.setUserId(userService.getLoginUserId());
-        return service.paging(pagingRequest);
+        return service.pagingView(pagingRequest);
     }
 
     /**

@@ -8,6 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author sbx0
@@ -39,5 +43,10 @@ public class CategoryService extends JpaService<CategoryRepository, CategoryEnti
     protected CategoryEntity updateBefore(CategoryEntity entity) {
         entity.setUpdateTime(LocalDateTime.now());
         return entity;
+    }
+
+    public Map<Long, String> mapByIds(Set<Long> ids) {
+        List<CategoryEntitySimple> categories = repository().mapByIds(ids);
+        return categories.stream().collect(Collectors.toMap(CategoryEntitySimple::getId, CategoryEntitySimple::getCategoryName, (a, b) -> b));
     }
 }

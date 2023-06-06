@@ -1,9 +1,6 @@
 package cn.sbx0.todo.business.user;
 
-import cn.sbx0.todo.business.user.entity.ClientUser;
-import cn.sbx0.todo.business.user.entity.CustomUser;
-import cn.sbx0.todo.business.user.entity.DefaultUser;
-import cn.sbx0.todo.business.user.entity.RegisterParam;
+import cn.sbx0.todo.business.user.entity.*;
 import cn.sbx0.todo.entity.DefaultPagingRequest;
 import cn.sbx0.todo.exception.NotLoginException;
 import cn.sbx0.todo.exception.UserNotExistException;
@@ -27,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -170,5 +170,10 @@ public class ClientUserService extends JpaService<ClientUserRepository, ClientUs
     public String findWeChatOpenIdById(Long userId) {
         Optional<ClientUser> optional = repository.findById(userId);
         return optional.map(ClientUser::getWeChatOpenId).orElse(null);
+    }
+
+    public Map<Long, String> mapByIds(Set<Long> ids) {
+        List<ClientUserSimple> categories = repository().mapByIds(ids);
+        return categories.stream().collect(Collectors.toMap(ClientUserSimple::getId, ClientUserSimple::getNickname, (a, b) -> b));
     }
 }

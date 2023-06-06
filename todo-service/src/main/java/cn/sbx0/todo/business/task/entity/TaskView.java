@@ -1,36 +1,47 @@
-package cn.sbx0.todo.business.category;
-
+package cn.sbx0.todo.business.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 /**
  * @author sbx0
- * @since 2022/12/8
+ * @since 2023/6/6
  */
 @Getter
 @Setter
-@Entity
-@Table(name = "categories")
-public class CategoryEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class TaskView {
   private Long id;
-  // category name
+  // task name
+  private String taskName;
+  // task remark
+  private String taskRemark;
+  // task status
+  private Integer taskStatus;
+  // plan time
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  private LocalDateTime planTime;
+  // reminder time
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  private LocalDateTime reminderTime;
+  // category id
+  private Long categoryId;
   private String categoryName;
-  // category remark
-  private String categoryRemark;
   // userId
   private Long userId;
+  private String userName;
   // when create
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -41,16 +52,4 @@ public class CategoryEntity {
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime updateTime;
-
-  public CategoryEntity() {
-  }
-
-  public CategoryEntity(String categoryName) {
-    this.categoryName = categoryName;
-  }
-
-  public CategoryEntity(Long id, String categoryName) {
-    this.id = id;
-    this.categoryName = categoryName;
-  }
 }
