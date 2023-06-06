@@ -8,12 +8,14 @@ import cn.sbx0.todo.business.task.entity.TaskView;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
+import cn.sbx0.todo.entity.IdParam;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.repositories.TaskRepository;
 import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -196,4 +198,8 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         }
     }
 
+    @Transactional
+    public Result<Void> complete(IdParam param) {
+        return Result.judge(repository().complete(param));
+    }
 }

@@ -3,9 +3,24 @@ import {CircleIcon} from "@primer/octicons-react";
 import animations from "../../styles/animation.module.css";
 import {useState} from "react";
 import CountDown from "../time/CountDown";
+import {callApi} from "../../apis/request";
+import {POST, TaskComplete} from "../../apis/apiPath";
 
 export default function TaskItem({task, draggable = false}) {
     const [exit, setExit] = useState(false);
+    const markComplete = (task) => {
+        callApi({
+            method: POST,
+            url: TaskComplete,
+            params: {
+                id: task.id
+            }
+        }).then(r => {
+            if (r.success) {
+                setExit(true);
+            }
+        })
+    }
 
     return <>
         <div id={task.id}
@@ -20,7 +35,7 @@ export default function TaskItem({task, draggable = false}) {
                  event.preventDefault();
              }}
              className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : animations.scaleInCenter}`}>
-            <div className={`${styles.taskTime}`} onClick={() => setExit(true)}>
+            <div className={`${styles.taskTime}`} onClick={() => markComplete(task)}>
                 <CircleIcon/>
             </div>
             <div/>

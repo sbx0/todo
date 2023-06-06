@@ -17,6 +17,10 @@ public class Result<T> {
 
     private T data;
 
+    public static Result<Void> judge(int number) {
+        return number > 0 ? Result.success() : Result.failure();
+    }
+
     public static <T> Result<T> success() {
         Result<T> result = new Result<>();
         result.setSuccess(true);

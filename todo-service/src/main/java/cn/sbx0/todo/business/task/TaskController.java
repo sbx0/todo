@@ -4,6 +4,7 @@ import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.business.task.entity.TaskView;
 import cn.sbx0.todo.business.user.ClientUserService;
+import cn.sbx0.todo.entity.IdParam;
 import cn.sbx0.todo.entity.StatisticalIndicators;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
@@ -73,5 +74,10 @@ public class TaskController {
     @PostMapping("/update")
     public Result<TaskEntity> update(@RequestBody TaskEntity entity) {
         return service.update(entity);
+    }
+
+    @PostMapping("/complete")
+    public Result<Void> complete(@RequestBody IdParam param) {
+        return service.complete(param);
     }
 }

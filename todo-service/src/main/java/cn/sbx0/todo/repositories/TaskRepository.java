@@ -1,6 +1,7 @@
 package cn.sbx0.todo.repositories;
 
 import cn.sbx0.todo.business.task.entity.TaskEntity;
+import cn.sbx0.todo.entity.IdParam;
 import cn.sbx0.todo.entity.PagingRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -104,4 +105,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
             nativeQuery = true
     )
     List<TaskEntity> getHaveReminderTimeTask();
+
+    @Modifying
+    @Query(value = "UPDATE TaskEntity SET taskStatus = 1 WHERE id = :#{#param.id}")
+    int complete(IdParam param);
 }

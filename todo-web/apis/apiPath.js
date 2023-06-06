@@ -3,6 +3,7 @@ export const GET = "GET";
 export const ApiPrefix = "http://";
 export const API = "/api";
 export const TaskPaging = API + "/task/paging";
+export const TaskComplete = API + "/task/complete";
 export const CategoryPaging = API + "/category/paging";
 export const TaskStatistics = API + "/task/statistics";
 export const AssetTypePaging = API + "/asset/type/paging";
