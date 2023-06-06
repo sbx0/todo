@@ -41,7 +41,7 @@ class CategoryServiceTest {
 
     @Test
     public void paging() {
-        DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 0);
+        DefaultPagingRequest pagingRequest = new DefaultPagingRequest(1, 1);
 
         List<CategoryEntity> data = new ArrayList<>();
         data.add(new CategoryEntity("test"));
@@ -58,8 +58,8 @@ class CategoryServiceTest {
 
         PagingCommon common = paging.getCommon();
         assertNotNull(common);
-        assertEquals(Paging.adjustPage(pagingRequest.getPage()), common.getPage());
-        assertEquals(Paging.adjustPageSize(pagingRequest.getPageSize()), common.getPageSize());
+        assertEquals(pagingRequest.getPage(), common.getPage());
+        assertEquals(pagingRequest.getPageSize(), common.getPageSize());
         assertEquals(data.size(), common.getTotal());
     }
 

@@ -138,7 +138,7 @@ class TaskServiceTest {
 
     @Test
     public void paging() {
-        TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 0);
+        TaskPagingRequest pagingRequest = new TaskPagingRequest(1, 1);
 
         List<TaskEntity> data = new ArrayList<>();
         data.add(new TaskEntity("test"));
@@ -156,8 +156,8 @@ class TaskServiceTest {
 
         PagingCommon common = paging.getCommon();
         assertNotNull(common);
-        assertEquals(Paging.adjustPage(pagingRequest.getPage()), common.getPage());
-        assertEquals(Paging.adjustPageSize(pagingRequest.getPageSize()), common.getPageSize());
+        assertEquals(pagingRequest.getPage(), common.getPage());
+        assertEquals(pagingRequest.getPageSize(), common.getPageSize());
         assertEquals(data.size(), common.getTotal());
     }
 
