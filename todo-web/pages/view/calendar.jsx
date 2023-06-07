@@ -1,13 +1,13 @@
 import {useEffect, useState} from "react";
-import Container from "../../../components/Container";
+import Container from "../../components/Container";
 import moment from "moment";
 import 'moment/locale/zh-cn';
-import useTask from "../../../hooks/useTask";
-import NavigationBar from "../../../components/NavigationBar";
-import Model from "../../../components/model/Model";
-import TaskItem from "../../../components/task/TaskItem";
-import {changeTask} from "../../../components/TaskPage";
-import Loading from "../../../components/Loading";
+import useTask from "../../hooks/useTask";
+import NavigationBar from "../../components/NavigationBar";
+import Model from "../../components/model/Model";
+import TaskItem from "../../components/task/TaskItem";
+import {changeTask} from "../../components/TaskPage";
+import Loading from "../../components/Loading";
 
 export function isMonthStart(time) {
     return moment(time).format('DD') === '01';
