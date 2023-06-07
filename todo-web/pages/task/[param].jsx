@@ -6,6 +6,7 @@ import {POST, TaskPaging} from "../../apis/apiPath";
 import {callApi} from "../../apis/request";
 import NavBar from "../../components/beta/NavBar";
 import {useRouter} from "next/router";
+import Model from "../../components/beta/Model";
 
 export default function CategoryId() {
     const router = useRouter();
@@ -18,6 +19,7 @@ export default function CategoryId() {
     const [completedTasks, setCompletedTasks] = useState([]);
     const [isMore, setIsMore] = useState(true);
     const [newTask, setNewTask] = useState('');
+    const [modalShow, setModalShow] = useState(false);
 
     useEffect(() => {
         if (router.query.param === null || router.query.param === undefined || router.query.param === '') {
@@ -175,6 +177,9 @@ export default function CategoryId() {
                 <div className={`${styles.taskContainer}`}>
                     {tasks.map((one) =>
                         <TaskItem draggable
+                                  onClick={() => {
+                                      setModalShow(true);
+                                  }}
                                   task={one}
                                   key={one.key}/>
                     )}
@@ -188,11 +193,18 @@ export default function CategoryId() {
                 <div className={`${styles.taskContainer}`}>
                     {completedTasks.map((one) =>
                         <TaskItem draggable
+                                  onClick={() => {
+                                      setModalShow(true);
+                                  }}
                                   task={one}
                                   key={one.id}/>
                     )}
                 </div>
             </Padding>
         </div>
+        <Model show={modalShow}
+               close={() => setModalShow(false)}>
+
+        </Model>
     </div>
 }

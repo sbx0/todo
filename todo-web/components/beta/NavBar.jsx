@@ -1,7 +1,7 @@
+import {useEffect, useState} from "react";
 import styles from "./NavBar.module.css";
 import {callApi} from "../../apis/request";
 import {CategoryPaging, POST} from "../../apis/apiPath";
-import {useEffect, useState} from "react";
 
 export default function NavBar({loadTasks, categoryId, taskTotal, backToTop}) {
     const [categories, setCategories] = useState([]);

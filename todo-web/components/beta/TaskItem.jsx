@@ -6,7 +6,7 @@ import CountDown from "../time/CountDown";
 import {callApi} from "../../apis/request";
 import {POST, TaskComplete} from "../../apis/apiPath";
 
-export default function TaskItem({task, draggable = false}) {
+export default function TaskItem({task, draggable = false, onClick}) {
     const [exit, setExit] = useState(false);
     const markComplete = (task) => {
         callApi({
@@ -24,6 +24,7 @@ export default function TaskItem({task, draggable = false}) {
 
     return <>
         <div id={task.id}
+             onClick={onClick}
              draggable={draggable}
              onDragStart={(event) => {
                  event.dataTransfer.dropEffect = "move";

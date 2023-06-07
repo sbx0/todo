@@ -30,3 +30,29 @@
         margin-bottom: 0;
     }
 }
+
+.fadeIn {
+    animation: fadeIn 0.3s both;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeOut {
+    animation: fadeOut 0.3s both;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
