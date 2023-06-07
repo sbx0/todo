@@ -7,6 +7,7 @@ import {callApi} from "../../apis/request";
 import NavBar from "../../components/beta/NavBar";
 import {useRouter} from "next/router";
 import Model from "../../components/beta/Model";
+import Button from "../../components/basic/Button";
 
 export default function CategoryId() {
     const router = useRouter();
@@ -20,6 +21,7 @@ export default function CategoryId() {
     const [isMore, setIsMore] = useState(true);
     const [newTask, setNewTask] = useState('');
     const [modalShow, setModalShow] = useState(false);
+    const [current, setCurrent] = useState(null);
 
     useEffect(() => {
         if (router.query.param === null || router.query.param === undefined || router.query.param === '') {
@@ -144,6 +146,31 @@ export default function CategoryId() {
         });
     }
 
+    const clickTask = (task) => {
+        setModalShow(true);
+        setCurrent(task);
+    }
+
+    const changeTask = (task) => {
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: task
+        }).then((r) => {
+            if (r.success) {
+                let newTasks = [];
+                for (let i = 0; i < tasks.length; i++) {
+                    if (tasks[i].id === task.id) {
+                        newTasks.push(task);
+                    } else {
+                        newTasks.push(tasks[i]);
+                    }
+                }
+                setTasks(newTasks);
+            }
+        });
+    }
+
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
@@ -167,6 +194,7 @@ export default function CategoryId() {
                                     event.preventDefault();
                                 }
                             }}
+                            rows={1}
                             value={newTask}
                             onChange={(event) => {
                                 setNewTask(event.target.value);
@@ -177,9 +205,7 @@ export default function CategoryId() {
                 <div className={`${styles.taskContainer}`}>
                     {tasks.map((one) =>
                         <TaskItem draggable
-                                  onClick={() => {
-                                      setModalShow(true);
-                                  }}
+                                  onClick={() => clickTask(one)}
                                   task={one}
                                   key={one.key}/>
                     )}
@@ -193,9 +219,7 @@ export default function CategoryId() {
                 <div className={`${styles.taskContainer}`}>
                     {completedTasks.map((one) =>
                         <TaskItem draggable
-                                  onClick={() => {
-                                      setModalShow(true);
-                                  }}
+                                  onClick={() => clickTask(one)}
                                   task={one}
                                   key={one.id}/>
                     )}
@@ -204,7 +228,47 @@ export default function CategoryId() {
         </div>
         <Model show={modalShow}
                close={() => setModalShow(false)}>
-
+            <div className={`${styles.label}`}>{current?.categoryName}</div>
+            <div className={`${styles.textAreaDiv}`}>
+                        <textarea
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                }
+                            }}
+                            rows={1}
+                            value={current?.taskName}
+                            onChange={(event) => {
+                                setCurrent({
+                                    ...current,
+                                    taskName: event.target.value.trim()
+                                })
+                            }}
+                            placeholder={"请输入任务名称"}
+                            className={`${styles.textAreaNoBackground}`}/>
+            </div>
+            <div className={`${styles.label}`}>备注</div>
+            <div className={`${styles.textAreaDiv}`}>
+                        <textarea
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                }
+                            }}
+                            rows={3}
+                            placeholder={"在此处插入笔记"}
+                            value={current?.taskRemark}
+                            onChange={(event) => {
+                                setCurrent({
+                                    ...current,
+                                    taskRemark: event.target.value.trim()
+                                })
+                            }}
+                            className={`${styles.textAreaNoBackground}`}/>
+            </div>
+            <Button onClick={() => changeTask(current)}>
+                保存
+            </Button>
         </Model>
     </div>
 }

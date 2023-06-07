@@ -24,7 +24,6 @@ export default function TaskItem({task, draggable = false, onClick}) {
 
     return <>
         <div id={task.id}
-             onClick={onClick}
              draggable={draggable}
              onDragStart={(event) => {
                  event.dataTransfer.dropEffect = "move";
@@ -40,7 +39,8 @@ export default function TaskItem({task, draggable = false, onClick}) {
                 <CircleIcon/>
             </div>
             <div/>
-            <div className={`${styles.taskCenter}`}>
+            <div className={`${styles.taskCenter}`}
+                 onClick={onClick}>
                 <div className={`${styles.categoryName}`}>{task.categoryName}</div>
                 <div>{task.taskName}</div>
             </div>

@@ -72,3 +72,33 @@
     border: 0;
     resize: none;
 }
+
+.textAreaNoBackground {
+    font-weight: bolder;
+    font-size: 17px;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+    max-width: 685px;
+    overflow: auto;
+    height: max-content;
+    cursor: text;
+    outline: 0;
+    border: 0;
+    resize: none;
+}
+
+.textAreaNoBackground:hover {
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.label {
+    font-size: 13px;
+    color: #9b9b9b;
+    padding: 10px;
+}
