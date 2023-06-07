@@ -20,12 +20,12 @@ export default function CategoryId() {
     const [newTask, setNewTask] = useState('');
 
     useEffect(() => {
-        if (router.query.categoryId === null || router.query.categoryId === undefined || router.query.categoryId === '') {
+        if (router.query.param === null || router.query.param === undefined || router.query.param === '') {
             return;
         }
-        setCategoryId(parseInt(router.query.categoryId));
-        loadTasks(page, pageSize, parseInt(router.query.categoryId), 0);
-    }, [router.query.categoryId])
+        setCategoryId(parseInt(router.query.param));
+        loadTasks(page, pageSize, parseInt(router.query.param), 0);
+    }, [router.query.param])
 
     const loadTasks = (page = 1,
                        pageSize = 20,
