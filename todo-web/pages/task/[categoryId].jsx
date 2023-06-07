@@ -1,27 +1,31 @@
-"use client"
-
-import styles from "../../../styles/Beta.module.css"
 import {useEffect, useRef, useState} from "react";
-import TaskItem from "../../../components/beta/TaskItem";
-import Padding from "../../../components/beta/Padding";
-import {POST, TaskPaging} from "../../../apis/apiPath";
-import {callApi} from "../../../apis/request";
-import NavBar from "../../../components/beta/NavBar";
+import styles from "../../styles/Beta.module.css"
+import TaskItem from "../../components/beta/TaskItem";
+import Padding from "../../components/beta/Padding";
+import {POST, TaskPaging} from "../../apis/apiPath";
+import {callApi} from "../../apis/request";
+import NavBar from "../../components/beta/NavBar";
+import {useRouter} from "next/router";
 
-export default function Page({params}) {
+export default function CategoryId() {
+    const router = useRouter();
     const centerRef = useRef(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [tasks, setTasks] = useState([]);
-    const [categoryId, setCategoryId] = useState(params.categoryId);
+    const [categoryId, setCategoryId] = useState(0);
     const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [isMore, setIsMore] = useState(true);
     const [newTask, setNewTask] = useState('');
 
     useEffect(() => {
-        loadTasks(page, pageSize, categoryId, 0);
-    }, [])
+        if (router.query.categoryId === null || router.query.categoryId === undefined || router.query.categoryId === '') {
+            return;
+        }
+        setCategoryId(parseInt(router.query.categoryId));
+        loadTasks(page, pageSize, parseInt(router.query.categoryId), 0);
+    }, [router.query.categoryId])
 
     const loadTasks = (page = 1,
                        pageSize = 20,
