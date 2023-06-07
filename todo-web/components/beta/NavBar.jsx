@@ -2,10 +2,12 @@ import styles from "./NavBar.module.css";
 import {callApi} from "../../apis/request";
 import {CategoryPaging, POST} from "../../apis/apiPath";
 import {useEffect, useState} from "react";
+import {useRouter} from 'next/navigation';
 
 export default function NavBar({loadTasks, categoryId, taskTotal, backToTop}) {
     const [categories, setCategories] = useState([]);
     const [total, setTotal] = useState([]);
+    const router = useRouter()
 
     useEffect(() => {
         let t = [...total];
@@ -45,6 +47,7 @@ export default function NavBar({loadTasks, categoryId, taskTotal, backToTop}) {
                                       onClick={() => {
                                           loadTasks(1, 20, one.id, 0);
                                           backToTop();
+                                          history.pushState('', '', "/task/" + one.id);
                                       }}
                                       className={`${styles.item}`}>
             <div className={`${styles.number}`}>

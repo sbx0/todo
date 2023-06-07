@@ -1,24 +1,26 @@
-import styles from "../styles/Beta.module.css"
-import {useEffect, useRef, useState} from "react";
-import TaskItem from "../components/beta/TaskItem";
-import Padding from "../components/beta/Padding";
-import {POST, TaskPaging} from "../apis/apiPath";
-import {callApi} from "../apis/request";
-import NavBar from "../components/beta/NavBar";
+"use client"
 
-export default function Beta() {
+import styles from "../../../styles/Beta.module.css"
+import {useEffect, useRef, useState} from "react";
+import TaskItem from "../../../components/beta/TaskItem";
+import Padding from "../../../components/beta/Padding";
+import {POST, TaskPaging} from "../../../apis/apiPath";
+import {callApi} from "../../../apis/request";
+import NavBar from "../../../components/beta/NavBar";
+
+export default function Page({params}) {
     const centerRef = useRef(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
     const [tasks, setTasks] = useState([]);
-    const [categoryId, setCategoryId] = useState(0);
+    const [categoryId, setCategoryId] = useState(params.categoryId);
     const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [isMore, setIsMore] = useState(true);
     const [newTask, setNewTask] = useState('');
 
     useEffect(() => {
-        loadTasks();
+        loadTasks(page, pageSize, categoryId, 0);
     }, [])
 
     const loadTasks = (page = 1,
