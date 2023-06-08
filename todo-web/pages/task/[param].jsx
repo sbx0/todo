@@ -1,14 +1,14 @@
 import {useEffect, useRef, useState} from "react";
 import styles from "../../styles/Tasks.module.css"
+import {useRouter} from "next/router";
 
-import TaskItem from "../../components/beta/TaskItem";
-import Padding from "../../components/beta/Padding";
 import {callApi} from "../../apis/request";
 import {POST, TaskPaging} from "../../apis/apiPath";
 import NavBar from "../../components/beta/NavBar";
-import {useRouter} from "next/router";
+import Padding from "../../components/beta/Padding";
 import Model from "../../components/beta/Model";
 import TaskDetail from "../../components/beta/TaskDetail";
+import TaskList from "../../components/beta/TaskList";
 
 export default function Tasks() {
     const router = useRouter();
@@ -187,44 +187,32 @@ export default function Tasks() {
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
-                <div className={`${styles.textAreaDiv}`} style={{display: categoryId === 0 ? "none" : "block"}}>
-                        <textarea
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter") {
-                                    addNewTask(newTask, pageSize, categoryId);
-                                    event.preventDefault();
-                                }
-                            }}
-                            rows={1}
-                            value={newTask}
-                            onChange={(event) => {
-                                setNewTask(event.target.value);
-                            }}
-                            placeholder={"添加任务"}
-                            className={`${styles.textArea}`}/>
-                </div>
-                <div className={`${styles.taskContainer}`}>
-                    {tasks.map((one) =>
-                        <TaskItem draggable
-                                  onClick={() => clickTask(one)}
-                                  task={one}
-                                  key={one.key}/>
-                    )}
-                </div>
+                <TaskList
+                    addNewTask={addNewTask}
+                    newTask={newTask}
+                    setNewTask={setNewTask}
+                    pageSize={pageSize}
+                    categoryId={categoryId}
+                    tasks={tasks}
+                    clickTask={clickTask}
+                    showAdd={categoryId !== 0}
+                />
             </Padding>
         </div>
         <div className={`${styles.rightContainer}`}
              onDrop={onDropRight}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
-                <div className={`${styles.taskContainer}`}>
-                    {completedTasks.map((one) =>
-                        <TaskItem draggable
-                                  onClick={() => clickTask(one)}
-                                  task={one}
-                                  key={one.id}/>
-                    )}
-                </div>
+                <TaskList
+                    addNewTask={addNewTask}
+                    newTask={newTask}
+                    setNewTask={setNewTask}
+                    pageSize={pageSize}
+                    categoryId={categoryId}
+                    tasks={completedTasks}
+                    clickTask={clickTask}
+                    showAdd={false}
+                />
             </Padding>
         </div>
         <Model show={modalShow}
