@@ -12,7 +12,7 @@ export default function TaskDetail({current, setCurrent, changeTask}) {
                                 }
                             }}
                             rows={1}
-                            value={current?.taskName}
+                            value={current?.taskName != null ? current?.taskName : ''}
                             onChange={(event) => {
                                 setCurrent({
                                     ...current,
@@ -32,7 +32,7 @@ export default function TaskDetail({current, setCurrent, changeTask}) {
                             }}
                             rows={3}
                             placeholder={"在此处插入笔记"}
-                            value={current?.taskRemark}
+                            value={current?.taskRemark != null ? current?.taskRemark : ''}
                             onChange={(event) => {
                                 setCurrent({
                                     ...current,
