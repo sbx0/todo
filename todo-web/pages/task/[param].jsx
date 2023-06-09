@@ -9,13 +9,9 @@ import Padding from "../../components/beta/Padding";
 import Model from "../../components/beta/Model";
 import TaskDetail from "../../components/beta/TaskDetail";
 import TaskList from "../../components/beta/TaskList";
+import dynamic from "next/dynamic";
 
-
-export default function Tasks() {
-    const themes = [
-        {key: 'light', name: "亮色模式"},
-        {key: 'dark', name: "暗黑模式"},
-    ];
+function Tasks() {
     const router = useRouter();
     const centerRef = useRef(null);
     const [page, setPage] = useState(1);
@@ -28,7 +24,7 @@ export default function Tasks() {
     const [newTask, setNewTask] = useState('');
     const [modalShow, setModalShow] = useState(false);
     const [current, setCurrent] = useState(null);
-    const [theme, setTheme] = useState(themes[0].key);
+    const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
     useEffect(() => {
         if (router.query.param === null || router.query.param === undefined || router.query.param === '') {
@@ -211,7 +207,6 @@ export default function Tasks() {
             <NavBar loadTasks={loadTasks}
                     backToTop={backToTop}
                     categoryId={categoryId}
-                    themes={themes}
                     theme={theme}
                     setTheme={setTheme}
                     changeTaskCategory={changeTaskCategory}
@@ -259,3 +254,7 @@ export default function Tasks() {
         </Model>
     </div>
 }
+
+export default dynamic(() => Promise.resolve(Tasks), {
+    ssr: false
+})
