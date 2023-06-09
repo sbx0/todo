@@ -8,18 +8,18 @@
 .leftNavBar {
     margin: 0 0;
     min-height: 100vh;
-    background-color: #ffffff;
+    background-color: var(--background-color-1);
 }
 
 .centerContainer {
     margin: 0 0;
     min-height: 100vh;
-    background-color: #f3f3f3;
+    background-color: var(--background-color-2);
     overflow: auto;
 }
 
 .rightContainer {
     margin: 0 0;
     min-height: 100vh;
-    background-color: #ffffff;
+    background-color: var(--background-color-1);
 }

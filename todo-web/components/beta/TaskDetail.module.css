@@ -6,7 +6,7 @@
 
 .label {
     font-size: 13px;
-    color: #9b9b9b;
+    color: var(--text-secend);
     padding: 10px;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .textAreaNoBackground:hover {
-    background-color: #fff;
+    background-color: var(--background-color-1);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
 }

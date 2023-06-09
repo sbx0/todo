@@ -18,7 +18,7 @@
     width: fill-available;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--background-color-1);
     overflow: auto;
     height: max-content;
     cursor: text;

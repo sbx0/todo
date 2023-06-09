@@ -28,7 +28,10 @@ function Category({onClick, onDrop, one, showNumber}) {
     </div>;
 }
 
-export default function NavBar({loadTasks, categoryId, taskTotal, backToTop, changeTaskCategory}) {
+export default function NavBar({
+                                   loadTasks, categoryId, taskTotal, backToTop, changeTaskCategory,
+                                   themes, theme, setTheme
+                               }) {
     const [categories, setCategories] = useState([]);
     const [total, setTotal] = useState([]);
 
@@ -87,5 +90,12 @@ export default function NavBar({loadTasks, categoryId, taskTotal, backToTop, cha
                       showNumber={showNumber(total[one.id])}
                       one={one}/>)
         }
+        <div className={`${styles.category}`}>主题</div>
+        <select defaultValue={theme}
+                onChange={(event) => {
+                    setTheme(event.target.value);
+                }}>
+            {themes.map((one) => <option key={one.key} value={one.key}>{one.name}</option>)}
+        </select>
     </div>
 }

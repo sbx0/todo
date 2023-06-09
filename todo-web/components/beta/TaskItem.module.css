@@ -2,7 +2,7 @@
     padding: 12px 16px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--background-color-1);
     display: grid;
     grid-template-areas: "checkbox . content . time";
     grid-template-columns: auto 16px 1fr 16px auto;
@@ -19,7 +19,7 @@
 }
 
 .taskItem:hover {
-    background-color: #f7f7f7;
+    background-color: var(--background-color-3);
 }
 
 .taskCenter {
@@ -29,16 +29,16 @@
 
 .categoryName {
     font-size: 13px;
-    color: #9b9b9b;
+    color: var(--text-secend);
     margin-bottom: 5px;
 }
 
 .taskTime {
-    color: #9b9b9b;
+    color: var(--text-secend);
 }
 
 .something {
-    background-color: #e8e8e8;
+    background-color: var(--background-color-4);
     border-radius: 8px;
     margin-bottom: 10px;
 }

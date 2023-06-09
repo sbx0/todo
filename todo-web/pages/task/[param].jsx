@@ -10,7 +10,12 @@ import Model from "../../components/beta/Model";
 import TaskDetail from "../../components/beta/TaskDetail";
 import TaskList from "../../components/beta/TaskList";
 
+
 export default function Tasks() {
+    const themes = [
+        {key: 'light', name: "亮色模式"},
+        {key: 'dark', name: "暗黑模式"},
+    ];
     const router = useRouter();
     const centerRef = useRef(null);
     const [page, setPage] = useState(1);
@@ -23,6 +28,7 @@ export default function Tasks() {
     const [newTask, setNewTask] = useState('');
     const [modalShow, setModalShow] = useState(false);
     const [current, setCurrent] = useState(null);
+    const [theme, setTheme] = useState(themes[0].key);
 
     useEffect(() => {
         if (router.query.param === null || router.query.param === undefined || router.query.param === '') {
@@ -200,11 +206,14 @@ export default function Tasks() {
         });
     }
 
-    return <div className={`${styles.main}`}>
+    return <div className={`${theme} ${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
                     backToTop={backToTop}
                     categoryId={categoryId}
+                    themes={themes}
+                    theme={theme}
+                    setTheme={setTheme}
                     changeTaskCategory={changeTaskCategory}
                     taskTotal={taskTotal}/>
         </div>
