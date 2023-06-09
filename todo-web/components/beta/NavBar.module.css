@@ -14,6 +14,10 @@
     cursor: pointer;
 }
 
+.itemHover {
+    background-color: #efefef;
+}
+
 .item:hover {
     background-color: #efefef;
 }

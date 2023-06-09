@@ -31,8 +31,8 @@ export default function TaskItem({task, draggable = false, onClick}) {
                  setExit(true);
              }}
              onDragEnd={(event) => {
-                 setExit(false);
                  event.preventDefault();
+                 setExit(false);
              }}
              className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : animations.scaleInCenter}`}>
             <div className={`${styles.taskTime}`} onClick={() => markComplete(task)}>

@@ -172,18 +172,45 @@ export default function Tasks() {
         });
     }
 
+    const changeTaskCategory = (id, categoryId) => {
+        let changeTask = null;
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === id) {
+                changeTask = {
+                    ...tasks[i],
+                    categoryId: categoryId
+                };
+            } else {
+                newTasks.push(tasks[i]);
+            }
+        }
+        if (changeTask == null) {
+            return;
+        }
+        setTasks(newTasks);
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: changeTask
+        }).then((r) => {
+            if (!r.success) {
+                setTasks([...tasks]);
+            }
+        });
+    }
+
     return <div className={`${styles.main}`}>
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
                     backToTop={backToTop}
                     categoryId={categoryId}
+                    changeTaskCategory={changeTaskCategory}
                     taskTotal={taskTotal}/>
         </div>
         <div className={`${styles.centerContainer}`}
              ref={centerRef}
-             onScroll={(event) => {
-                 handleScroll(event, page, pageSize, categoryId);
-             }}
+             onScroll={(event) => handleScroll(event, page, pageSize, categoryId)}
              onDrop={onDropCenter}
              onDragOver={(event) => event.preventDefault()}>
             <Padding>
