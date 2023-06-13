@@ -10,3 +10,6 @@ spring:
 jwt:
   private.key: classpath:app.key
   public.key: classpath:app.pub
+ocr:
+  data-path: D:\Workspace\IdeaProjects\todo\todo-service\src\main\resources\ocr
+  language: chi_sim

@@ -43,3 +43,6 @@ weixin:
     token: 3
 chatgpt:
   api-key: 4
+ocr:
+  data-path: D:\Workspace\IdeaProjects\todo\todo-service\src\main\resources\ocr
+  language: chi_sim
