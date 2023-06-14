@@ -1,6 +1,6 @@
 export const POST = "POST";
 export const GET = "GET";
-export const ApiPrefix = "http://";
+export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://todo.sbx0.cn";
 export const API = "/api";
 export const TaskPaging = API + "/task/paging";
 export const TaskComplete = API + "/task/complete";
