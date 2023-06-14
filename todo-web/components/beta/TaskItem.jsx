@@ -34,7 +34,7 @@ export default function TaskItem({task, draggable = false, onClick}) {
                  event.preventDefault();
                  setExit(false);
              }}
-             className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : animations.scaleInCenter}`}>
+             className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : ''}`}>
             <div className={`${styles.taskTime}`} onClick={() => markComplete(task)}>
                 <CircleIcon/>
             </div>

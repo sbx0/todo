@@ -5,7 +5,6 @@ const withPWA = require('next-pwa')({
 })
 module.exports = process.env.NODE_ENV === 'development' ?
     {
-        output: 'standalone',
         reactStrictMode: true,
         async rewrites() {
             return [
@@ -18,7 +17,6 @@ module.exports = process.env.NODE_ENV === 'development' ?
     }
     :
     withPWA({
-        output: 'export',
         reactStrictMode: true,
         images: {
             unoptimized: true

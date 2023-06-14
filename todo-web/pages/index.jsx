@@ -10,7 +10,7 @@ export default function Index() {
     return <Container>
         <Padding>
             <Button
-                onClick={() => router.push("/task/0")}>
+                onClick={() => router.push("/tasks/0")}>
                 Go Beta
             </Button>
         </Padding>

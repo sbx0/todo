@@ -95,7 +95,7 @@ export default function NavBar({
                       onClick={() => {
                           loadTasks(1, 20, one.id, 0);
                           backToTop();
-                          history.pushState('', '', "/task/" + one.id);
+                          history.pushState('', '', "/tasks/" + one.id);
                       }}
                       onDrop={(event) => {
                           if (one.id !== 0 && one.id !== categoryId) {
