@@ -1,34 +1,29 @@
 "use client"
 
-import {useEffect, useState} from "react";
 import styles from "./TaskList.module.css";
 import TaskItem from "./TaskItem";
+import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
+import {useState} from "react";
 
 export default function TaskList({
-                                     addNewTask,
-                                     newTask,
-                                     setNewTask,
-                                     pageSize,
-                                     categoryId,
                                      tasks,
                                      clickTask,
                                      showAdd
                                  }) {
-    const [example, setExample] = useState(false);
-
-    useEffect(() => {
-        if (example) {
-            setExample(true);
-        }
-    }, []);
-
+    const [newTask, setNewTask] = useState('');
+    const {
+        setTasks,
+        params, setParams,
+        others, setOthers,
+        fetchTasks, addTask
+    } = useTasksContext();
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.textAreaDiv}`} style={{display: showAdd ? "block" : "none"}}>
                         <textarea
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
-                                    addNewTask(newTask, pageSize, categoryId);
+                                    addTask(newTask, params.pageSize, params.categoryId, 0);
                                     event.preventDefault();
                                 }
                             }}
@@ -41,7 +36,7 @@ export default function TaskList({
                             className={`${styles.textArea}`}/>
         </div>
         <div className={`${styles.taskContainer}`}>
-            {tasks.map((one) =>
+            {tasks?.map((one) =>
                 <TaskItem draggable
                           onClick={() => clickTask(one)}
                           task={one}

@@ -1,5 +1,9 @@
 import {useEffect, useState} from "react";
 import styles from "./NavBar.module.css";
+import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
+import {callApi} from "../../apis/request";
+import {POST} from "../../apis/apiPath";
+import {useRouter} from "next/navigation";
 
 function Category({onClick, onDrop, one, showNumber}) {
     const [hover, setHover] = useState(false);
@@ -47,13 +51,42 @@ export default function NavBar({
                                    categoryId,
                                    taskTotal,
                                    backToTop,
-                                   changeTaskCategory,
                                    theme,
                                    setTheme,
                                    initCategories
                                }) {
+    const router = useRouter();
+    const {tasks, setTasks} = useTasksContext();
     const [categories, setCategories] = useState(initCategories);
     const [total, setTotal] = useState([]);
+
+    const changeTaskCategory = (id, categoryId) => {
+        let changeTask = null;
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === id) {
+                changeTask = {
+                    ...tasks[i],
+                    categoryId: categoryId
+                };
+            } else {
+                newTasks.push(tasks[i]);
+            }
+        }
+        if (changeTask == null) {
+            return;
+        }
+        setTasks(newTasks);
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: changeTask
+        }).then((r) => {
+            if (!r.success) {
+                setTasks([...tasks]);
+            }
+        });
+    }
 
     useEffect(() => {
         let t = [...total];
@@ -82,7 +115,7 @@ export default function NavBar({
                       onClick={() => {
                           loadTasks(1, 20, one.id, 0);
                           backToTop();
-                          history.pushState('', '', "/tasks/" + one.id);
+                          router.push("/tasks/" + one.id);
                       }}
                       onDrop={(event) => {
                           if (one.id !== 0 && one.id !== categoryId) {
