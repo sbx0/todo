@@ -12,7 +12,7 @@ import TaskDetail from "../../../../components/beta/TaskDetail";
 import TaskList from "../../../../components/beta/TaskList";
 import dynamic from "next/dynamic";
 
-export function Tasks({initTasks, category}) {
+export function Tasks({initTasks, initCategories, category}) {
     const centerRef = useRef(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(20);
@@ -198,6 +198,7 @@ export function Tasks({initTasks, category}) {
         <div className={`${styles.leftNavBar}`}>
             <NavBar loadTasks={loadTasks}
                     backToTop={backToTop}
+                    initCategories={initCategories}
                     categoryId={categoryId}
                     theme={theme}
                     setTheme={setTheme}

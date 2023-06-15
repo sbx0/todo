@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react";
 import styles from "./NavBar.module.css";
-import {callApi} from "../../apis/request";
-import {CategoryPaging, POST} from "../../apis/apiPath";
 
 function Category({onClick, onDrop, one, showNumber}) {
     const [hover, setHover] = useState(false);
@@ -45,9 +43,16 @@ function ThemeSelect({theme, setTheme}) {
 }
 
 export default function NavBar({
-                                   loadTasks, categoryId, taskTotal, backToTop, changeTaskCategory, theme, setTheme
+                                   loadTasks,
+                                   categoryId,
+                                   taskTotal,
+                                   backToTop,
+                                   changeTaskCategory,
+                                   theme,
+                                   setTheme,
+                                   initCategories
                                }) {
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState(initCategories);
     const [total, setTotal] = useState([]);
 
     useEffect(() => {
@@ -55,24 +60,6 @@ export default function NavBar({
         t[categoryId] = taskTotal;
         setTotal(t);
     }, [categoryId]);
-
-    useEffect(() => {
-        loadCategories();
-    }, []);
-
-    const loadCategories = () => {
-        callApi({
-            method: POST, url: CategoryPaging, params: {
-                page: 1,
-                pageSize: 100,
-                orders: [{name: "create_time", direction: "desc"}]
-            }
-        }).then(r => {
-            if (r.success) {
-                setCategories(r.data);
-            }
-        });
-    };
 
     const showNumber = (number) => {
         if (number > 0) {
