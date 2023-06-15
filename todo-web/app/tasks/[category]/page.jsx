@@ -1,7 +1,7 @@
-import {callApi} from "../../../apis/request";
-import {ApiPrefix, CategoryPaging, POST, TaskPaging} from "../../../apis/apiPath";
 import {cookies} from "next/headers";
 import Tasks from "./components/tasks";
+import {callApi} from "../../../apis/request";
+import {ApiPrefix, CategoryPaging, POST, TaskPaging} from "../../../apis/apiPath";
 
 export default async function Page({params}) {
     let token = cookies().get("token").value;
@@ -10,7 +10,7 @@ export default async function Page({params}) {
     let initCategories = [];
 
     if (token != null && token.trim() !== '') {
-        initTasks = await fetchTaskPaging(token);
+        initTasks = await fetchTaskPaging(token, 1, 20, params.category, 0);
         initCategories = await fetchCategory(token);
     }
 
