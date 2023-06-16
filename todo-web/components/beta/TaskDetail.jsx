@@ -1,7 +1,9 @@
 import styles from "./TaskDetail.module.css"
 import Button from "../basic/Button";
+import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
 
-export default function TaskDetail({current, setCurrent, changeTask}) {
+export default function TaskDetail({current, setCurrent, setModalShow}) {
+    const {changeTask} = useTasksContext();
     return <>
         <div className={`${styles.label}`}>{current?.categoryName}</div>
         <div className={`${styles.textAreaDiv}`}>
@@ -41,7 +43,10 @@ export default function TaskDetail({current, setCurrent, changeTask}) {
                             }}
                             className={`${styles.textAreaNoBackground}`}/>
         </div>
-        <Button onClick={() => changeTask(current)}>
+        <Button onClick={() => {
+            changeTask(current);
+            setModalShow(false);
+        }}>
             保存
         </Button>
     </>

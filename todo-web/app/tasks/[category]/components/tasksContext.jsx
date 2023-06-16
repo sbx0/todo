@@ -10,12 +10,12 @@ export function useTasksContext() {
 
 const TasksContext = createContext(null);
 
-export default function TasksProvider({children}) {
-    const [tasks, setTasks] = useState([]);
+export default function TasksProvider({children, initData, categoryId}) {
+    const [tasks, setTasks] = useState(initData);
     const [params, setParams] = useState({
         page: 1,
         pageSize: 20,
-        categoryId: 0,
+        categoryId: categoryId,
         taskStatus: 0
     });
     const [others, setOthers] = useState({
@@ -89,11 +89,31 @@ export default function TasksProvider({children}) {
         });
     }
 
+    const changeTask = (task) => {
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: task
+        }).then((r) => {
+            if (r.success) {
+                let newTasks = [];
+                for (let i = 0; i < tasks.length; i++) {
+                    if (tasks[i].id === task.id) {
+                        newTasks.push(task);
+                    } else {
+                        newTasks.push(tasks[i]);
+                    }
+                }
+                setTasks(newTasks);
+            }
+        });
+    }
+
     return <TasksContext.Provider value={{
         tasks, setTasks,
         params, setParams,
         others, setOthers,
-        fetchTasks, addTask
+        fetchTasks, addTask, changeTask
     }}>
         {children}
     </TasksContext.Provider>;

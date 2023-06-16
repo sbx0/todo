@@ -47,7 +47,6 @@ function ThemeSelect({theme, setTheme}) {
 }
 
 export default function NavBar({
-                                   loadTasks,
                                    categoryId,
                                    taskTotal,
                                    backToTop,
@@ -56,7 +55,7 @@ export default function NavBar({
                                    initCategories
                                }) {
     const router = useRouter();
-    const {tasks, setTasks} = useTasksContext();
+    const {tasks, setTasks, fetchTasks} = useTasksContext();
     const [categories, setCategories] = useState(initCategories);
     const [total, setTotal] = useState([]);
 
@@ -113,9 +112,9 @@ export default function NavBar({
         {categories.map((one) =>
             <Category key={one.id}
                       onClick={() => {
-                          loadTasks(1, 20, one.id, 0);
+                          fetchTasks(1, 20, one.id, 0);
                           backToTop();
-                          router.push("/tasks/" + one.id);
+                          history.pushState(null, "", "/tasks/" + one.id)
                       }}
                       onDrop={(event) => {
                           if (one.id !== 0 && one.id !== categoryId) {

@@ -24,6 +24,7 @@ export default function TaskList({
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
                                     addTask(newTask, params.pageSize, params.categoryId, 0);
+                                    setNewTask('')
                                     event.preventDefault();
                                 }
                             }}
