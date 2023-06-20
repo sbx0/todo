@@ -1,11 +1,10 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import styles from "./NavBar.module.css";
 import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
 import {callApi} from "../../apis/request";
 import {POST} from "../../apis/apiPath";
-import {useRouter} from "next/navigation";
 
-function Category({onClick, onDrop, one, showNumber}) {
+function Category({onClick, onDrop, one}) {
     const [hover, setHover] = useState(false);
 
     return <div
@@ -23,9 +22,6 @@ function Category({onClick, onDrop, one, showNumber}) {
             event.preventDefault();
         }}
         className={`${styles.item} ${hover ? styles.itemHover : ""}`}>
-        <div className={`${styles.number}`}>
-            {showNumber}
-        </div>
         {`${one.categoryName}`}
     </div>;
 }
@@ -48,16 +44,12 @@ function ThemeSelect({theme, setTheme}) {
 
 export default function NavBar({
                                    categoryId,
-                                   taskTotal,
                                    backToTop,
                                    theme,
                                    setTheme,
                                    initCategories
                                }) {
-    const router = useRouter();
     const {tasks, setTasks, fetchTasks} = useTasksContext();
-    const [categories, setCategories] = useState(initCategories);
-    const [total, setTotal] = useState([]);
 
     const changeTaskCategory = (id, categoryId) => {
         let changeTask = null;
@@ -87,20 +79,6 @@ export default function NavBar({
         });
     }
 
-    useEffect(() => {
-        let t = [...total];
-        t[categoryId] = taskTotal;
-        setTotal(t);
-    }, [categoryId]);
-
-    const showNumber = (number) => {
-        if (number > 0) {
-            return number;
-        } else {
-            return '';
-        }
-    }
-
     const onDrop = (event, categoryId) => {
         let id = parseInt(event.dataTransfer.getData('text'));
         changeTaskCategory(id, categoryId);
@@ -109,7 +87,7 @@ export default function NavBar({
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.category}`}>标签</div>
-        {categories.map((one) =>
+        {initCategories.map((one) =>
             <Category key={one.id}
                       onClick={() => {
                           fetchTasks(1, 20, one.id, 0);
@@ -121,7 +99,6 @@ export default function NavBar({
                               onDrop(event, one.id)
                           }
                       }}
-                      showNumber={showNumber(total[one.id])}
                       one={one}/>)
         }
         <div className={`${styles.category}`}>主题</div>

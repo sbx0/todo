@@ -10,11 +10,9 @@ import TaskList from "../../../../components/beta/TaskList";
 import dynamic from "next/dynamic";
 import TasksProvider, {useTasksContext} from "./tasksContext";
 
-export function Tasks({initTasks, initCategories, category}) {
+export function Tasks({initTasks, initCategories, categoryId}) {
     const centerRef = useRef(null);
     const [tasks, setTasks] = useState(initTasks);
-    const [categoryId, setCategoryId] = useState(parseInt(category));
-    const [taskTotal, setTaskTotal] = useState(0);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [current, setCurrent] = useState(null);
@@ -49,20 +47,19 @@ export function Tasks({initTasks, initCategories, category}) {
         setCurrent(task);
     }
 
-    return <TasksProvider initData={initTasks} categoryId={parseInt(category)}>
+    return <TasksProvider initData={initTasks} categoryId={categoryId}>
         <div className={`${theme} ${styles.main}`}>
             <div className={`${styles.leftNavBar}`}>
                 <NavBar backToTop={backToTop}
                         initCategories={initCategories}
                         categoryId={categoryId}
                         theme={theme}
-                        setTheme={setTheme}
-                        taskTotal={taskTotal}/>
+                        setTheme={setTheme}/>
             </div>
             <Center
                 centerRef={centerRef}
                 initTasks={initTasks}
-                categoryId={parseInt(category)}
+                categoryId={categoryId}
                 completedTasks={completedTasks}
                 setCompletedTasks={setCompletedTasks}
                 clickTask={clickTask}/>
@@ -87,12 +84,10 @@ export function Tasks({initTasks, initCategories, category}) {
     </TasksProvider>;
 }
 
-function Center({centerRef, completedTasks, setCompletedTasks, clickTask, initTasks, categoryId}) {
+function Center({centerRef, completedTasks, setCompletedTasks, clickTask}) {
     const {
         tasks, setTasks,
-        params, setParams,
-        others, setOthers,
-        fetchTasks, addTask
+        params, fetchTasks
     } = useTasksContext();
 
     const onDropCenter = (event) => {

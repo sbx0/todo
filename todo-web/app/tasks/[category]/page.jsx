@@ -16,7 +16,7 @@ export default async function Page({params}) {
 
     return <Tasks initTasks={initTasks}
                   initCategories={initCategories}
-                  category={params.category}/>;
+                  categoryId={parseInt(params.category)}/>;
 }
 
 async function fetchTaskPaging(token, page = 1, pageSize = 20, categoryId = 0, taskStatus = 0) {
