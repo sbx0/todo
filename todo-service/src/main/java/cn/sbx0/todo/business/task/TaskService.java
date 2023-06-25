@@ -1,10 +1,7 @@
 package cn.sbx0.todo.business.task;
 
 import cn.sbx0.todo.business.category.CategoryService;
-import cn.sbx0.todo.business.task.entity.TaskEntity;
-import cn.sbx0.todo.business.task.entity.TaskMapper;
-import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
-import cn.sbx0.todo.business.task.entity.TaskView;
+import cn.sbx0.todo.business.task.entity.*;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.business.weixin.WeChatService;
 import cn.sbx0.todo.business.weixin.entity.WeChatMessage;
@@ -35,6 +32,9 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
     public static final Set<Long> REMINDER_IDS = new CopyOnWriteArraySet<>();
+    public static final Double DEFAULT_POSITION = 5000.0;
+    public static final Double STEP_POSITION = 2500.0;
+    public static final double DENOMINATOR = 2.0;
     private final CategoryService categoryService;
     @Resource
     private TaskRepository repository;
@@ -201,5 +201,51 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
     @Transactional
     public Result<Void> complete(IdParam param) {
         return Result.judge(repository().complete(param));
+    }
+
+    public Result<Void> sort(SortParam param) {
+        Long currentId = param.getCurrentId();
+        Optional<TaskEntity> taskEntityOptional = repository().findById(currentId);
+        if (taskEntityOptional.isEmpty()) {
+            return Result.failure("任务[" + currentId + "]不存在");
+        }
+        TaskEntity taskEntity = taskEntityOptional.get();
+        taskEntity.setPrevId(param.getPrevId());
+        taskEntity.setNextId(param.getNextId());
+        if (param.getPrevId() == null && param.getNextId() == null) {
+            // first and only
+            taskEntity.setPosition(DEFAULT_POSITION);
+        } else if (param.getPrevId() == null) {
+            // first and not only
+            Optional<TaskEntity> nextOptional = repository().findById(param.getNextId());
+            if (nextOptional.isEmpty()) {
+                return Result.failure("任务[" + param.getNextId() + "]不存在");
+            }
+            TaskEntity nextTask = nextOptional.get();
+            taskEntity.setPosition(nextTask.getPosition() + STEP_POSITION);
+        } else if (param.getNextId() == null) {
+            // last and not only
+            Optional<TaskEntity> prevOptional = repository().findById(param.getPrevId());
+            if (prevOptional.isEmpty()) {
+                return Result.failure("任务[" + param.getPrevId() + "]不存在");
+            }
+            TaskEntity prevTask = prevOptional.get();
+            taskEntity.setPosition(prevTask.getPosition() - STEP_POSITION);
+        } else {
+            // center
+            Optional<TaskEntity> prevOptional = repository().findById(param.getPrevId());
+            if (prevOptional.isEmpty()) {
+                return Result.failure("任务[" + param.getPrevId() + "]不存在");
+            }
+            TaskEntity prevTask = prevOptional.get();
+            Optional<TaskEntity> nextOptional = repository().findById(param.getNextId());
+            if (nextOptional.isEmpty()) {
+                return Result.failure("任务[" + param.getNextId() + "]不存在");
+            }
+            TaskEntity nextTask = nextOptional.get();
+            taskEntity.setPosition((prevTask.getPosition() + nextTask.getPosition()) / DENOMINATOR);
+        }
+        repository().save(taskEntity);
+        return Result.success();
     }
 }

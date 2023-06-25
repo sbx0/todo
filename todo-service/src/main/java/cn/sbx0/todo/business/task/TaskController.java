@@ -1,5 +1,6 @@
 package cn.sbx0.todo.business.task;
 
+import cn.sbx0.todo.business.task.entity.SortParam;
 import cn.sbx0.todo.business.task.entity.TaskEntity;
 import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
 import cn.sbx0.todo.business.task.entity.TaskView;
@@ -79,5 +80,16 @@ public class TaskController {
     @PostMapping("/complete")
     public Result<Void> complete(@RequestBody IdParam param) {
         return service.complete(param);
+    }
+
+    /**
+     * Sort Task
+     *
+     * @param param sort param
+     * @return sort result
+     */
+    @PostMapping("/sort")
+    public Result<Void> sort(@RequestBody SortParam param) {
+        return service.sort(param);
     }
 }
