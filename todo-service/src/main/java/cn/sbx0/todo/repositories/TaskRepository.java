@@ -35,6 +35,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT *
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
+                      AND position is null
                       AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
@@ -44,6 +45,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
+                      AND position is null
                       AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
@@ -57,6 +59,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT *
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
+                      AND position is null
                       AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
@@ -66,6 +69,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                     SELECT COUNT(*)
                     FROM tasks
                     WHERE user_id = :#{#pagingRequest.userId}
+                      AND position is null
                       AND ((:#{#pagingRequest.categoryId} = 0)
                         OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
                       AND ((:#{#pagingRequest.taskStatus} < 0)
