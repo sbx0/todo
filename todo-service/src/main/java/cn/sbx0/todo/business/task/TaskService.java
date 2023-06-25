@@ -189,8 +189,8 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
             return Result.failure("任务[" + currentId + "]不存在");
         }
         TaskEntity taskEntity = taskEntityOptional.get();
+        List<TaskEntity> tasks = new ArrayList<>();
         if (param.getReset()) {
-            List<TaskEntity> tasks = new ArrayList<>();
             taskEntity.setPosition(null);
             if (taskEntity.getPrevId() != null) {
                 Optional<TaskEntity> prevTaskOptional = repository().findById(taskEntity.getPrevId());
@@ -225,6 +225,8 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
             }
             TaskEntity nextTask = nextOptional.get();
             taskEntity.setPosition(nextTask.getPosition() + STEP_POSITION);
+            nextTask.setPrevId(param.getCurrentId());
+            tasks.add(nextTask);
         } else if (param.getNextId() == null) {
             // last and not only
             Optional<TaskEntity> prevOptional = repository().findById(param.getPrevId());
@@ -233,6 +235,8 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
             }
             TaskEntity prevTask = prevOptional.get();
             taskEntity.setPosition(prevTask.getPosition() - STEP_POSITION);
+            prevTask.setNextId(param.getCurrentId());
+            tasks.add(prevTask);
         } else {
             // center
             Optional<TaskEntity> prevOptional = repository().findById(param.getPrevId());
@@ -240,14 +244,19 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
                 return Result.failure("任务[" + param.getPrevId() + "]不存在");
             }
             TaskEntity prevTask = prevOptional.get();
+            prevTask.setNextId(param.getCurrentId());
+            tasks.add(prevTask);
             Optional<TaskEntity> nextOptional = repository().findById(param.getNextId());
             if (nextOptional.isEmpty()) {
                 return Result.failure("任务[" + param.getNextId() + "]不存在");
             }
             TaskEntity nextTask = nextOptional.get();
+            nextTask.setPrevId(param.getPrevId());
+            tasks.add(nextTask);
             taskEntity.setPosition((prevTask.getPosition() + nextTask.getPosition()) / DENOMINATOR);
         }
-        repository().save(taskEntity);
+        tasks.add(taskEntity);
+        repository().saveAll(tasks);
         return Result.success();
     }
 
