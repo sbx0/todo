@@ -2,7 +2,7 @@
 
 import {createContext, useContext, useState} from "react";
 import {callApi} from "../../../../apis/request";
-import {POST, TaskPaging} from "../../../../apis/apiPath";
+import {ApiPrefix, POST, TaskPaging, TaskSort} from "../../../../apis/apiPath";
 
 export function useTasksContext() {
     return useContext(TasksContext);
@@ -110,12 +110,70 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         });
     }
 
+    const taskSort = (currentId) => {
+        let nextId = null;
+        if (sortedTasks != null && sortedTasks.length > 0) {
+            nextId = sortedTasks[0].id;
+        }
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === currentId) {
+                sortedTasks.reverse();
+                sortedTasks.push(tasks[i]);
+                sortedTasks.reverse();
+            } else {
+                newTasks.push(tasks[i]);
+            }
+        }
+        setTasks(newTasks);
+        setSortedTasks([...sortedTasks]);
+        callApi({
+            method: POST,
+            url: ApiPrefix + TaskSort,
+            params: {
+                currentId: currentId,
+                nextId: nextId
+            }
+        }).then((r) => {
+            if (r.success) {
+                // fetchTasks(1, params.pageSize, params.categoryId, params.taskStatus);
+            }
+        });
+    }
+    const resetTaskSort = (currentId) => {
+        let newTasks = [];
+        for (let i = 0; i < sortedTasks.length; i++) {
+            if (sortedTasks[i].id !== currentId) {
+                newTasks.push(sortedTasks[i]);
+            } else {
+                tasks.reverse();
+                tasks.push(sortedTasks[i]);
+                tasks.reverse();
+            }
+        }
+        setSortedTasks(newTasks);
+        setTasks([...tasks]);
+        callApi({
+            method: POST,
+            url: ApiPrefix + TaskSort,
+            params: {
+                currentId: currentId,
+                reset: true
+            }
+        }).then((r) => {
+            if (r.success) {
+                // fetchTasks(1, params.pageSize, params.categoryId, params.taskStatus);
+            }
+        });
+    }
+
     return <TasksContext.Provider value={{
         tasks, setTasks,
         sortedTasks, setSortedTasks,
         params, setParams,
         others, setOthers,
-        fetchTasks, addTask, changeTask
+        fetchTasks, addTask, changeTask,
+        taskSort, resetTaskSort
     }}>
         {children}
     </TasksContext.Provider>;

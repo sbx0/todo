@@ -12,10 +12,10 @@ import cn.sbx0.todo.service.JpaService;
 import cn.sbx0.todo.service.common.Paging;
 import cn.sbx0.todo.service.common.Result;
 import jakarta.annotation.Resource;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, TaskPagingRequest> {
     public static final Set<Long> REMINDER_IDS = new CopyOnWriteArraySet<>();
-    public static final Double DEFAULT_POSITION = 5000.0;
-    public static final Double STEP_POSITION = 2500.0;
+    public static final Double DEFAULT_POSITION = 100.0;
+    public static final Double STEP_POSITION = 10.0;
     public static final double DENOMINATOR = 2.0;
     private final CategoryService categoryService;
     @Resource
@@ -176,11 +176,12 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Result<Void> complete(IdParam param) {
         return Result.judge(repository().complete(param));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Result<Void> sort(SortParam param) {
         Long currentId = param.getCurrentId();
         Optional<TaskEntity> taskEntityOptional = repository().findById(currentId);
@@ -188,6 +189,29 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
             return Result.failure("任务[" + currentId + "]不存在");
         }
         TaskEntity taskEntity = taskEntityOptional.get();
+        if (param.getReset()) {
+            List<TaskEntity> tasks = new ArrayList<>();
+            taskEntity.setPosition(null);
+            if (taskEntity.getPrevId() != null) {
+                Optional<TaskEntity> prevTaskOptional = repository().findById(taskEntity.getPrevId());
+                if (prevTaskOptional.isPresent()) {
+                    TaskEntity prevTask = prevTaskOptional.get();
+                    prevTask.setNextId(taskEntity.getNextId());
+                    tasks.add(prevTask);
+                }
+            }
+            if (taskEntity.getNextId() != null) {
+                Optional<TaskEntity> nextTaskOptional = repository().findById(taskEntity.getNextId());
+                if (nextTaskOptional.isPresent()) {
+                    TaskEntity nextTask = nextTaskOptional.get();
+                    nextTask.setPrevId(taskEntity.getPrevId());
+                    tasks.add(nextTask);
+                }
+                tasks.add(taskEntity);
+            }
+            repository().saveAll(tasks);
+            return Result.success();
+        }
         taskEntity.setPrevId(param.getPrevId());
         taskEntity.setNextId(param.getNextId());
         if (param.getPrevId() == null && param.getNextId() == null) {

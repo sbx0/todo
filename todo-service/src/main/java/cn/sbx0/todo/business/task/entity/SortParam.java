@@ -13,4 +13,5 @@ public class SortParam {
     private Long prevId;
     private Long currentId;
     private Long nextId;
+    private Boolean reset = false;
 }

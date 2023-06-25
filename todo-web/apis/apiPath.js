@@ -1,8 +1,9 @@
 export const POST = "POST";
 export const GET = "GET";
-export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://todo.sbx0.cn";
+export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://192.168.50.2:3000" : "https://todo.sbx0.cn";
 export const API = "/api";
 export const TaskPaging = API + "/task/paging";
+export const TaskSort = API + "/task/sort";
 export const TaskSortedPaging = API + "/task/sortedPaging";
 export const TaskComplete = API + "/task/complete";
 export const CategoryPaging = API + "/category/paging";

@@ -60,24 +60,13 @@ export function Tasks({
 function Center({centerRef, clickTask}) {
     const {
         tasks, setTasks,
-        sortedTasks, setSortedTasks,
+        resetTaskSort, setSortedTasks,
         params, fetchTasks
     } = useTasksContext();
 
     const onDropCenter = (event) => {
         let id = parseInt(event.dataTransfer.getData('text'));
-        let newTasks = [];
-        for (let i = 0; i < sortedTasks.length; i++) {
-            if (sortedTasks[i].id !== id) {
-                newTasks.push(sortedTasks[i]);
-            } else {
-                tasks.reverse();
-                tasks.push(sortedTasks[i]);
-                tasks.reverse();
-            }
-        }
-        setSortedTasks(newTasks);
-        setTasks([...tasks]);
+        resetTaskSort(id);
         event.preventDefault();
     }
 
@@ -106,25 +95,12 @@ function Center({centerRef, clickTask}) {
 
 function Left({clickTask}) {
     const {
-        tasks, setTasks,
-        sortedTasks, setSortedTasks,
-        params, fetchTasks
+        sortedTasks, taskSort
     } = useTasksContext();
 
     const onDropRight = (event) => {
         let id = parseInt(event.dataTransfer.getData('text'));
-        let newTasks = [];
-        for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].id !== id) {
-                newTasks.push(tasks[i]);
-            } else {
-                sortedTasks.reverse();
-                sortedTasks.push(tasks[i]);
-                sortedTasks.reverse();
-            }
-        }
-        setTasks(newTasks);
-        setSortedTasks([...sortedTasks]);
+        taskSort(id);
         event.preventDefault();
     }
 
