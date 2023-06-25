@@ -129,30 +129,8 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
 
     public Paging<TaskView> pagingView(TaskPagingRequest pagingRequest) {
         Paging<TaskEntity> paging = this.paging(pagingRequest);
-        List<TaskEntity> tasks = paging.getData();
-        Set<Long> categoryIds = new HashSet<>();
-        Set<Long> userIds = new HashSet<>();
-        for (TaskEntity task : tasks) {
-            if (task.getCategoryId() != null) {
-                categoryIds.add(task.getCategoryId());
-            }
-            if (task.getUserId() != null) {
-                userIds.add(task.getUserId());
-            }
-        }
-        Map<Long, String> categories = categoryService.mapByIds(categoryIds);
-        Map<Long, String> users = userService.mapByIds(userIds);
-        List<TaskView> newTasks = new ArrayList<>();
-        for (TaskEntity task : tasks) {
-            TaskView newTask = TaskMapper.INSTANCE.toView(
-                    task,
-                    users.getOrDefault(task.getUserId(), ""),
-                    categories.getOrDefault(task.getCategoryId(), "")
-            );
-            newTasks.add(newTask);
-        }
         return Paging.success(
-                newTasks,
+                buildTaskView(paging.getData()),
                 paging.getCommon().getPage(),
                 paging.getCommon().getPageSize(),
                 paging.getCommon().getTotal(),
@@ -247,5 +225,55 @@ public class TaskService extends JpaService<TaskRepository, TaskEntity, Long, Ta
         }
         repository().save(taskEntity);
         return Result.success();
+    }
+
+    public List<TaskView> buildTaskView(List<TaskEntity> tasks) {
+        Set<Long> categoryIds = new HashSet<>();
+        Set<Long> userIds = new HashSet<>();
+        for (TaskEntity task : tasks) {
+            if (task.getCategoryId() != null) {
+                categoryIds.add(task.getCategoryId());
+            }
+            if (task.getUserId() != null) {
+                userIds.add(task.getUserId());
+            }
+        }
+        Map<Long, String> categories = categoryService.mapByIds(categoryIds);
+        Map<Long, String> users = userService.mapByIds(userIds);
+        List<TaskView> newTasks = new ArrayList<>();
+        for (TaskEntity task : tasks) {
+            TaskView newTask = TaskMapper.INSTANCE.toView(
+                    task,
+                    users.getOrDefault(task.getUserId(), ""),
+                    categories.getOrDefault(task.getCategoryId(), "")
+            );
+            newTasks.add(newTask);
+        }
+        return newTasks;
+    }
+
+    public Paging<TaskView> sortedPagingView(TaskSortedPagingRequest pagingRequest) {
+        Paging<TaskEntity> paging = this.sortedPaging(pagingRequest);
+        return Paging.success(
+                buildTaskView(paging.getData()),
+                paging.getCommon().getPage(),
+                paging.getCommon().getPageSize(),
+                paging.getCommon().getTotal(),
+                paging.getCommon().getTotalPage()
+        );
+    }
+
+    private Paging<TaskEntity> sortedPaging(TaskSortedPagingRequest pagingRequest) {
+        Page<TaskEntity> pagingData = repository.sortedPaging(pagingRequest, Paging.build(
+                pagingRequest.getPage(),
+                pagingRequest.getPageSize()
+        ));
+        return Paging.success(
+                pagingData.getContent(),
+                pagingData.getPageable().getPageNumber() + 1,
+                pagingData.getPageable().getPageSize(),
+                pagingData.getTotalElements(),
+                pagingData.getTotalPages()
+        );
     }
 }

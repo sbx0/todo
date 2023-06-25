@@ -109,4 +109,26 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
     @Modifying
     @Query(value = "UPDATE TaskEntity SET taskStatus = 1 WHERE id = :#{#param.id}")
     int complete(IdParam param);
+
+    @Query(
+            value = """
+                    SELECT *
+                    FROM tasks
+                    WHERE task_status = 0
+                      AND position is not null
+                      AND user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
+                        OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))
+                    ORDER BY position DESC""",
+            countQuery = """
+                    SELECT COUNT(*)
+                    FROM tasks
+                    WHERE task_status = 0
+                      AND position is not null
+                      AND user_id = :#{#pagingRequest.userId}
+                      AND ((:#{#pagingRequest.categoryId} = 0)
+                        OR (:#{#pagingRequest.categoryId} <> 0 AND category_id = :#{#pagingRequest.categoryId}))""",
+            nativeQuery = true
+    )
+    <T extends PagingRequest> Page<TaskEntity> sortedPaging(T pagingRequest, Pageable pageable);
 }

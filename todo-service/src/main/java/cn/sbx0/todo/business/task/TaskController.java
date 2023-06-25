@@ -1,9 +1,6 @@
 package cn.sbx0.todo.business.task;
 
-import cn.sbx0.todo.business.task.entity.SortParam;
-import cn.sbx0.todo.business.task.entity.TaskEntity;
-import cn.sbx0.todo.business.task.entity.TaskPagingRequest;
-import cn.sbx0.todo.business.task.entity.TaskView;
+import cn.sbx0.todo.business.task.entity.*;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.entity.IdParam;
 import cn.sbx0.todo.entity.StatisticalIndicators;
@@ -41,11 +38,11 @@ public class TaskController {
     }
 
     /**
-     * <p>Task paging list</p>
+     * <p>Task Paging List</p>
      * <p>Unit Test is {@link  TaskControllerTest#paging}</p>
      *
      * @param pagingRequest pagingRequest
-     * @return Task list
+     * @return Task List
      */
     @PostMapping("/paging")
     public Paging<TaskView> paging(@RequestBody TaskPagingRequest pagingRequest) {
@@ -91,5 +88,18 @@ public class TaskController {
     @PostMapping("/sort")
     public Result<Void> sort(@RequestBody SortParam param) {
         return service.sort(param);
+    }
+
+    /**
+     * <p>Task Sorted Paging List</p>
+     * <p>Unit Test is {@link  TaskControllerTest#sortPaging}</p>
+     *
+     * @param pagingRequest pagingRequest
+     * @return Sorted Task Paging List
+     */
+    @PostMapping("/sortedPaging")
+    public Paging<TaskView> sortedPaging(@RequestBody TaskSortedPagingRequest pagingRequest) {
+        pagingRequest.setUserId(userService.getLoginUserId());
+        return service.sortedPagingView(pagingRequest);
     }
 }
