@@ -10,8 +10,9 @@ export function useTasksContext() {
 
 const TasksContext = createContext(null);
 
-export default function TasksProvider({children, initData, categoryId}) {
+export default function TasksProvider({children, initData, sortedData, categoryId}) {
     const [tasks, setTasks] = useState(initData);
+    const [sortedTasks, setSortedTasks] = useState(sortedData);
     const [params, setParams] = useState({
         page: 1,
         pageSize: 20,
@@ -111,6 +112,7 @@ export default function TasksProvider({children, initData, categoryId}) {
 
     return <TasksContext.Provider value={{
         tasks, setTasks,
+        sortedTasks, setSortedTasks,
         params, setParams,
         others, setOthers,
         fetchTasks, addTask, changeTask

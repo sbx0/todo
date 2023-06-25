@@ -10,30 +10,16 @@ import TaskList from "../../../../components/beta/TaskList";
 import dynamic from "next/dynamic";
 import TasksProvider, {useTasksContext} from "./tasksContext";
 
-export function Tasks({initTasks, initCategories, categoryId}) {
+export function Tasks({
+                          initTasks,
+                          initSortedTasks,
+                          initCategories,
+                          categoryId
+                      }) {
+    const [theme, setTheme] = useState(localStorage.getItem("theme"));
     const centerRef = useRef(null);
-    const [tasks, setTasks] = useState(initTasks);
-    const [completedTasks, setCompletedTasks] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [current, setCurrent] = useState(null);
-    const [theme, setTheme] = useState(localStorage.getItem("theme"));
-
-    const onDropRight = (event) => {
-        let id = parseInt(event.dataTransfer.getData('text'));
-        let newTasks = [];
-        for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].id !== id) {
-                newTasks.push(tasks[i]);
-            } else {
-                completedTasks.reverse();
-                completedTasks.push(tasks[i]);
-                completedTasks.reverse();
-            }
-        }
-        setTasks(newTasks);
-        setCompletedTasks([...completedTasks]);
-        event.preventDefault();
-    }
 
     const backToTop = () => {
         centerRef.current.scrollTo({
@@ -47,7 +33,9 @@ export function Tasks({initTasks, initCategories, categoryId}) {
         setCurrent(task);
     }
 
-    return <TasksProvider initData={initTasks} categoryId={categoryId}>
+    return <TasksProvider initData={initTasks}
+                          sortedData={initSortedTasks}
+                          categoryId={categoryId}>
         <div className={`${theme} ${styles.main}`}>
             <div className={`${styles.leftNavBar}`}>
                 <NavBar backToTop={backToTop}
@@ -56,24 +44,9 @@ export function Tasks({initTasks, initCategories, categoryId}) {
                         theme={theme}
                         setTheme={setTheme}/>
             </div>
-            <Center
-                centerRef={centerRef}
-                initTasks={initTasks}
-                categoryId={categoryId}
-                completedTasks={completedTasks}
-                setCompletedTasks={setCompletedTasks}
-                clickTask={clickTask}/>
-            <div className={`${styles.rightContainer}`}
-                 onDrop={onDropRight}
-                 onDragOver={(event) => event.preventDefault()}>
-                <Padding>
-                    <TaskList
-                        tasks={completedTasks}
-                        clickTask={clickTask}
-                        showAdd={false}
-                    />
-                </Padding>
-            </div>
+            <Center centerRef={centerRef}
+                    clickTask={clickTask}/>
+            <Left clickTask={clickTask}/>
             <Model show={modalShow}
                    close={() => setModalShow(false)}>
                 <TaskDetail current={current}
@@ -84,25 +57,26 @@ export function Tasks({initTasks, initCategories, categoryId}) {
     </TasksProvider>;
 }
 
-function Center({centerRef, completedTasks, setCompletedTasks, clickTask}) {
+function Center({centerRef, clickTask}) {
     const {
         tasks, setTasks,
+        sortedTasks, setSortedTasks,
         params, fetchTasks
     } = useTasksContext();
 
     const onDropCenter = (event) => {
         let id = parseInt(event.dataTransfer.getData('text'));
         let newTasks = [];
-        for (let i = 0; i < completedTasks.length; i++) {
-            if (completedTasks[i].id !== id) {
-                newTasks.push(completedTasks[i]);
+        for (let i = 0; i < sortedTasks.length; i++) {
+            if (sortedTasks[i].id !== id) {
+                newTasks.push(sortedTasks[i]);
             } else {
                 tasks.reverse();
-                tasks.push(completedTasks[i]);
+                tasks.push(sortedTasks[i]);
                 tasks.reverse();
             }
         }
-        setCompletedTasks(newTasks);
+        setSortedTasks(newTasks);
         setTasks([...tasks]);
         event.preventDefault();
     }
@@ -128,6 +102,43 @@ function Center({centerRef, completedTasks, setCompletedTasks, clickTask}) {
             />
         </Padding>
     </div>
+}
+
+function Left({clickTask}) {
+    const {
+        tasks, setTasks,
+        sortedTasks, setSortedTasks,
+        params, fetchTasks
+    } = useTasksContext();
+
+    const onDropRight = (event) => {
+        let id = parseInt(event.dataTransfer.getData('text'));
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id !== id) {
+                newTasks.push(tasks[i]);
+            } else {
+                sortedTasks.reverse();
+                sortedTasks.push(tasks[i]);
+                sortedTasks.reverse();
+            }
+        }
+        setTasks(newTasks);
+        setSortedTasks([...sortedTasks]);
+        event.preventDefault();
+    }
+
+    return <div className={`${styles.rightContainer}`}
+                onDrop={onDropRight}
+                onDragOver={(event) => event.preventDefault()}>
+        <Padding>
+            <TaskList
+                tasks={sortedTasks}
+                clickTask={clickTask}
+                showAdd={false}
+            />
+        </Padding>
+    </div>;
 }
 
 export default dynamic(() => Promise.resolve(Tasks), {

@@ -3,6 +3,7 @@ export const GET = "GET";
 export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://todo.sbx0.cn";
 export const API = "/api";
 export const TaskPaging = API + "/task/paging";
+export const TaskSortedPaging = API + "/task/sortedPaging";
 export const TaskComplete = API + "/task/complete";
 export const CategoryPaging = API + "/category/paging";
 export const TaskStatistics = API + "/task/statistics";
