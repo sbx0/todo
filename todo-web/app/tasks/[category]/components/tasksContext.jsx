@@ -3,6 +3,7 @@
 import {createContext, useContext, useState} from "react";
 import {callApi} from "../../../../apis/request";
 import {ApiPrefix, POST, TaskPaging, TaskSort} from "../../../../apis/apiPath";
+import toast, {Toaster} from 'react-hot-toast';
 
 export function useTasksContext() {
     return useContext(TasksContext);
@@ -86,6 +87,9 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }).then((r) => {
             if (r.success) {
                 fetchTasks(1, pageSize, categoryId, taskStatus);
+                toast.success("已添加任务");
+            } else {
+                toast.error("添加任务失败");
             }
         });
     }
@@ -106,6 +110,9 @@ export default function TasksProvider({children, initData, sortedData, categoryI
                     }
                 }
                 setTasks(newTasks);
+                toast.success("已修改任务");
+            } else {
+                toast.error("修改任务失败");
             }
         });
     }
@@ -137,6 +144,8 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }).then((r) => {
             if (r.success) {
                 // fetchTasks(1, params.pageSize, params.categoryId, params.taskStatus);
+            } else {
+                toast.error("任务排序失败");
             }
         });
     }
@@ -163,6 +172,8 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }).then((r) => {
             if (r.success) {
                 // fetchTasks(1, params.pageSize, params.categoryId, params.taskStatus);
+            } else {
+                toast.error("重置任务排序失败");
             }
         });
     }
@@ -176,5 +187,6 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         taskSort, resetTaskSort
     }}>
         {children}
+        <Toaster/>
     </TasksContext.Provider>;
 }
