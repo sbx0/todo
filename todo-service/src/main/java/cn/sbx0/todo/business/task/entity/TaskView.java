@@ -42,6 +42,12 @@ public class TaskView {
   // userId
   private Long userId;
   private String userName;
+  // prev id
+  private Long prevId;
+  // next id
+  private Long nextId;
+  // position
+  private Double position;
   // when create
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
