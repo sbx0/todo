@@ -3,14 +3,14 @@ import {CircleIcon} from "@primer/octicons-react";
 import animations from "../../styles/animation.module.css";
 import {useState} from "react";
 import CountDown from "../time/CountDown";
-import {callApi} from "../../apis/request";
 import {POST, TaskComplete} from "../../apis/apiPath";
 import toast from "react-hot-toast";
+import {fetchLoading} from "../../apis/request";
 
 export default function TaskItem({task, draggable = false, onClick}) {
     const [exit, setExit] = useState(false);
     const markComplete = (task) => {
-        callApi({
+        fetchLoading({
             method: POST,
             url: TaskComplete,
             params: {

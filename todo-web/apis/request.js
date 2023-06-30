@@ -1,4 +1,5 @@
 import {getCookie, removeCookie} from "./cookies";
+import toast from "react-hot-toast";
 
 export const fetcher = (...args) => callApi(...args).then((res) => res);
 
@@ -17,6 +18,41 @@ export function buildPath(url, params) {
         }
     }
     return url;
+}
+
+let loadingId = null;
+
+export async function fetchLoading(params) {
+    let clear = () => {
+    };
+
+    const loading = new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+            if (loadingId == null) {
+                const id = toast.loading("请求中...");
+                loadingId = id;
+                resolve(id);
+            }
+        }, 500);
+        clear = () => {
+            clearTimeout(timeout);
+            loadingId = null;
+            resolve('')
+        }
+    });
+
+    const fetch = new Promise((resolve, reject) => {
+        callApi(params).then(r => {
+            clear();
+            resolve(r);
+        });
+    });
+
+    return await Promise.all([loading, fetch]).then((responses) => {
+        let id = responses[0];
+        toast.dismiss(id);
+        return responses[1];
+    });
 }
 
 export async function callApi({

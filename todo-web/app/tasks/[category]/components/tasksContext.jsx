@@ -1,7 +1,7 @@
 "use client";
 
 import {createContext, useContext, useReducer} from "react";
-import {callApi} from "../../../../apis/request";
+import {fetchLoading} from "../../../../apis/request";
 import {ApiPrefix, POST, TaskPaging, TaskSort, TaskSortedPaging} from "../../../../apis/apiPath";
 import toast, {Toaster} from 'react-hot-toast';
 
@@ -47,7 +47,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         if (params.page > 1 && !sortedTasksState.isMore) {
             return;
         }
-        callApi({
+        fetchLoading({
             method: POST, url: TaskSortedPaging, params: params,
         }).then(r => {
             let key = `${params.page}-${params.pageSize}-${params.categoryId}-`
@@ -97,7 +97,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         if (params.page > 1 && !tasksState.isMore) {
             return;
         }
-        callApi({
+        fetchLoading({
             method: POST, url: TaskPaging, params: params
         }).then(r => {
             if (r.success) {
@@ -145,7 +145,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         if (tasksState.categoryId === 0) {
             return;
         }
-        callApi({
+        fetchLoading({
             method: POST,
             url: '/api/task/save',
             params: {
@@ -163,7 +163,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
     }
 
     const changeTask = (task) => {
-        callApi({
+        fetchLoading({
             method: POST,
             url: '/api/task/update',
             params: task
@@ -217,7 +217,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }
         tasksDispatch({type: 'saveData', payload: {data: newTasks}});
         sortedTasksDispatch({type: 'saveData', payload: {data: sortedTasks}});
-        callApi({
+        fetchLoading({
             method: POST,
             url: ApiPrefix + TaskSort,
             params: {
@@ -246,7 +246,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }
         tasksDispatch({type: 'saveData', payload: {data: tasks}});
         sortedTasksDispatch({type: 'saveData', payload: {data: newTasks}});
-        callApi({
+        fetchLoading({
             method: POST,
             url: ApiPrefix + TaskSort,
             params: {
@@ -280,7 +280,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             return;
         }
         tasksDispatch({type: 'saveData', payload: {data: newTasks}});
-        callApi({
+        fetchLoading({
             method: POST,
             url: '/api/task/update',
             params: changeTask
