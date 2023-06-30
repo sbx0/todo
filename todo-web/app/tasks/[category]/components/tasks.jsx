@@ -59,9 +59,9 @@ export function Tasks({
 
 function Center({centerRef, clickTask}) {
     const {
-        tasks, setTasks,
         resetTaskSort, setSortedTasks,
-        params, fetchTasks
+        params, fetchTasks,
+        tasksState, tasksDispatch
     } = useTasksContext();
 
     const onDropCenter = (event) => {
@@ -74,7 +74,7 @@ function Center({centerRef, clickTask}) {
         const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
         if (scrollHeight - scrollTop === clientHeight) {
             // 到达底部，加载下一页数据
-            fetchTasks(params.page + 1, params.pageSize, params.categoryId, params.taskStatus);
+            fetchTasks({page: tasksState.page + 1});
         }
     };
 
@@ -85,7 +85,7 @@ function Center({centerRef, clickTask}) {
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
             <TaskList
-                tasks={tasks}
+                tasks={tasksState.data}
                 clickTask={clickTask}
                 showAdd={params.categoryId !== 0}
             />

@@ -11,17 +11,12 @@ export function useTasksContext() {
 
 const TasksContext = createContext(null);
 
-function sortedTasksReducer(state, action) {
+function tasksReducer(state, action) {
     if (action.type === 'saveData') {
         return {
             ...state,
-            data: action.payload
+            ...action.payload
         };
-    } else if (action.type === 'setCategoryId') {
-        return {
-            ...state,
-            categoryId: action.payload
-        }
     }
     throw Error('Unknown action.');
 }
@@ -39,7 +34,16 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         isMore: true,
         total: 0
     });
-    const [sortedTasksState, sortedTasksDispatch] = useReducer(sortedTasksReducer, {
+    const [tasksState, tasksDispatch] = useReducer(tasksReducer, {
+        page: 1,
+        pageSize: 20,
+        categoryId: categoryId,
+        taskStatus: 0,
+        isMore: true,
+        total: 0,
+        data: initData
+    });
+    const [sortedTasksState, sortedTasksDispatch] = useReducer(tasksReducer, {
         page: 1,
         pageSize: 20,
         categoryId: categoryId,
@@ -56,40 +60,67 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             categoryId: sortedTasksState.categoryId,
             ...params
         }
-        callApi({
-            method: POST, url: TaskSortedPaging, params: params,
-        }).then(response => {
-            let data = [];
-            if (response.success) {
-                const key = `fetchTaskSortedPaging-${params.page}-${params.pageSize}-${params.categoryId}-`
-                for (let i = 0; i < response.data.length; i++) {
-                    data.push({
-                        key: key + response.data[i].id,
-                        ...response.data[i]
-                    });
-                }
-            }
-            sortedTasksDispatch({type: 'saveData', payload: data});
-        });
-    }
-
-    const fetchTasks = (page = 1,
-                        pageSize = 20,
-                        categoryId = 0,
-                        taskStatus = 0) => {
-        if (page > 1 && !others.isMore) {
+        if (params.page > 1 && !sortedTasksState.isMore) {
             return;
         }
         callApi({
-            method: POST, url: TaskPaging, params: {
-                page: page,
-                pageSize: pageSize,
-                categoryId: categoryId,
-                taskStatus: taskStatus
+            method: POST, url: TaskSortedPaging, params: params,
+        }).then(r => {
+            let key = `${params.page}-${params.pageSize}-${params.categoryId}-`
+            let newData;
+            if (r.common.page === 1) {
+                newData = [];
+            } else {
+                newData = tasks;
             }
+            for (let i = 0; i < r.data.length; i++) {
+                newData.push({
+                    key: key + r.data[i].id,
+                    ...r.data[i]
+                });
+            }
+            let payload = {
+                data: newData,
+                page: r.common.page,
+                pageSize: r.common.pageSize,
+                total: r.common.total,
+                categoryId: params.categoryId,
+                taskStatus: params.taskStatus
+            }
+            if (r.data.length < r.common.pageSize) {
+                payload = {
+                    ...payload,
+                    isMore: false
+                }
+            } else {
+                payload = {
+                    ...payload,
+                    isMore: true
+                }
+            }
+            sortedTasksDispatch({
+                type: 'saveData',
+                payload: payload
+            })
+        });
+    }
+
+    const fetchTasks = (params) => {
+        params = {
+            page: tasksState.page,
+            pageSize: tasksState.pageSize,
+            categoryId: tasksState.categoryId,
+            taskStatus: tasksState.taskStatus,
+            ...params
+        }
+        if (params.page > 1 && !tasksState.isMore) {
+            return;
+        }
+        callApi({
+            method: POST, url: TaskPaging, params: params
         }).then(r => {
             if (r.success) {
-                let key = `${page}-${pageSize}-${categoryId}-${taskStatus}-`
+                let key = `${params.page}-${params.pageSize}-${params.categoryId}-${params.taskStatus}-`
                 let newData;
                 if (r.common.page === 1) {
                     newData = [];
@@ -102,18 +133,29 @@ export default function TasksProvider({children, initData, sortedData, categoryI
                         ...r.data[i]
                     });
                 }
-                setTasks(newData);
-                setParams({
+                let payload = {
+                    data: newData,
                     page: r.common.page,
                     pageSize: r.common.pageSize,
-                    categoryId: categoryId,
-                    taskStatus: taskStatus
-                })
-                if (r.data.length < r.common.pageSize) {
-                    setOthers({isMore: false, total: r.common.total});
-                } else {
-                    setOthers({isMore: true, total: r.common.total});
+                    total: r.common.total,
+                    categoryId: params.categoryId,
+                    taskStatus: params.taskStatus
                 }
+                if (r.data.length < r.common.pageSize) {
+                    payload = {
+                        ...payload,
+                        isMore: false
+                    }
+                } else {
+                    payload = {
+                        ...payload,
+                        isMore: true
+                    }
+                }
+                tasksDispatch({
+                    type: 'saveData',
+                    payload: payload
+                })
             }
         });
     }
@@ -134,7 +176,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             }
         }).then((r) => {
             if (r.success) {
-                fetchTasks(1, pageSize, categoryId, taskStatus);
+                fetchTasks({page: 1});
                 toast.success("已添加任务");
             } else {
                 toast.error("添加任务失败");
@@ -246,7 +288,9 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         params, setParams,
         others, setOthers,
         fetchTasks, addTask, changeTask,
-        taskSort, resetTaskSort, sortedTasksDispatch, fetchSortedTasks, sortedTasksState
+        taskSort, resetTaskSort, fetchSortedTasks,
+        sortedTasksState, sortedTasksDispatch,
+        tasksState, tasksDispatch
     }}>
         {children}
         <Toaster/>

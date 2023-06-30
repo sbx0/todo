@@ -91,9 +91,13 @@ export default function NavBar({
             <Category key={one.id}
                       onClick={() => {
                           fetchSortedTasks({
+                              page: 1,
                               categoryId: one.id
                           });
-                          fetchTasks(1, 20, one.id, 0);
+                          fetchTasks({
+                              page: 1,
+                              categoryId: one.id
+                          });
                           backToTop();
                           history.pushState(null, "", "/tasks/" + one.id)
                       }}
