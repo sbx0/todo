@@ -23,7 +23,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         pageSize: 20,
         categoryId: categoryId,
         taskStatus: 0,
-        isMore: true,
+        isMore: initData.length === 20,
         total: 0,
         data: initData
     });
@@ -32,7 +32,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         pageSize: 20,
         categoryId: categoryId,
         taskStatus: 0,
-        isMore: true,
+        isMore: sortedData.length === 20,
         total: 0,
         data: sortedData
     });

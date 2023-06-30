@@ -9,6 +9,7 @@ import TaskDetail from "../../../../components/beta/TaskDetail";
 import TaskList from "../../../../components/beta/TaskList";
 import dynamic from "next/dynamic";
 import TasksProvider, {useTasksContext} from "./tasksContext";
+import Button from "../../../../components/basic/Button";
 
 export function Tasks({
                           initTasks,
@@ -67,17 +68,8 @@ function Center({centerRef, clickTask}) {
         event.preventDefault();
     }
 
-    const handleScroll = (event) => {
-        const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
-        if (scrollHeight - scrollTop <= clientHeight) {
-            // 到达底部，加载下一页数据
-            fetchTasks({page: tasksState.page + 1});
-        }
-    };
-
     return <div className={`${styles.centerContainer}`}
                 ref={centerRef}
-                onScroll={(event) => handleScroll(event)}
                 onDrop={onDropCenter}
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
@@ -87,6 +79,14 @@ function Center({centerRef, clickTask}) {
                 showAdd={tasksState.categoryId !== 0}
             />
         </Padding>
+        {
+            tasksState.isMore ?
+                <Padding>
+                    <Button onClick={() => fetchTasks({page: tasksState.page + 1})}>加载更多</Button>
+                </Padding>
+                :
+                <></>
+        }
     </div>
 }
 
@@ -101,16 +101,7 @@ function Left({clickTask}) {
         event.preventDefault();
     }
 
-    const handleScroll = (event) => {
-        const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
-        if (scrollHeight - scrollTop <= clientHeight) {
-            // 到达底部，加载下一页数据
-            fetchSortedTasks({page: sortedTasksState.page + 1});
-        }
-    };
-
     return <div className={`${styles.rightContainer}`}
-                onScroll={(event) => handleScroll(event)}
                 onDrop={onDropRight}
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
@@ -120,6 +111,14 @@ function Left({clickTask}) {
                 showAdd={false}
             />
         </Padding>
+        {
+            sortedTasksState.isMore ?
+                <Padding>
+                    <Button onClick={() => fetchSortedTasks({page: sortedTasksState.page + 1})}>加载更多</Button>
+                </Padding>
+                :
+                <></>
+        }
     </div>;
 }
 
