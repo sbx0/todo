@@ -33,7 +33,7 @@ export async function fetchLoading(params) {
                 loadingId = id;
                 resolve(id);
             }
-        }, 500);
+        }, 300);
         clear = () => {
             clearTimeout(timeout);
             loadingId = null;
