@@ -1,6 +1,6 @@
 "use client";
 
-import {createContext, useContext, useReducer, useState} from "react";
+import {createContext, useContext, useReducer} from "react";
 import {callApi} from "../../../../apis/request";
 import {ApiPrefix, POST, TaskPaging, TaskSort, TaskSortedPaging} from "../../../../apis/apiPath";
 import toast, {Toaster} from 'react-hot-toast';
@@ -22,18 +22,6 @@ function tasksReducer(state, action) {
 }
 
 export default function TasksProvider({children, initData, sortedData, categoryId}) {
-    const [tasks, setTasks] = useState(initData);
-    const [sortedTasks, setSortedTasks] = useState(sortedData);
-    const [params, setParams] = useState({
-        page: 1,
-        pageSize: 20,
-        categoryId: categoryId,
-        taskStatus: 0
-    });
-    const [others, setOthers] = useState({
-        isMore: true,
-        total: 0
-    });
     const [tasksState, tasksDispatch] = useReducer(tasksReducer, {
         page: 1,
         pageSize: 20,
@@ -71,7 +59,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             if (r.common.page === 1) {
                 newData = [];
             } else {
-                newData = tasks;
+                newData = sortedTasksState.data;
             }
             for (let i = 0; i < r.data.length; i++) {
                 newData.push({
@@ -98,10 +86,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
                     isMore: true
                 }
             }
-            sortedTasksDispatch({
-                type: 'saveData',
-                payload: payload
-            })
+            sortedTasksDispatch({type: 'saveData', payload: payload})
         });
     }
 
@@ -125,7 +110,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
                 if (r.common.page === 1) {
                     newData = [];
                 } else {
-                    newData = tasks;
+                    newData = tasksState.data;
                 }
                 for (let i = 0; i < r.data.length; i++) {
                     newData.push({
@@ -152,19 +137,16 @@ export default function TasksProvider({children, initData, sortedData, categoryI
                         isMore: true
                     }
                 }
-                tasksDispatch({
-                    type: 'saveData',
-                    payload: payload
-                })
+                tasksDispatch({type: 'saveData', payload: payload})
             }
         });
     }
 
-    const addTask = (taskName, pageSize = 20, categoryId = 0, taskStatus = 0) => {
+    const addTask = (taskName) => {
         if (taskName == null || taskName === '' || taskName.trim() === '') {
             return;
         }
-        if (categoryId === 0) {
+        if (tasksState.categoryId === 0) {
             return;
         }
         callApi({
@@ -172,7 +154,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             url: '/api/task/save',
             params: {
                 taskName: taskName.trim(),
-                categoryId: categoryId
+                categoryId: tasksState.categoryId
             }
         }).then((r) => {
             if (r.success) {
@@ -193,26 +175,26 @@ export default function TasksProvider({children, initData, sortedData, categoryI
             if (r.success) {
                 let newTasks = [];
                 let isFind = false;
-                for (let i = 0; i < tasks.length; i++) {
-                    if (tasks[i].id === task.id) {
+                for (let i = 0; i < tasksState.data.length; i++) {
+                    if (tasksState.data[i].id === task.id) {
                         isFind = true;
                         newTasks.push(task);
                     } else {
-                        newTasks.push(tasks[i]);
+                        newTasks.push(tasksState.data[i]);
                     }
                 }
                 if (isFind) {
-                    setTasks(newTasks);
+                    tasksDispatch({type: 'saveData', payload: {data: newTasks}});
                 } else {
                     let newSortedTasks = [];
-                    for (let i = 0; i < sortedTasks.length; i++) {
-                        if (sortedTasks[i].id === task.id) {
+                    for (let i = 0; i < sortedTasksState.data.length; i++) {
+                        if (sortedTasksState.data[i].id === task.id) {
                             newSortedTasks.push(task);
                         } else {
-                            newSortedTasks.push(sortedTasks[i]);
+                            newSortedTasks.push(sortedTasksState.data[i]);
                         }
                     }
-                    setSortedTasks(newSortedTasks);
+                    sortedTasksDispatch({type: 'saveData', payload: {data: newSortedTasks}});
                 }
                 toast.success("已修改任务");
             } else {
@@ -223,21 +205,22 @@ export default function TasksProvider({children, initData, sortedData, categoryI
 
     const taskSort = (currentId) => {
         let nextId = null;
-        if (sortedTasks != null && sortedTasks.length > 0) {
+        let sortedTasks = [...sortedTasksState.data];
+        if (sortedTasks.length > 0) {
             nextId = sortedTasks[0].id;
         }
         let newTasks = [];
-        for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].id === currentId) {
+        for (let i = 0; i < tasksState.data.length; i++) {
+            if (tasksState.data[i].id === currentId) {
                 sortedTasks.reverse();
-                sortedTasks.push(tasks[i]);
+                sortedTasks.push(tasksState.data[i]);
                 sortedTasks.reverse();
             } else {
-                newTasks.push(tasks[i]);
+                newTasks.push(tasksState.data[i]);
             }
         }
-        setTasks(newTasks);
-        setSortedTasks([...sortedTasks]);
+        tasksDispatch({type: 'saveData', payload: {data: newTasks}});
+        sortedTasksDispatch({type: 'saveData', payload: {data: sortedTasks}});
         callApi({
             method: POST,
             url: ApiPrefix + TaskSort,
@@ -255,17 +238,18 @@ export default function TasksProvider({children, initData, sortedData, categoryI
     }
     const resetTaskSort = (currentId) => {
         let newTasks = [];
-        for (let i = 0; i < sortedTasks.length; i++) {
-            if (sortedTasks[i].id !== currentId) {
-                newTasks.push(sortedTasks[i]);
+        let tasks = [...tasksState.data];
+        for (let i = 0; i < sortedTasksState.data.length; i++) {
+            if (sortedTasksState.data[i].id !== currentId) {
+                newTasks.push(sortedTasksState.data[i]);
             } else {
                 tasks.reverse();
-                tasks.push(sortedTasks[i]);
+                tasks.push(sortedTasksState.data[i]);
                 tasks.reverse();
             }
         }
-        setSortedTasks(newTasks);
-        setTasks([...tasks]);
+        tasksDispatch({type: 'saveData', payload: {data: tasks}});
+        sortedTasksDispatch({type: 'saveData', payload: {data: newTasks}});
         callApi({
             method: POST,
             url: ApiPrefix + TaskSort,
@@ -282,13 +266,42 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         });
     }
 
+    const changeTaskCategory = (id, categoryId) => {
+        let changeTask = null;
+        let tasks = tasksState.data;
+        let newTasks = [];
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === id) {
+                changeTask = {
+                    ...tasks[i],
+                    categoryId: categoryId
+                };
+            } else {
+                newTasks.push(tasks[i]);
+            }
+        }
+        if (changeTask == null) {
+            return;
+        }
+        tasksDispatch({type: 'saveData', payload: {data: newTasks}});
+        callApi({
+            method: POST,
+            url: '/api/task/update',
+            params: changeTask
+        }).then((r) => {
+            if (r.success) {
+                toast.success("修改任务类别成功");
+            } else {
+                toast.error("修改任务类别失败");
+                tasksDispatch({type: 'saveData', payload: {data: [...tasks]}});
+            }
+        });
+    }
+
     return <TasksContext.Provider value={{
-        tasks, setTasks,
-        sortedTasks, setSortedTasks,
-        params, setParams,
-        others, setOthers,
         fetchTasks, addTask, changeTask,
         taskSort, resetTaskSort, fetchSortedTasks,
+        changeTaskCategory,
         sortedTasksState, sortedTasksDispatch,
         tasksState, tasksDispatch
     }}>

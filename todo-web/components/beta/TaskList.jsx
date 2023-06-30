@@ -11,16 +11,14 @@ export default function TaskList({
                                      showAdd
                                  }) {
     const [newTask, setNewTask] = useState('');
-    const {
-        params, addTask
-    } = useTasksContext();
+    const {addTask} = useTasksContext();
 
     return <div className={`${styles.main}`}>
         <div className={`${styles.textAreaDiv}`} style={{display: showAdd ? "block" : "none"}}>
                         <textarea
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
-                                    addTask(newTask, params.pageSize, params.categoryId, 0);
+                                    addTask(newTask);
                                     setNewTask('')
                                     event.preventDefault();
                                 }

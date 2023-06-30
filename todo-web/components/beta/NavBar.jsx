@@ -1,8 +1,7 @@
 import {useState} from "react";
 import styles from "./NavBar.module.css";
 import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
-import {callApi} from "../../apis/request";
-import {POST} from "../../apis/apiPath";
+import toast from "react-hot-toast";
 
 function Category({onClick, onDrop, one}) {
     const [hover, setHover] = useState(false);
@@ -49,35 +48,7 @@ export default function NavBar({
                                    setTheme,
                                    initCategories
                                }) {
-    const {tasks, setTasks, fetchTasks, sortedTasksDispatch, fetchSortedTasks} = useTasksContext();
-
-    const changeTaskCategory = (id, categoryId) => {
-        let changeTask = null;
-        let newTasks = [];
-        for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].id === id) {
-                changeTask = {
-                    ...tasks[i],
-                    categoryId: categoryId
-                };
-            } else {
-                newTasks.push(tasks[i]);
-            }
-        }
-        if (changeTask == null) {
-            return;
-        }
-        setTasks(newTasks);
-        callApi({
-            method: POST,
-            url: '/api/task/update',
-            params: changeTask
-        }).then((r) => {
-            if (!r.success) {
-                setTasks([...tasks]);
-            }
-        });
-    }
+    const {fetchTasks, fetchSortedTasks, changeTaskCategory} = useTasksContext();
 
     const onDrop = (event, categoryId) => {
         let id = parseInt(event.dataTransfer.getData('text'));
@@ -86,7 +57,7 @@ export default function NavBar({
     }
 
     return <div className={`${styles.main}`}>
-        <div className={`${styles.category}`}>标签</div>
+        <div className={`${styles.category}`}>类别</div>
         {initCategories.map((one) =>
             <Category key={one.id}
                       onClick={() => {
@@ -102,9 +73,15 @@ export default function NavBar({
                           history.pushState(null, "", "/tasks/" + one.id)
                       }}
                       onDrop={(event) => {
-                          if (one.id !== 0 && one.id !== categoryId) {
-                              onDrop(event, one.id)
+                          if (one.id === 0) {
+                              toast.error("无法移动任务到全部类别");
+                              return;
                           }
+                          if (one.id === categoryId) {
+                              toast.error("该任务已在目标类别");
+                              return;
+                          }
+                          onDrop(event, one.id);
                       }}
                       one={one}/>)
         }

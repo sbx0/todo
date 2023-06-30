@@ -59,9 +59,7 @@ export function Tasks({
 
 function Center({centerRef, clickTask}) {
     const {
-        resetTaskSort, setSortedTasks,
-        params, fetchTasks,
-        tasksState, tasksDispatch
+        resetTaskSort, fetchTasks, tasksState
     } = useTasksContext();
 
     const onDropCenter = (event) => {
@@ -70,7 +68,7 @@ function Center({centerRef, clickTask}) {
         event.preventDefault();
     }
 
-    const handleScroll = (event, params) => {
+    const handleScroll = (event) => {
         const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
         if (scrollHeight - scrollTop === clientHeight) {
             // 到达底部，加载下一页数据
@@ -80,14 +78,14 @@ function Center({centerRef, clickTask}) {
 
     return <div className={`${styles.centerContainer}`}
                 ref={centerRef}
-                onScroll={(event) => handleScroll(event, params)}
+                onScroll={(event) => handleScroll(event)}
                 onDrop={onDropCenter}
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
             <TaskList
                 tasks={tasksState.data}
                 clickTask={clickTask}
-                showAdd={params.categoryId !== 0}
+                showAdd={tasksState.categoryId !== 0}
             />
         </Padding>
     </div>
@@ -95,7 +93,7 @@ function Center({centerRef, clickTask}) {
 
 function Left({clickTask}) {
     const {
-        sortedTasks, taskSort, sortedTasksState
+        taskSort, sortedTasksState
     } = useTasksContext();
 
     const onDropRight = (event) => {
