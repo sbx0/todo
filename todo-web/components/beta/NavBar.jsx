@@ -3,8 +3,9 @@ import styles from "./NavBar.module.css";
 import {useTasksContext} from "../../app/tasks/[category]/components/tasksContext";
 import toast from "react-hot-toast";
 
-function Category({onClick, onDrop, one}) {
+function Category({onClick, onDrop, one, current}) {
     const [hover, setHover] = useState(false);
+    const isCurrent = current === one.id;
 
     return <div
         onClick={onClick}
@@ -20,7 +21,7 @@ function Category({onClick, onDrop, one}) {
             setHover(false);
             event.preventDefault();
         }}
-        className={`${styles.item} ${hover ? styles.itemHover : ""}`}>
+        className={`${styles.item} ${hover ? styles.itemHover : ""} ${isCurrent ? styles.current : ""}`}>
         {`${one.categoryName}`}
     </div>;
 }
@@ -42,13 +43,12 @@ function ThemeSelect({theme, setTheme}) {
 }
 
 export default function NavBar({
-                                   categoryId,
                                    backToTop,
                                    theme,
                                    setTheme,
                                    initCategories
                                }) {
-    const {fetchTasks, fetchSortedTasks, changeTaskCategory} = useTasksContext();
+    const {tasksState, fetchTasks, fetchSortedTasks, changeTaskCategory} = useTasksContext();
 
     const onDrop = (event, categoryId) => {
         let id = parseInt(event.dataTransfer.getData('text'));
@@ -77,12 +77,9 @@ export default function NavBar({
                               toast.error("无法移动任务到全部类别");
                               return;
                           }
-                          if (one.id === categoryId) {
-                              toast.error("该任务已在目标类别");
-                              return;
-                          }
                           onDrop(event, one.id);
                       }}
+                      current={tasksState.categoryId}
                       one={one}/>)
         }
         <div className={`${styles.category}`}>主题</div>

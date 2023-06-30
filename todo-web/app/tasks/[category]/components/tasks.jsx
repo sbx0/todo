@@ -40,7 +40,6 @@ export function Tasks({
             <div className={`${styles.leftNavBar}`}>
                 <NavBar backToTop={backToTop}
                         initCategories={initCategories}
-                        categoryId={categoryId}
                         theme={theme}
                         setTheme={setTheme}/>
             </div>

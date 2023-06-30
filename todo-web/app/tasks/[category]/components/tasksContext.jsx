@@ -268,6 +268,10 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         let newTasks = [];
         for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].id === id) {
+                if (tasks[i].categoryId === categoryId) {
+                    toast.error("该任务已在目标类别");
+                    return;
+                }
                 changeTask = {
                     ...tasks[i],
                     categoryId: categoryId
