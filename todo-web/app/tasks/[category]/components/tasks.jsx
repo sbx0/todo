@@ -19,11 +19,16 @@ export function Tasks({
                       }) {
     const [theme, setTheme] = useState(localStorage.getItem("theme"));
     const centerRef = useRef(null);
+    const rightRef = useRef(null);
     const [modalShow, setModalShow] = useState(false);
     const [current, setCurrent] = useState(null);
 
     const backToTop = () => {
         centerRef.current.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+        rightRef.current.scrollTo({
             top: 0,
             behavior: "smooth"
         });
@@ -46,7 +51,8 @@ export function Tasks({
             </div>
             <Center centerRef={centerRef}
                     clickTask={clickTask}/>
-            <Left clickTask={clickTask}/>
+            <Right rightRef={rightRef}
+                   clickTask={clickTask}/>
             <Model show={modalShow}
                    close={() => setModalShow(false)}>
                 <TaskDetail current={current}
@@ -90,7 +96,7 @@ function Center({centerRef, clickTask}) {
     </div>
 }
 
-function Left({clickTask}) {
+function Right({rightRef, clickTask}) {
     const {
         taskSort, sortedTasksState, fetchSortedTasks
     } = useTasksContext();
@@ -102,6 +108,7 @@ function Left({clickTask}) {
     }
 
     return <div className={`${styles.rightContainer}`}
+                ref={rightRef}
                 onDrop={onDropRight}
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
