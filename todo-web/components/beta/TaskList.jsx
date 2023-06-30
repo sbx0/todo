@@ -12,10 +12,7 @@ export default function TaskList({
                                  }) {
     const [newTask, setNewTask] = useState('');
     const {
-        setTasks,
-        params, setParams,
-        others, setOthers,
-        fetchTasks, addTask
+        params, addTask
     } = useTasksContext();
 
     return <div className={`${styles.main}`}>

@@ -5,6 +5,7 @@ import {useState} from "react";
 import CountDown from "../time/CountDown";
 import {callApi} from "../../apis/request";
 import {POST, TaskComplete} from "../../apis/apiPath";
+import toast from "react-hot-toast";
 
 export default function TaskItem({task, draggable = false, onClick}) {
     const [exit, setExit] = useState(false);
@@ -18,6 +19,9 @@ export default function TaskItem({task, draggable = false, onClick}) {
         }).then(r => {
             if (r.success) {
                 setExit(true);
+                toast.success("任务已完成");
+            } else {
+                toast.error("任务完成失败");
             }
         })
     }

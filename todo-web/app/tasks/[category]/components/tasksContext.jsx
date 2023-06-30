@@ -102,14 +102,28 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }).then((r) => {
             if (r.success) {
                 let newTasks = [];
+                let isFind = false;
                 for (let i = 0; i < tasks.length; i++) {
                     if (tasks[i].id === task.id) {
+                        isFind = true;
                         newTasks.push(task);
                     } else {
                         newTasks.push(tasks[i]);
                     }
                 }
-                setTasks(newTasks);
+                if (isFind) {
+                    setTasks(newTasks);
+                } else {
+                    let newSortedTasks = [];
+                    for (let i = 0; i < sortedTasks.length; i++) {
+                        if (sortedTasks[i].id === task.id) {
+                            newSortedTasks.push(task);
+                        } else {
+                            newSortedTasks.push(sortedTasks[i]);
+                        }
+                    }
+                    setSortedTasks(newSortedTasks);
+                }
                 toast.success("已修改任务");
             } else {
                 toast.error("修改任务失败");
