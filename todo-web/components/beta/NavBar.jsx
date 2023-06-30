@@ -49,7 +49,7 @@ export default function NavBar({
                                    setTheme,
                                    initCategories
                                }) {
-    const {tasks, setTasks, fetchTasks} = useTasksContext();
+    const {tasks, setTasks, fetchTasks, sortedTasksDispatch, fetchSortedTasks} = useTasksContext();
 
     const changeTaskCategory = (id, categoryId) => {
         let changeTask = null;
@@ -90,6 +90,9 @@ export default function NavBar({
         {initCategories.map((one) =>
             <Category key={one.id}
                       onClick={() => {
+                          fetchSortedTasks({
+                              categoryId: one.id
+                          });
                           fetchTasks(1, 20, one.id, 0);
                           backToTop();
                           history.pushState(null, "", "/tasks/" + one.id)

@@ -1,8 +1,8 @@
 "use client";
 
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useReducer, useState} from "react";
 import {callApi} from "../../../../apis/request";
-import {ApiPrefix, POST, TaskPaging, TaskSort} from "../../../../apis/apiPath";
+import {ApiPrefix, POST, TaskPaging, TaskSort, TaskSortedPaging} from "../../../../apis/apiPath";
 import toast, {Toaster} from 'react-hot-toast';
 
 export function useTasksContext() {
@@ -10,6 +10,21 @@ export function useTasksContext() {
 }
 
 const TasksContext = createContext(null);
+
+function sortedTasksReducer(state, action) {
+    if (action.type === 'saveData') {
+        return {
+            ...state,
+            data: action.payload
+        };
+    } else if (action.type === 'setCategoryId') {
+        return {
+            ...state,
+            categoryId: action.payload
+        }
+    }
+    throw Error('Unknown action.');
+}
 
 export default function TasksProvider({children, initData, sortedData, categoryId}) {
     const [tasks, setTasks] = useState(initData);
@@ -24,6 +39,39 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         isMore: true,
         total: 0
     });
+    const [sortedTasksState, sortedTasksDispatch] = useReducer(sortedTasksReducer, {
+        page: 1,
+        pageSize: 20,
+        categoryId: categoryId,
+        taskStatus: 0,
+        isMore: true,
+        total: 0,
+        data: sortedData
+    });
+
+    const fetchSortedTasks = (params) => {
+        params = {
+            page: sortedTasksState.page,
+            pageSize: sortedTasksState.pageSize,
+            categoryId: sortedTasksState.categoryId,
+            ...params
+        }
+        callApi({
+            method: POST, url: TaskSortedPaging, params: params,
+        }).then(response => {
+            let data = [];
+            if (response.success) {
+                const key = `fetchTaskSortedPaging-${params.page}-${params.pageSize}-${params.categoryId}-`
+                for (let i = 0; i < response.data.length; i++) {
+                    data.push({
+                        key: key + response.data[i].id,
+                        ...response.data[i]
+                    });
+                }
+            }
+            sortedTasksDispatch({type: 'saveData', payload: data});
+        });
+    }
 
     const fetchTasks = (page = 1,
                         pageSize = 20,
@@ -198,7 +246,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         params, setParams,
         others, setOthers,
         fetchTasks, addTask, changeTask,
-        taskSort, resetTaskSort
+        taskSort, resetTaskSort, sortedTasksDispatch, fetchSortedTasks, sortedTasksState
     }}>
         {children}
         <Toaster/>

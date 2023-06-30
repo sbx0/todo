@@ -95,7 +95,7 @@ function Center({centerRef, clickTask}) {
 
 function Left({clickTask}) {
     const {
-        sortedTasks, taskSort
+        sortedTasks, taskSort, sortedTasksState
     } = useTasksContext();
 
     const onDropRight = (event) => {
@@ -109,7 +109,7 @@ function Left({clickTask}) {
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>
             <TaskList
-                tasks={sortedTasks}
+                tasks={sortedTasksState.data}
                 clickTask={clickTask}
                 showAdd={false}
             />
