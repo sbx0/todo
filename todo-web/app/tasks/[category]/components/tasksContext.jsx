@@ -2,7 +2,7 @@
 
 import {createContext, useContext, useReducer} from "react";
 import {fetchLoading} from "../../../../apis/request";
-import {ApiPrefix, POST, TaskPaging, TaskSort, TaskSortedPaging} from "../../../../apis/apiPath";
+import {POST, TaskPaging, TaskSave, TaskSort, TaskSortedPaging, TaskUpdate} from "../../../../apis/apiPath";
 import toast, {Toaster} from 'react-hot-toast';
 
 const TasksContext = createContext(null);
@@ -147,7 +147,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         }
         fetchLoading({
             method: POST,
-            url: '/api/task/save',
+            url: TaskSave,
             params: {
                 taskName: taskName.trim(),
                 categoryId: tasksState.categoryId
@@ -165,7 +165,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
     const changeTask = (task) => {
         fetchLoading({
             method: POST,
-            url: '/api/task/update',
+            url: TaskUpdate,
             params: task
         }).then((r) => {
             if (r.success) {
@@ -219,7 +219,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         sortedTasksDispatch({type: 'saveData', payload: {data: sortedTasks}});
         fetchLoading({
             method: POST,
-            url: ApiPrefix + TaskSort,
+            url: TaskSort,
             params: {
                 currentId: currentId,
                 nextId: nextId
@@ -248,7 +248,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         sortedTasksDispatch({type: 'saveData', payload: {data: newTasks}});
         fetchLoading({
             method: POST,
-            url: ApiPrefix + TaskSort,
+            url: TaskSort,
             params: {
                 currentId: currentId,
                 reset: true
@@ -286,7 +286,7 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         tasksDispatch({type: 'saveData', payload: {data: newTasks}});
         fetchLoading({
             method: POST,
-            url: '/api/task/update',
+            url: TaskUpdate,
             params: changeTask
         }).then((r) => {
             if (r.success) {

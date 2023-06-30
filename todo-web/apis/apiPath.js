@@ -4,6 +4,8 @@ export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://192.16
 export const API = "/api";
 export const TaskPaging = API + "/task/paging";
 export const TaskSort = API + "/task/sort";
+export const TaskSave = API + "/task/save";
+export const TaskUpdate = API + "/task/Update";
 export const TaskSortedPaging = API + "/task/sortedPaging";
 export const TaskComplete = API + "/task/complete";
 export const CategoryPaging = API + "/category/paging";
