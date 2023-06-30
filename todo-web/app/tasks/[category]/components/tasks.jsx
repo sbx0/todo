@@ -70,7 +70,7 @@ function Center({centerRef, clickTask}) {
 
     const handleScroll = (event) => {
         const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
-        if (scrollHeight - scrollTop === clientHeight) {
+        if (scrollHeight - scrollTop <= clientHeight) {
             // 到达底部，加载下一页数据
             fetchTasks({page: tasksState.page + 1});
         }
@@ -93,7 +93,7 @@ function Center({centerRef, clickTask}) {
 
 function Left({clickTask}) {
     const {
-        taskSort, sortedTasksState
+        taskSort, sortedTasksState, fetchSortedTasks
     } = useTasksContext();
 
     const onDropRight = (event) => {
@@ -102,7 +102,16 @@ function Left({clickTask}) {
         event.preventDefault();
     }
 
+    const handleScroll = (event) => {
+        const {scrollTop, clientHeight, scrollHeight} = event.currentTarget;
+        if (scrollHeight - scrollTop <= clientHeight) {
+            // 到达底部，加载下一页数据
+            fetchSortedTasks({page: sortedTasksState.page + 1});
+        }
+    };
+
     return <div className={`${styles.rightContainer}`}
+                onScroll={(event) => handleScroll(event)}
                 onDrop={onDropRight}
                 onDragOver={(event) => event.preventDefault()}>
         <Padding>

@@ -5,10 +5,6 @@ import {callApi} from "../../../../apis/request";
 import {ApiPrefix, POST, TaskPaging, TaskSort, TaskSortedPaging} from "../../../../apis/apiPath";
 import toast, {Toaster} from 'react-hot-toast';
 
-export function useTasksContext() {
-    return useContext(TasksContext);
-}
-
 const TasksContext = createContext(null);
 
 function tasksReducer(state, action) {
@@ -308,4 +304,8 @@ export default function TasksProvider({children, initData, sortedData, categoryI
         {children}
         <Toaster/>
     </TasksContext.Provider>;
+}
+
+export function useTasksContext() {
+    return useContext(TasksContext);
 }
