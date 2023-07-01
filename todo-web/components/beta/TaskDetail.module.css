@@ -24,12 +24,9 @@
     height: max-content;
     cursor: text;
     outline: 0;
-    border: 0;
     resize: none;
-}
-
-.textAreaNoBackground:hover {
     background-color: var(--background-color-1);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
 }

@@ -3,12 +3,15 @@
     color: var(--color);
     --color: #0e0e0e;
     --background-color-1: #ffffff;
-    --background-color-2: #f3f3f3;
+    --background-color-2: #e2e2e2;
     --background-color-3: #f7f7f7;
     --background-color-4: #e8e8e8;
     --model-outter-background-color: rgba(0, 0, 0, 0.5);
     --model-inner-background-color: rgb(255, 255, 255);
-    --text-secend: #9b9b9b,
+    --text-secend: #999999;
+    --text-color-1: rgb(75, 79, 84);
+    --text-color-2: rgb(153, 153, 153);
+    --text-background-color-1: rgb(245, 245, 245);
 }
 
 .dark {
@@ -21,15 +24,14 @@
     --background-color-4: #797979;
     --model-outter-background-color: rgba(0, 0, 0, 0.5);
     --model-inner-background-color: rgb(87, 87, 87);
-    --text-secend: #c7c7c7,
+    --text-secend: #c7c7c7;
 }
 
-html,
+/* 设置全局默认字体 */
 body {
+    font-family: "Segoe UI", "Luxi Sans", "Segoe UI", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Logo";
     padding: 0;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     overflow-y: overlay;
     overflow-x: hidden;
     -moz-user-select: none;
@@ -37,4 +39,79 @@ body {
     -ms-user-select: none;
     -khtml-user-select: none;
     user-select: none;
+}
+
+/* 设置标题字体 */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Segoe UI", "Luxi Sans", "Segoe UI", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Logo";
+    font-weight: bold;
+}
+
+textarea, input {
+    font-family: "Segoe UI", "Luxi Sans", "Segoe UI", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Logo";
+}
+
+/* 设置正文字体 */
+p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* 设置链接字体 */
+a {
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 设置列表字体 */
+ul, ol {
+    margin: 1em 0;
+    padding: 0 0 0 2em;
+}
+
+li {
+    margin: 0.5em 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+table {
+    -webkit-border-horizontal-spacing: 0;
+    -webkit-border-vertical-spacing: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    width: 100%;
+}
+
+th, td {
+    border: none;
+}
+
+th {
+}
+
+/* 设置代码字体 */
+code, pre {
+    font-family: "SF Mono", "Consolas", "Menlo", "Monaco", "Courier New", monospace;
+}
+
+pre {
+    margin: 1em 0;
+    padding: 1em;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    overflow-x: auto;
+}
+
+/* 设置图片字体 */
+img {
+    max-width: 100%;
+    height: auto;
 }

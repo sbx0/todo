@@ -3,7 +3,7 @@ import '../styles/nprogress.css';
 
 export default function RootLayout({children}) {
     return (
-        <html lang="en">
+        <html lang="zh-CN">
         <body>{children}</body>
         </html>
     )

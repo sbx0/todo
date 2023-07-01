@@ -6,6 +6,7 @@ import CountDown from "../time/CountDown";
 import {POST, TaskComplete} from "../../apis/apiPath";
 import toast from "react-hot-toast";
 import {fetchLoading} from "../../apis/request";
+import FormatTime from "../time/FormatTime";
 
 export default function TaskItem({task, draggable = false, onClick}) {
     const [exit, setExit] = useState(false);
@@ -39,21 +40,37 @@ export default function TaskItem({task, draggable = false, onClick}) {
                  setExit(false);
              }}
              className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : ''}`}>
-            <div className={`${styles.taskTime}`} onClick={() => markComplete(task)}>
-                <CircleIcon/>
-            </div>
+            <table cellPadding="0" cellSpacing="0" border="0" width="100%">
+                <tbody>
+                <tr>
+                    <td width="32" valign="middle" align="center" onClick={() => markComplete(task)}>
+                        <div className={`${styles.second}`}>
+                            <CircleIcon/>
+                        </div>
+                    </td>
+                    <td width="10"></td>
+                    <td width="auto" valign="middle" onClick={onClick}>
+                        <span className={styles.taskName}>{task.taskName}</span>
+                        <div className={styles.sep5}></div>
+                        <div className={`${styles.categoryName}`}>
+                            <span>{task.categoryName}</span>
+                        </div>
+                        <div className={`${styles.second}`}>
+                            &nbsp;•&nbsp;
+                        </div>
+                        <div className={`${styles.second}`}>
+                            {
+                                task.planTime == null ?
+                                    <FormatTime time={task.createTime}/>
+                                    :
+                                    <CountDown time={task.planTime}/>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <div/>
-            <div className={`${styles.taskCenter}`}
-                 onClick={onClick}>
-                <div className={`${styles.categoryName}`}>{task.categoryName}</div>
-                <div>{task.taskName}</div>
-            </div>
-            <div/>
-            <div>
-                <div className={`${styles.taskTime}`}>
-                    <CountDown time={task.planTime}/>
-                </div>
-            </div>
         </div>
     </>;
 }

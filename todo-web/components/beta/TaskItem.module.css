@@ -1,17 +1,12 @@
 .taskItem {
-    padding: 12px 16px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
+    padding: 10px;
     background-color: var(--background-color-1);
-    display: grid;
-    grid-template-areas: "checkbox . content . time";
-    grid-template-columns: auto 16px 1fr 16px auto;
     overflow: hidden;
     transition: color 200ms, background-color 200ms;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
-    margin-bottom: 10px;
+    border-bottom: 1px solid var(--background-color-2);
 }
 
 .taskItem:last-child {
@@ -27,12 +22,6 @@
     grid-template-columns: 1fr;
 }
 
-.categoryName {
-    font-size: 13px;
-    color: var(--text-secend);
-    margin-bottom: 5px;
-}
-
 .taskTime {
     color: var(--text-secend);
 }
@@ -41,4 +30,35 @@
     background-color: var(--background-color-4);
     border-radius: 8px;
     margin-bottom: 10px;
+}
+
+.taskName {
+    font-size: 16px;
+    line-height: 130%;
+    word-break: break-word;
+    line-break: strict;
+    color: var(--text-color-1);
+}
+
+.sep5 {
+    height: 5px;
+}
+
+.categoryName {
+    color: var(--text-color-2);
+    display: inline;
+    width: min-content;
+    padding: 0 5px;
+    font-size: 13px;
+    border-radius: 3px;
+    background-color: var(--text-background-color-1);
+}
+
+.second {
+    color: var(--text-color-2);
+    display: inline;
+    width: min-content;
+    padding: 0 5px;
+    font-size: 13px;
+    border-radius: 3px;
 }
