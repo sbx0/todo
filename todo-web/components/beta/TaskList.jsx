@@ -26,7 +26,17 @@ export default function TaskList({
                             rows={1}
                             value={newTask}
                             onChange={(event) => {
+                                let textarea = event.target;
                                 setNewTask(event.target.value);
+                                // 计算文本框的高度
+                                let computedHeight = Math.round(parseFloat(textarea.style.height));
+                                let computedStyle = window.getComputedStyle(textarea, null);
+                                let actualHeight = "content-box" === computedStyle.boxSizing ? Math.round(parseFloat(computedStyle.height)) : textarea.offsetHeight;
+
+                                // 如果文本框的实际高度小于计算出的高度
+                                if (actualHeight < computedHeight) {
+                                    actualHeight = "content-box" === computedStyle.boxSizing ? Math.round(parseFloat(window.getComputedStyle(textarea, null).height)) : textarea.offsetHeight
+                                }
                             }}
                             placeholder={"添加任务"}
                             className={`${styles.textArea}`}/>
