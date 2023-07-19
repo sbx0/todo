@@ -28,6 +28,9 @@ public class WeChatXmlMessage {
     @JacksonXmlProperty(localName = "EventKey")
     private String eventKey;
 
+    public WeChatXmlMessage() {
+    }
+
     public WeChatXmlMessage(Builder builder) {
         this.fromUserName = builder.fromUserName;
         this.toUserName = builder.toUserName;

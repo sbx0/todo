@@ -84,7 +84,7 @@ class WeChatServiceTest {
         assertNotNull(response);
         assertEquals(fromUserName, response.getToUserName());
         assertEquals(toUserName, response.getFromUserName());
-        assertEquals(WeChatReplyMessage.WAITING_MESSAGE, response.getContent());
+        assertEquals(WeChatReplyMessage.OVERLOAD_MESSAGE, response.getContent());
         assertEquals(WeChatMsgType.TEXT.getValue(), response.getMsgType());
     }
 

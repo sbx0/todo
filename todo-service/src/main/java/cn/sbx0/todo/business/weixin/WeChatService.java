@@ -1,6 +1,5 @@
 package cn.sbx0.todo.business.weixin;
 
-import cn.sbx0.todo.business.chatgpt.ChatGPTMessage;
 import cn.sbx0.todo.business.chatgpt.ChatGPTService;
 import cn.sbx0.todo.business.user.ClientUserService;
 import cn.sbx0.todo.business.user.entity.ClientUser;
@@ -55,19 +54,7 @@ public class WeChatService {
         responseMessage.setCreateTime(new Date().getTime());
         String message = WeChatReplyMessage.UNSUPPORTED_MESSAGE;
         switch (WeChatMsgType.find(msg.getMsgType())) {
-            case TEXT -> {
-                Boolean result = chatGPTService.addMessage(
-                        ChatGPTMessage.builder()
-                                .user(msg.getFromUserName())
-                                .message(msg.getContent())
-                                .build()
-                );
-                if (result) {
-                    message = WeChatReplyMessage.WAITING_MESSAGE;
-                } else {
-                    message = WeChatReplyMessage.OVERLOAD_MESSAGE;
-                }
-            }
+            case TEXT -> message = WeChatReplyMessage.OVERLOAD_MESSAGE;
             case EVENT -> {
                 switch (WeChatMsgEventType.find(msg.getEvent())) {
                     case SUBSCRIBE -> message = WeChatReplyMessage.WELCOME_MESSAGE;
