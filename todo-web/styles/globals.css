@@ -39,6 +39,19 @@ body {
     -ms-user-select: none;
     -khtml-user-select: none;
     user-select: none;
+    color-scheme: light;
+    color: var(--color);
+    --color: #0e0e0e;
+    --background-color-1: #ffffff;
+    --background-color-2: #e2e2e2;
+    --background-color-3: #f7f7f7;
+    --background-color-4: #e8e8e8;
+    --model-outter-background-color: rgba(0, 0, 0, 0.5);
+    --model-inner-background-color: rgb(255, 255, 255);
+    --text-secend: #999999;
+    --text-color-1: rgb(75, 79, 84);
+    --text-color-2: rgb(153, 153, 153);
+    --text-background-color-1: rgb(245, 245, 245);
 }
 
 /* 设置标题字体 */

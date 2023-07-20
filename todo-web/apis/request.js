@@ -89,9 +89,12 @@ export async function callApi({
         });
     }
     if (!res.ok) {
-        if (res.status === 401) {
+        if (res.status === 401 || res.status === 403) {
             if (typeof document !== 'undefined') {
                 removeCookie('token');
+            }
+            if (url.indexOf("/user/client/info") === -1) {
+                window.location.href = "/login";
             }
         }
 

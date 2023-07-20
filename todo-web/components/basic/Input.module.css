@@ -1,0 +1,29 @@
+.main {
+    width: 100%;
+    display: block;
+}
+
+.label {
+    font-size: 13px;
+    color: var(--text-secend);
+    padding: 10px;
+}
+
+.input {
+    font-size: 16px;
+    display: block;
+    margin: 0 auto;
+    padding: 15px;
+    height: fill-available;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+    border: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02), 0 2px 18px rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    background-color: var(--background-color-1);
+    cursor: text;
+    outline: 1px solid var(--background-color-2);
+    resize: none;
+    font-weight: normal;
+}
