@@ -14,8 +14,13 @@ export default function Login() {
     const router = useRouter();
     const pathname = usePathname();
     const [account, setAccount] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     function login() {
+        if (loading) {
+            return;
+        }
+        setLoading(true);
         removeCookie('token');
         if (account == null || account.username == null || account.password == null) {
             return;
@@ -35,7 +40,6 @@ export default function Login() {
                 setCookie('token', r.data);
                 if (pathname === '/login') {
                     router.push("/tasks/0");
-                    router.refresh();
                 } else {
                     router.refresh();
                 }
@@ -66,7 +70,8 @@ export default function Login() {
                            })
                        }}/>
                 <Padding/>
-                <Button onClick={login}>登录</Button>
+                <Button style={{display: loading ? "none" : "block"}} onClick={login}>登录</Button>
+                <Button style={{display: loading ? "block" : "none"}}>登录中...</Button>
             </Padding>
         </div>
     </div>
