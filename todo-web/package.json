@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@primer/octicons-react": "19.4.0",
-    "echarts": "5.4.2",
+    "echarts": "5.4.3",
     "echarts-for-react": "3.0.2",
     "localforage": "1.10.0",
     "moment": "2.29.4",
