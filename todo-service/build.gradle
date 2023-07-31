@@ -53,7 +53,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
     // https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j
-    implementation 'net.sourceforge.tess4j:tess4j:5.7.0'
+    implementation 'net.sourceforge.tess4j:tess4j:5.8.0'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
