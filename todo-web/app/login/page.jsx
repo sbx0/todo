@@ -2,7 +2,7 @@
 
 import styles from "./Login.module.css"
 import {useState} from "react";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {callApi} from "../../apis/request";
 import {removeCookie, setCookie} from "../../apis/cookies";
 import {POST} from "../../apis/apiPath";
@@ -11,7 +11,6 @@ import Input from "../../components/basic/Input";
 import Padding from "../../components/beta/Padding";
 
 export default function Login() {
-    const router = useRouter();
     const pathname = usePathname();
     const [account, setAccount] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -39,13 +38,11 @@ export default function Login() {
             if (r.success) {
                 setCookie('token', r.data);
                 if (pathname === '/login') {
-                    router.push("/tasks/0");
+                    window.location.href = "/tasks/0";
                 } else {
-                    router.refresh();
+                    window.location.reload();
                 }
             }
-        }).finally(() => {
-            setLoading(false);
         });
     }
 
