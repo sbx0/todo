@@ -44,6 +44,8 @@ export default function Login() {
                     router.refresh();
                 }
             }
+        }).finally(() => {
+            setLoading(false);
         });
     }
 
