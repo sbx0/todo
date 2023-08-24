@@ -4,14 +4,14 @@ import {useEffect} from "react";
 import {callApi} from "../apis/request";
 import {setCookie} from "../apis/cookies";
 import {useRouter} from "next/router";
-import {POST} from "../apis/apiPath";
+import {GET, GetToken} from "../apis/apiPath";
 
 export default function Container({children, needLogin = true}) {
     const router = useRouter()
 
     useEffect(() => {
         if (needLogin) {
-            callApi({method: POST, url: "/api/user/client/token"}).then(r => {
+            callApi({method: GET, url: GetToken}).then(r => {
                 if (!r.success) {
                     console.error(r.message);
                     router.push('/login').then(r => r);
