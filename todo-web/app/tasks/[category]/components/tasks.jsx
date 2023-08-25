@@ -42,17 +42,21 @@ export function Tasks({
     return <TasksProvider initData={initTasks}
                           sortedData={initSortedTasks}
                           categoryId={categoryId}>
-        <div className={`${theme} ${styles.main}`}>
-            <div className={`${styles.leftNavBar}`}>
+        <div className="container mx-auto max-w-6xl flex">
+            <div className="w-2/12">
                 <NavBar backToTop={backToTop}
                         initCategories={initCategories}
                         theme={theme}
                         setTheme={setTheme}/>
             </div>
-            <Center centerRef={centerRef}
-                    clickTask={clickTask}/>
-            <Right rightRef={rightRef}
-                   clickTask={clickTask}/>
+            <div className="w-5/12">
+                <Center centerRef={centerRef}
+                        clickTask={clickTask}/>
+            </div>
+            <div className="w-5/12">
+                <Right rightRef={rightRef}
+                       clickTask={clickTask}/>
+            </div>
             <Model show={modalShow}
                    close={() => setModalShow(false)}>
                 <TaskDetail current={current}

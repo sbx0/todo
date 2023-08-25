@@ -39,12 +39,12 @@ export default function TaskItem({task, draggable = false, onClick}) {
                  event.preventDefault();
                  setExit(false);
              }}
-             className={`${styles.taskItem} ${exit ? animations.scaleOutCenter : ''}`}>
+             className={`border-b cursor-pointer mt-2 ${exit ? animations.scaleOutCenter : ''}`}>
             <table cellPadding="0" cellSpacing="0" border="0" width="100%">
                 <tbody>
                 <tr>
                     <td width="32" valign="middle" align="center" onClick={() => markComplete(task)}>
-                        <div className={`${styles.second}`}>
+                        <div className="text-gray-400">
                             <CircleIcon/>
                         </div>
                     </td>
@@ -52,13 +52,13 @@ export default function TaskItem({task, draggable = false, onClick}) {
                     <td width="auto" valign="middle" onClick={onClick}>
                         <span className={styles.taskName}>{task.taskName}</span>
                         <div className={styles.sep5}></div>
-                        <div className={`${styles.categoryName}`}>
+                        <div className="text-gray-400 inline text-xs">
                             <span>{task.categoryName}</span>
                         </div>
-                        <div className={`${styles.second}`}>
+                        <div className="text-gray-400 inline text-xs">
                             &nbsp;•&nbsp;
                         </div>
-                        <div className={`${styles.second}`}>
+                        <div className="text-gray-400 inline text-xs">
                             {
                                 task.planTime == null ?
                                     <FormatTime time={task.createTime}/>

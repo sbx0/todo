@@ -14,7 +14,7 @@ export default function TaskList({
     const {addTask} = useTasksContext();
 
     return <div className={`${styles.main}`}>
-        <div className={`${styles.textAreaDiv}`} style={{display: showAdd ? "block" : "none"}}>
+        <div className="mb-2" style={{display: showAdd ? "block" : "none"}}>
                         <textarea
                             onKeyDown={(event) => {
                                 if (event.key === "Enter") {
@@ -26,22 +26,12 @@ export default function TaskList({
                             rows={1}
                             value={newTask}
                             onChange={(event) => {
-                                let textarea = event.target;
                                 setNewTask(event.target.value);
-                                // 计算文本框的高度
-                                let computedHeight = Math.round(parseFloat(textarea.style.height));
-                                let computedStyle = window.getComputedStyle(textarea, null);
-                                let actualHeight = "content-box" === computedStyle.boxSizing ? Math.round(parseFloat(computedStyle.height)) : textarea.offsetHeight;
-
-                                // 如果文本框的实际高度小于计算出的高度
-                                if (actualHeight < computedHeight) {
-                                    actualHeight = "content-box" === computedStyle.boxSizing ? Math.round(parseFloat(window.getComputedStyle(textarea, null).height)) : textarea.offsetHeight
-                                }
                             }}
                             placeholder={"添加任务"}
-                            className={`${styles.textArea}`}/>
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
         </div>
-        <div className={`${styles.taskContainer}`}>
+        <div className="border-t border-l border-r border-gray-200 dark:bg-gray-700 dark:border-gray-600">
             {tasks?.map((one) =>
                 <TaskItem draggable
                           onClick={() => clickTask(one)}

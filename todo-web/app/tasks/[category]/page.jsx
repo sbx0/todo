@@ -2,6 +2,7 @@ import {cookies} from "next/headers";
 import Tasks from "./components/tasks";
 import {callApi} from "../../../apis/request";
 import {ApiPrefix, CategoryPaging, POST, TaskPaging, TaskSortedPaging} from "../../../apis/apiPath";
+import Header from "../../components/header/header";
 
 export default async function Page({params}) {
     let token = cookies().get("token").value;
@@ -16,10 +17,13 @@ export default async function Page({params}) {
         initCategories = await fetchCategory(token);
     }
 
-    return <Tasks initTasks={initTasks}
-                  initSortedTasks={initSortedTasks}
-                  initCategories={initCategories}
-                  categoryId={parseInt(params.category)}/>;
+    return <>
+        <Header/>
+        <Tasks initTasks={initTasks}
+               initSortedTasks={initSortedTasks}
+               initCategories={initCategories}
+               categoryId={parseInt(params.category)}/>
+    </>;
 }
 
 async function fetchTaskPaging(token, page = 1, pageSize = 20, categoryId = 0, taskStatus = 0) {
