@@ -267,5 +267,18 @@ chmod u+x quick.sh
 
 # install nginx
 
-apt install nginx -y  
+apt install nginx -y
+
+# To resolve the issue of the default Ubuntu account being unable to run Docker commands
+
+follow these steps:
+
+Run the command `sudo groupadd docker` to create the 'docker' user group.
+
+Add the current logged-in account to the 'docker' user group by executing `sudo gpasswd -a $USER docker`.
+
+Update the user group by running `newgrp docker`.
+
+These steps will allow the default Ubuntu account to successfully execute Docker commands.
+
 
