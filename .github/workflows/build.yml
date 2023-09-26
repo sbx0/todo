@@ -49,7 +49,8 @@ jobs:
           local_path: './todo-service/build/libs/todo-service-*-SNAPSHOT.jar'
           remote_path: '/home/ubuntu/todo/todo-service'
           args: '-o ConnectTimeout=5'
-      - name: build and run service
+      - name: Build and Run Service
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: '${{ secrets.SERVER }}'
