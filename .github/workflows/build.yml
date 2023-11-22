@@ -29,36 +29,36 @@ jobs:
         id: gradle
         working-directory: ./todo-service
         run: ./gradlew build
-      - name: Upload Test Report to Server
-        if: github.ref == 'refs/heads/main'
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: '${{ secrets.SERVER }}'
-          username: 'ubuntu'
-          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-          local_path: './todo-service/build/reports/jacoco/test/html/*'
-          remote_path: '/home/ubuntu/todo/code-coverage'
-          args: '-o ConnectTimeout=5'
-      - name: Upload Jar to Server
-        if: github.ref == 'refs/heads/main'
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: '${{ secrets.SERVER }}'
-          username: 'ubuntu'
-          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-          local_path: './todo-service/build/libs/todo-service-*-SNAPSHOT.jar'
-          remote_path: '/home/ubuntu/todo/todo-service'
-          args: '-o ConnectTimeout=5'
-      - name: Build and Run Service
-        if: github.ref == 'refs/heads/main'
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: '${{ secrets.SERVER }}'
-          username: 'ubuntu'
-          key: '${{ secrets.SSH_PRIVATE_KEY }}'
-          script: |
-            cd /home/ubuntu/todo/todo-service
-            ./quick.sh build
+      #      - name: Upload Test Report to Server
+      #        if: github.ref == 'refs/heads/main'
+      #        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      #        with:
+      #          server: '${{ secrets.SERVER }}'
+      #          username: 'ubuntu'
+      #          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+      #          local_path: './todo-service/build/reports/jacoco/test/html/*'
+      #          remote_path: '/home/ubuntu/todo/code-coverage'
+      #          args: '-o ConnectTimeout=5'
+      #      - name: Upload Jar to Server
+      #        if: github.ref == 'refs/heads/main'
+      #        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      #        with:
+      #          server: '${{ secrets.SERVER }}'
+      #          username: 'ubuntu'
+      #          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+      #          local_path: './todo-service/build/libs/todo-service-*-SNAPSHOT.jar'
+      #          remote_path: '/home/ubuntu/todo/todo-service'
+      #          args: '-o ConnectTimeout=5'
+      #      - name: Build and Run Service
+      #        if: github.ref == 'refs/heads/main'
+      #        uses: appleboy/ssh-action@v1.0.0
+      #        with:
+      #          host: '${{ secrets.SERVER }}'
+      #          username: 'ubuntu'
+      #          key: '${{ secrets.SSH_PRIVATE_KEY }}'
+      #          script: |
+      #            cd /home/ubuntu/todo/todo-service
+      #            ./quick.sh build
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
