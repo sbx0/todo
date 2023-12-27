@@ -1,9 +1,197 @@
-_- install wsl2 Ubuntu 22.04.1 LTS
+- install wsl2 Ubuntu
+
+
+- run `wsl --update`
+- `sudo -e /etc/wsl.conf`
+
+```text
+[boot]
+systemd=true
+```
+- `wsl --shutdown`
+- `sudo systemctl status`
+- 
 
 - `sudo passwd` set root password
 - `su root`
 - [install docker](https://docs.docker.com/engine/install/ubuntu/)
-- `update-alternatives --config iptables` change to iptables-legacy
+
+# Deploy
+
+- `mkdir dev-env`
+- `cd dev-env`
+- `vim docker-compose.yml`
+
+```yaml
+version: '3.1'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: justfordev
+      TZ: Asia/Shanghai
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+  cache:
+    image: redis
+    container_name: redis
+    command: redis-server --requirepass justfordev
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis:/data                     
+```
+
+- `cd ..`
+- `vim start.sh`
+
+```shell
+cd dev-env
+docker compose up -d
+```
+
+- `chmod u+x start.sh`
+- `./start.sh`
+
+vim Dockerfile
+
+```dockerfile
+FROM eclipse-temurin:17
+
+MAINTAINER sbx0
+
+ADD /*.jar /bootstrap.jar
+ADD /application-prod.yml /application-prod.yml
+
+CMD java -jar /bootstrap.jar --spring.profiles.active=prod
+```
+
+vim docker-compose.yml
+
+```yml
+version: '3.7'
+services:
+  todo-service:
+    image: todo-service:latest
+    ports:
+      - "1112:9999"
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - ./logs:/logs
+      - ./dependency:/dependency
+```
+
+vim quick.sh
+
+```shell
+#!/bin/bash
+# chmod u+x this.sh
+# sed -i 's/\r//' this.sh
+
+NAME="todo-service"
+
+log() {
+ tail -F -n 250 logs/current.log
+}
+
+build() {
+ docker build -t $NAME:v$(date "+%Y%m%d.%H%M%S") .
+ docker build -t $NAME:latest .
+}
+
+up() {
+ docker-compose -p $NAME up -d --build
+ log
+}
+
+case "$1" in
+"up" )
+ up
+ ;;
+"build" )
+ build $2
+ ;;
+*)
+ log
+ ;;
+esac
+```
+
+copy `todo-service/libs/dependency` to `/home/sbx0/todo/service`
+copy `todo-service/libs/todo-service-*.jar` to `/home/sbx0/todo/service`
+copy `application-prod.yml` to `/home/sbx0/todo/service`
+
+chmod u+x quick.sh
+
+./quick.sh build
+
+./quick.sh up
+
+./quick.sh
+
+# docker use proxy
+
+https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+- `vim /etc/docker/daemon.json`
+
+```json
+{ "registry-mirrors": [ "https://dockerproxy.com" ] }
+```
+
+- `systemctl daemon-reload`
+- `systemctl restart docker`
+
+# use proxy
+- `vim ~/.bashrc`
+
+```
+# add proxy
+export hostip=$(ip route | grep default | awk '{print $3}')
+export socks_hostport=10810
+export http_hostport=10811
+alias proxy='
+export https_proxy="http://${hostip}:${http_hostport}"
+export http_proxy="http://${hostip}:${http_hostport}"
+export ALL_PROXY="socks5://${hostip}:${socks_hostport}"
+export all_proxy="socks5://${hostip}:${socks_hostport}"
+'
+alias unproxy='
+unset ALL_PROXY
+unset https_proxy
+unset http_proxy
+unset all_proxy
+'
+alias echoproxy='
+echo $ALL_PROXY
+echo $all_proxy
+echo $https_proxy
+echo $http_proxy
+'
+#end proxy
+```
+
+- `source ~/.bashrc`
+
+# install nginx
+
+apt install nginx -y
+
+# To resolve the issue of the default Ubuntu account being unable to run Docker commands
+
+follow these steps:
+
+Run the command `sudo groupadd docker` to create the 'docker' user group.
+
+Add the current logged-in account to the 'docker' user group by executing `sudo gpasswd -a $USER docker`.
+
+Update the user group by running `newgrp docker`.
+
+These steps will allow the default Ubuntu account to successfully execute Docker commands.
 
 # XShell Connect to WSL2
 
@@ -138,147 +326,5 @@ public class WSL2Support {
 - `javac WSL2Support.java`
 - `java WSL2Support`
 - `ping win.sbx0.cn`
-- `mkdir dev-env`
-- `cd dev-env`
-- `vim docker-compose.yml`
-
-```yaml
-version: '3.1'
-
-services:
-  db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: justfordev
-      TZ: Asia/Shanghai
-    ports:
-      - 3306:3306
-    volumes:
-      - ./mysql:/var/lib/mysql
-  cache:
-    image: redis
-    container_name: redis
-    command: redis-server --requirepass justfordev
-    ports:
-      - 6379:6379
-    volumes:
-      - ./redis:/data                     
-```
-
-- `cd ..`
-- `vim start.sh`
-
-```shell
-# after wsl start, run this to config host and start docker
-# change windows and wsl2 host file
-java WSL2Support
-service nginx start
-service ssh start
-apt update
-apt upgrade -y
-# start docker
-service docker start
-# start dev env
-cd dev-env
-docker compose up -d
-```
-
-- `chmod u+x start.sh`
-- `./start.sh`
-
-# Deploy
-
-vim Dockerfile
-
-```dockerfile
-FROM eclipse-temurin:17
-
-MAINTAINER sbx0
-
-ADD /*.jar /bootstrap.jar
-ADD /application-prod.yml /application-prod.yml
-
-CMD java -jar /bootstrap.jar --spring.profiles.active=prod
-```
-
-vim docker-compose.yml
-
-```yml
-version: '3.7'
-services:
-  todo-service:
-    image: todo-service:latest
-    ports:
-      - "1112:9999"
-    volumes:
-      - /etc/timezone:/etc/timezone
-      - ./logs:/logs
-      - ./dependency:/dependency
-```
-
-vim quick.sh
-
-```shell
-#!/bin/bash
-# chmod u+x this.sh
-# sed -i 's/\r//' this.sh
-
-NAME="todo-service"
-
-log() {
- tail -F -n 250 logs/current.log
-}
-
-build() {
- docker build -t $NAME:v$(date "+%Y%m%d.%H%M%S") .
- docker build -t $NAME:latest .
-}
-
-up() {
- docker-compose -p $NAME up -d --build
- log
-}
-
-case "$1" in
-"up" )
- up
- ;;
-"build" )
- build $2
- ;;
-*)
- log
- ;;
-esac
-```
-
-copy `todo-service/libs/dependency` to `/home/sbx0/todo/service`
-copy `todo-service/libs/todo-service-*.jar` to `/home/sbx0/todo/service`
-copy `application-prod.yml` to `/home/sbx0/todo/service`
-
-chmod u+x quick.sh
-
-./quick.sh build
-
-./quick.sh up
-
-./quick.sh
-
-# install nginx
-
-apt install nginx -y
-
-# To resolve the issue of the default Ubuntu account being unable to run Docker commands
-
-follow these steps:
-
-Run the command `sudo groupadd docker` to create the 'docker' user group.
-
-Add the current logged-in account to the 'docker' user group by executing `sudo gpasswd -a $USER docker`.
-
-Update the user group by running `newgrp docker`.
-
-These steps will allow the default Ubuntu account to successfully execute Docker commands.
 
 
