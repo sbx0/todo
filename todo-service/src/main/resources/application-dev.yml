@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://wsl2.sbx0.cn:3306/todo
+    url: jdbc:mysql://127.0.0.1:3306/todo_prod
     username: root
     password: justfordev
   jpa:
@@ -13,7 +13,7 @@ spring:
     open-in-view: false
   data:
     redis:
-      host: wsl2.sbx0.cn
+      host: 127.0.0.1
       port: 6379
       database: 0
       password: justfordev
