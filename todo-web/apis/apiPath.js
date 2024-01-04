@@ -1,6 +1,6 @@
 export const POST = "POST";
 export const GET = "GET";
-export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://192.168.50.2:3000" : "https://todo.sbx0.cn";
+export const ApiPrefix = process.env.NODE_ENV === 'development' ? "http://127.0.0.1:3000" : "https://todo.sbx0.cn";
 export const API = "/api";
 export const GetToken = API + "/user/client/token";
 export const TaskPaging = API + "/task/paging";

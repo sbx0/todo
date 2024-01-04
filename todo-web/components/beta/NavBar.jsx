@@ -20,7 +20,7 @@ function Category({onClick, onDrop, one, current}) {
             setHover(false);
             event.preventDefault();
         }}
-        className={`block w-full px-4 py-2 border-b border-gray-200 cursor-pointer dark:bg-gray-800 dark:border-gray-600 ${isCurrent ? "bg-blue-700 text-white" : ""}`}>
+        className={`block w-full px-4 py-2 border-b border-gray-200 cursor-pointer ${isCurrent ? "bg-blue-700 text-white" : ""}`}>
         {`${one.categoryName}`}
     </div>;
 }
@@ -57,7 +57,7 @@ export default function NavBar({
 
     return <div className="block w-full pt-2">
         <div
-            className="block w-full font-medium text-gray-900 bg-white border-t border-l border-r border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            className="block w-full font-medium text-gray-900 bg-white border-t border-l border-r border-gray-200">
             {initCategories.map((one) =>
                 <Category
                     key={one.id}
