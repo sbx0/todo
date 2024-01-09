@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {getCookie} from "../../../../apis/cookies";
 
 function DragAndDropUpload() {
     const [dragging, setDragging] = useState(false);
@@ -28,6 +29,40 @@ function DragAndDropUpload() {
         // 处理上传文件的逻辑，例如使用FormData发送到服务器
 
         console.log('Dropped files:', files);
+
+        // 创建 FormData 对象
+        const formData = new FormData();
+
+        // 将每个文件添加到 FormData
+        for (let i = 0; i < files.length; i++) {
+            formData.append('file', files[i]);
+        }
+
+        let token, headers;
+        if (typeof document !== 'undefined') {
+            token = getCookie('token');
+        }
+        if (token != null && token.trim() !== '') {
+            headers = {
+                Authorization: 'Bearer ' + token
+            }
+        }
+
+        // 使用 fetch 发送文件到服务器
+        fetch('/api/file/upload', {
+            method: 'POST',
+            body: formData,
+            headers: headers
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 处理上传成功的逻辑
+                console.log('Upload success:', data);
+            })
+            .catch(error => {
+                // 处理上传失败的逻辑
+                console.error('Upload failed:', error);
+            });
     };
 
     return (
