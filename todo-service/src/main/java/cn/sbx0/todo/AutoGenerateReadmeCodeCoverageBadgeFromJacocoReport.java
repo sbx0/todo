@@ -28,7 +28,7 @@ public class AutoGenerateReadmeCodeCoverageBadgeFromJacocoReport {
         String last = newContent.substring(0, endIndex);
         String replace = last.replace("</td><td class=\"ctr2\">", "-");
         String[] split = replace.split("-");
-        System.out.println("increase test coverage to " + split[1]);
+        System.out.println("Test coverage is " + split[1]);
         String percentString = split[1].replace("%", "");
         int percent = Integer.parseInt(percentString);
         String color;
