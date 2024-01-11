@@ -36,17 +36,17 @@ public class ServerScheduled {
     @Resource
     private TaskService taskService;
 
-    @Scheduled(fixedRate = 1000)
+    //    @Scheduled(fixedRate = 1000)
     public void handleReminderTime() {
         taskService.handleReminderTime();
     }
 
-    @Scheduled(fixedRate = 1000)
+    //    @Scheduled(fixedRate = 1000)
     public void handleMessage() {
         chatGPTService.handleMessage();
     }
 
-    @Scheduled(fixedRate = 1000)
+    //    @Scheduled(fixedRate = 1000)
     public void sendMessage() {
         chatGPTService.sendMessage();
     }
@@ -54,7 +54,7 @@ public class ServerScheduled {
     // 30min @Scheduled(fixedRate = 1800000)
     // 15min @Scheduled(fixedRate = 900000)
     // 1min @Scheduled(fixedRate = 60000)
-    @Scheduled(fixedRate = 3600000)
+    // @Scheduled(fixedRate = 3600000)
     public void getCarPlatePhoto() {
         DefaultPagingRequest pagingRequest = new DefaultPagingRequest();
         pagingRequest.setPage(1);
