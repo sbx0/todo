@@ -14,3 +14,4 @@ export const TaskStatistics = API + "/task/statistics";
 export const AssetTypePaging = API + "/asset/type/paging";
 export const RecentRecordTimeList = API + "/asset/record/getRecentRecordTimeList";
 export const AssetRecords = API + "/asset/record/getRecords";
+export const FileList = API + "/file/list";

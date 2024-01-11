@@ -9,4 +9,11 @@ public class FileInfoEntity {
     private String fileName;
     private String originalFileName;
     private String md5;
+
+    public FileInfoEntity() {
+    }
+
+    public FileInfoEntity(String fileName) {
+        this.fileName = fileName;
+    }
 }

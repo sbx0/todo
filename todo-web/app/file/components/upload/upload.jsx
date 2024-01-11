@@ -1,11 +1,27 @@
 "use client"
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {getCookie} from "../../../../apis/cookies";
+import {callApi} from "../../../../apis/request";
+import {FileList, GET, POST} from "../../../../apis/apiPath";
+import ImageClickFull from "../image/image";
 
 function DragAndDropUpload() {
     const [files, setFiles] = useState([])
     const [dragging, setDragging] = useState(false);
+
+    useEffect(() => {
+        getFileList();
+    }, []);
+
+    const getFileList = () => {
+        callApi({
+            method: GET,
+            url: FileList,
+        }).then(r => {
+            setFiles(r.data)
+        })
+    }
 
     const handleDragEnter = (event) => {
         event.preventDefault();
@@ -101,7 +117,7 @@ function DragAndDropUpload() {
                 {
                     files.map((one => {
                         return <div key={one.fileName}>
-                            <img src={'/api/file/download/' + one.fileName} alt="" loading="lazy"/>
+                            <ImageClickFull src={'/api/file/download/' + one.fileName}/>
                         </div>;
                     }))
                 }

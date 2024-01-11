@@ -10,12 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -72,6 +75,26 @@ public class FileController {
                 .contentLength(fileSystemResource.contentLength())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(fileSystemResource);
+    }
+
+    @GetMapping("/list")
+    public Result<List<FileInfoEntity>> fileList() {
+        File folder = new File(UPLOAD_DIR);
+        File[] files = folder.listFiles();
+        List<FileInfoEntity> fileInfos = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    continue;
+                }
+                String name = file.getName();
+                if (name.contains(JSON_TYPE)) {
+                    continue;
+                }
+                fileInfos.add(new FileInfoEntity(name));
+            }
+        }
+        return Result.success(fileInfos);
     }
 
     private String calculateMD5(byte[] fileBytes) throws NoSuchAlgorithmException {
