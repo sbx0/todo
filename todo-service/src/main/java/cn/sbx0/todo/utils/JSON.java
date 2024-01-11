@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author sbx0
  * @since 2022/12/2
@@ -36,6 +39,10 @@ public class JSON {
             log.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    public static <T> T readFromFile(String filePath,Class<T> valueType) throws IOException {
+        return OBJECT_MAPPER.readValue(new File(filePath), valueType);
     }
 
     public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
