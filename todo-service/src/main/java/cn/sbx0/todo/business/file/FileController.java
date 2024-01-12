@@ -36,10 +36,10 @@ public class FileController {
             // 保存文件信息
             FileInfoEntity fileInfo = new FileInfoEntity();
             // 新的文件名
-            fileInfo.setFileName(newFileName);
+            fileInfo.setName(newFileName);
             // 原始文件名
             String fileName = file.getOriginalFilename();
-            fileInfo.setOriginalFileName(fileName);
+            fileInfo.setOriginalName(fileName);
             // MD5
             String md5 = calculateMD5(file.getBytes());
             fileInfo.setMd5(md5);
@@ -67,7 +67,7 @@ public class FileController {
         FileSystemResource fileSystemResource = new FileSystemResource(filePath);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileInfo.getOriginalFileName());
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileInfo.getOriginalName());
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
         return ResponseEntity.ok()
