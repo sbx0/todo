@@ -65,7 +65,7 @@ function DragAndDropUpload() {
             .then(json => {
                 if (json.success) {
                     let newFiles = files.slice(0);
-                    let file = json.data;
+                    let file = json.data.name;
                     newFiles.push(file);
                     setFiles(newFiles);
                 } else {
@@ -116,8 +116,8 @@ function DragAndDropUpload() {
             <div className="p-1 gap-1 grid grid-cols-3 grid-rows-1">
                 {
                     files.map((one => {
-                        return <div key={one.fileName}>
-                            <ImageClickFull src={'/api/file/download/' + one.fileName}/>
+                        return <div key={one.name}>
+                            <ImageClickFull src={'/api/file/download/' + one.name}/>
                         </div>;
                     }))
                 }

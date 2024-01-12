@@ -8,13 +8,13 @@ public enum FileEncryptionType {
     // 点对点加密
     POINT_TO_POINT(2);
 
-    private final int id;
+    private final int value;
 
-    FileEncryptionType(int id) {
-        this.id = id;
+    FileEncryptionType(int value) {
+        this.value = value;
     }
 
-    public int getId() {
-        return id;
+    public int getValue() {
+        return value;
     }
 }
