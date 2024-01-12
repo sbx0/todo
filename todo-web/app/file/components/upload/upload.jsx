@@ -66,7 +66,7 @@ function DragAndDropUpload() {
                 if (json.success) {
                     let newFiles = files.slice(0);
                     let file = json.data.name;
-                    newFiles.push(file);
+                    newFiles.push({name: file});
                     setFiles(newFiles);
                 } else {
                     console.error('Upload failed:', json.message);
@@ -94,34 +94,15 @@ function DragAndDropUpload() {
     }
 
     return (
-        <div>
-            <div
-                className={`flex items-center justify-center h-screen bg-gray-100 ${dragging ? 'border-4 border-dashed border-blue-500' : ''}`}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onPaste={handlePaste}
-            >
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                    <h1 className="text-3xl font-bold mb-4">拖拽/粘贴上传</h1>
-                    <p className="text-gray-700 mb-4">
-                        拖拽/粘贴文件到此区域进行上传
-                    </p>
-                    <div className="border-2 border-dashed border-gray-400 p-4">
-                        {dragging ? '放开以上传文件' : '拖拽文件到此区域'}
-                    </div>
-                </div>
-            </div>
-            <div className="p-1 gap-1 grid grid-cols-3 grid-rows-1">
-                {
-                    files.map((one => {
-                        return <div key={one.name}>
-                            <ImageClickFull src={'/api/file/download/' + one.name}/>
-                        </div>;
-                    }))
-                }
-            </div>
+        <div className="w-screen h-screen"
+             onDragEnter={handleDragEnter}
+             onDragLeave={handleDragLeave}
+             onDragOver={handleDragOver}
+             onDrop={handleDrop}
+             onPaste={handlePaste}>
+            {
+                files.map((one => <ImageClickFull key={one.name} src={'/api/file/download/' + one.name}/>))
+            }
         </div>
     );
 }

@@ -42,7 +42,12 @@ public class JSON {
     }
 
     public static <T> T readFromFile(String filePath,Class<T> valueType) throws IOException {
-        return OBJECT_MAPPER.readValue(new File(filePath), valueType);
+        File file = new File(filePath);
+        if (file.exists()) {
+            return OBJECT_MAPPER.readValue(file, valueType);
+        } else {
+            return null;
+        }
     }
 
     public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {

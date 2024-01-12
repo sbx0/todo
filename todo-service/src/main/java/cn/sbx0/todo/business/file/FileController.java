@@ -53,6 +53,10 @@ public class FileController {
         String jsonFilePath = filePath + JSON_TYPE;
         // 读取文件原始信息
         FileInfoEntity fileInfo = JSON.readFromFile(jsonFilePath, FileInfoEntity.class);
+        if (fileInfo == null) {
+            return ResponseEntity.ok()
+                    .body(null);
+        }
 
         FileSystemResource fileSystemResource = new FileSystemResource(filePath);
 
