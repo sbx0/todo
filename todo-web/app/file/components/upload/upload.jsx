@@ -102,7 +102,8 @@ function DragAndDropUpload() {
              onPaste={handlePaste}>
             <div className="flex flex-wrap justify-center">
                 {
-                    files.map((one => <ImageClickFull key={one.name} src={'/api/file/download/' + one.name}/>))
+                    files.map((one => <ImageClickFull key={one.name}
+                                                      src={'/api/file/download/' + one.name + "?token=" + getCookie('token')}/>))
                 }
             </div>
         </div>

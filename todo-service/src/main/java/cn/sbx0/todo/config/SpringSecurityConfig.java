@@ -56,6 +56,7 @@ public class SpringSecurityConfig {
                                 "/wechat/auth",
                                 "/category/*",
                                 "/asset/type/*",
+                                "/file/download/*",
                                 "/time/now",
                                 "/user/client/register"
                         ).permitAll()

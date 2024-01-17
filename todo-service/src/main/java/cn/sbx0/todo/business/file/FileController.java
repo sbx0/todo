@@ -11,12 +11,15 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,6 +33,8 @@ public class FileController {
     private FileService service;
     @Resource
     private ClientUserService userService;
+    @Resource
+    private JwtDecoder jwtDecoder;
 
     public static final String JSON_TYPE = ".json";
 
@@ -49,7 +54,19 @@ public class FileController {
     }
 
     @GetMapping("/download/{fileName}")
-    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String fileName) throws IOException {
+    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String fileName, @RequestParam(value = "token") String token) throws IOException {
+        Jwt jwt = jwtDecoder.decode(token);
+        Instant expiresAt = jwt.getExpiresAt();
+        if (expiresAt == null) {
+            return ResponseEntity.ok()
+                    .body(null);
+        }
+        Instant now = Instant.now();
+        if (now.isAfter(expiresAt)) {
+            return ResponseEntity.ok()
+                    .body(null);
+        }
+
         String filePath = FileService.UPLOAD_DIR + fileName;
         // 文件信息的地址
         String jsonFilePath = filePath + JSON_TYPE;
