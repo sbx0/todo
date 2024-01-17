@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -77,6 +79,12 @@ public class FileController {
         File[] files = folder.listFiles();
         List<FileInfoEntity> fileInfos = new ArrayList<>();
         if (files != null) {
+            // 按照创建时间排序文件
+            Arrays.sort(files, (f1, f2) -> {
+                long timestamp1 = f1.lastModified();
+                long timestamp2 = f2.lastModified();
+                return Long.compare(timestamp1, timestamp2);
+            });
             for (File file : files) {
                 if (file.isDirectory()) {
                     continue;

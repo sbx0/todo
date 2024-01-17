@@ -1,14 +1,31 @@
 "use client"
 
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
+import {callApi} from "../../../apis/request";
+import {GET, GetToken} from "../../../apis/apiPath";
+import {setCookie} from "../../../apis/cookies";
 
 export default function Header() {
-    const [example, setExample] = useState(false);
 
     useEffect(() => {
-        if (example) {
-            setExample(true);
-        }
+        const fetchData = async () => {
+            callApi({method: GET, url: GetToken}).then(r => {
+                if (!r.success) {
+                    console.error(r.message);
+                    window.location.href = "/login"
+                } else {
+                    setCookie('token', r.data);
+                }
+            });
+        };
+
+        fetchData().then(r => r);
+
+        const intervalId = setInterval(fetchData, 60000); // 每隔 60 秒请求一次接口
+
+        return () => {
+            clearInterval(intervalId); // 在组件卸载时清除定时器
+        };
     }, []);
 
 

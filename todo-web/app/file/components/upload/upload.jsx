@@ -94,15 +94,17 @@ function DragAndDropUpload() {
     }
 
     return (
-        <div className="w-screen h-screen"
+        <div className="w-full h-full"
              onDragEnter={handleDragEnter}
              onDragLeave={handleDragLeave}
              onDragOver={handleDragOver}
              onDrop={handleDrop}
              onPaste={handlePaste}>
-            {
-                files.map((one => <ImageClickFull key={one.name} src={'/api/file/download/' + one.name}/>))
-            }
+            <div className="flex flex-wrap justify-center">
+                {
+                    files.map((one => <ImageClickFull key={one.name} src={'/api/file/download/' + one.name}/>))
+                }
+            </div>
         </div>
     );
 }

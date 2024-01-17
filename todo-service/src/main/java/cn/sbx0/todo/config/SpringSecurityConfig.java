@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -60,14 +61,7 @@ public class SpringSecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf((csrf) -> csrf.ignoringRequestMatchers(
-                        "/wechat/auth",
-                        "/category/*",
-                        "/asset/type/*",
-                        "/time/now",
-                        "/user/client/register",
-                        "/user/client/login"
-                ))
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(
                         formLogin -> formLogin.loginProcessingUrl("/user/client/login")
                                 .successForwardUrl("/user/client/handleLogin")
