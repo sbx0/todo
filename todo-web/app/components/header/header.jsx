@@ -13,16 +13,22 @@ export default function Header() {
 
 
     return <header className="bg-gray-800 text-white px-4 py-2">
-        <div className="container mx-auto flex items-center justify-between">
-            <h1 className="text-xl font-bold cursor-pointer"
-                onClick={() => window.location.href = "/"}>
-                Next Todo
+        <div className="container mx-auto flex items-center">
+            <h1 className="text-xl font-bold cursor-pointer">
+                <div onClick={() => window.location.href = "/"}>
+                    Next Todo
+                </div>
             </h1>
-            <nav>
-                <ul className="flex space-x-4">
-                    {/*<li><a href="#" className="text-white">Home</a></li>*/}
-                </ul>
-            </nav>
+            <h1 className="text-xl font-bold cursor-pointer ml-5">
+                <div onClick={() => window.location.href = "/login"}>
+                    Login
+                </div>
+            </h1>
+            <h1 className="text-xl font-bold cursor-pointer ml-5">
+                <div onClick={() => window.location.href = "/file"}>
+                    File
+                </div>
+            </h1>
         </div>
     </header>;
 }
