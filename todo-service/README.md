@@ -80,9 +80,10 @@ services:
     ports:
       - "1112:9999"
     volumes:
-      - /etc/timezone:/etc/timezone
       - ./logs:/logs
       - ./dependency:/dependency
+    environment:
+      - TZ=Asia/Shanghai
 ```
 
 vim quick.sh
